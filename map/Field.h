@@ -9,11 +9,6 @@
 class Field: public MapObject
 {
 public:
-    enum CellSignals{
-        PlayerOnCell,
-        EnemyOnCell
-        //...
-    };
 
     Field(unsigned map_height, unsigned map_width);
 
@@ -92,8 +87,6 @@ public:
     Cell* getCell(unsigned yIndex, unsigned xIndex);
 
     Cell::TypeOfCell getCellType(unsigned yIndex, unsigned xIndex);
-
-    void signalForCell(CellSignals signal, unsigned xIndex, unsigned yIndex);
 
     bool getPassability(unsigned yIndex, unsigned xIndex);
 

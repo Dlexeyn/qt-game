@@ -2,6 +2,7 @@
 #define VIEW_H
 
 #include <QPoint>
+#include <QGraphicsScene>
 #include "map/MapObject.h"
 
 class View
@@ -25,6 +26,7 @@ protected:
     int width, height;
     QPoint *XY = nullptr;
     MapObject *object = nullptr;
+    QGraphicsScene *gameScene = nullptr;
 };
 
 inline int View::getWidth() const

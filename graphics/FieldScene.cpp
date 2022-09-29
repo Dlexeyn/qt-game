@@ -29,7 +29,8 @@ FieldScene::FieldScene(int countCellsX, int countCellsY, int sizeCellPx)
         for(int indexX = 0; indexX < countCellsX; indexX++)
         {
             mapViewField[indexY][indexX] = new CellView(sizeCellPx, sizeCellPx,
-                                                        (dynamic_cast<Field*>(object))->getCell(indexY, indexX));
+                                                        (dynamic_cast<Field*>(object))->getCell(indexY, indexX),
+                                                        gameScene);
             gameScene->addItem(mapViewField[indexY][indexX]);
             mapViewField[indexY][indexX]->setPos(startW + sizeCellPx * indexX, startH + sizeCellPx * indexY);
         }
@@ -39,7 +40,8 @@ FieldScene::FieldScene(int countCellsX, int countCellsY, int sizeCellPx)
     gameScene->addItem(playerView);
     playerView->setPos(startW + sizeCellPx * (countCellsX/2), startH + sizeCellPx * (countCellsY/2));
 
-
+    mapViewField[playerView->getXY()->y()][playerView->getXY()->x()]->
+            playerOnCell(playerView->getPlayer());
 }
 
 void FieldScene::changeView()
@@ -70,4 +72,14 @@ int FieldScene::getCountCellsX() const
 int FieldScene::getCountCellsY() const
 {
     return countCellsY;
+}
+
+void FieldScene::playerMove(int stepX, int stepY)
+{
+    mapViewField[playerView->getXY()->y()][playerView->getXY()->x()]->playerIsGone();
+
+    playerView->moving(stepX, stepY);
+
+    mapViewField[playerView->getXY()->y()][playerView->getXY()->x()]->
+            playerOnCell(playerView->getPlayer());
 }

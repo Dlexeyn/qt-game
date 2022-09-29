@@ -2,18 +2,20 @@
 #include "qpainter.h"
 #include <map>
 
-CellView::CellView(int width, int height, Cell *cell)
+CellView::CellView(int width, int height, Cell *cell, QGraphicsScene *gameScene)
 {
     this->width = width;
     this->height = height;
     this->type = cell->getCell_type();
+    this->gameScene = gameScene;
     object = cell;
-
 }
 
 void CellView::changeView()
 {
-
+    type = (dynamic_cast<Cell*>(object))->getCell_type();
+    this->hide();
+    this->show();
 }
 
 void CellView::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
@@ -34,4 +36,17 @@ bool CellView::isCellPassable()
 QRectF CellView::boundingRect() const
 {
     return QRectF(-width/2, height/2, width, height);
+}
+
+void CellView::playerOnCell(Player *player)
+{
+    (dynamic_cast<Cell*>(object))->setPlayer(player);
+    int changes = (dynamic_cast<Cell*>(object))->triggerForPlayer();
+    if(changes)
+        changeView();
+}
+
+void CellView::playerIsGone()
+{
+    (dynamic_cast<Cell*>(object))->setPlayer(nullptr);
 }

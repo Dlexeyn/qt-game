@@ -3,6 +3,7 @@
 
 #include <QGraphicsScene>
 #include <vector>
+#include <QPoint>
 #include "PlayerView.h"
 #include "CellView.h"
 #include "View.h"
@@ -25,13 +26,15 @@ public:
 
     int getCountCellsY() const;
 
+    void playerMove(int stepX, int stepY);
+
 private:
     int width, height;  // in Px
     int countCellsX, countCellsY; // in Cell
     int sizeCellPx; // size of cell
     int startW, startH; // start point
 
-    QGraphicsScene *gameScene = nullptr;
+    //QGraphicsScene *gameScene = nullptr;
     PlayerView *playerView = nullptr;
     std::vector<std::vector<CellView*>> mapViewField;
 };

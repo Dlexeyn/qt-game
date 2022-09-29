@@ -34,14 +34,16 @@ public:
 
     Cell::TypeOfCell getCell_type() const;
 
-    void triggerForPlayer(Player *player);
+    int triggerForPlayer(); // 0 - nothing to do, 1 - change view of cell
+
+    void setPlayer(Player *newPlayer);
 
 private:
 
     TypeOfCell cell_type;
     TypeOfCell next_cell_type = EMPTY;
     bool isPassable;
-
+    Player *player = nullptr;
 };
 
 
