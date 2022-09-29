@@ -35,6 +35,7 @@ private:
     FieldScene *fieldScene = nullptr;
     DialogSize *dialog = nullptr;
     QTimer *timerForPlayer = nullptr;
+    QTimer *indicatorsTimer = nullptr;
     Controller *controller = nullptr;
 
     const unsigned sizeCellPx = 40;
@@ -42,9 +43,10 @@ private:
     bool closeApp = false;
 
     void keyPressEvent(QKeyEvent *event);
-    void updateHealthLabel();
+
 
 private slots:
     void slotPlayerTimer();
+    void updateHealthLabel();
 };
 #endif // BASEWINDOW_H

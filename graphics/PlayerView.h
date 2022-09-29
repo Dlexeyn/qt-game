@@ -20,6 +20,8 @@ public:
 
     int getHealth();
 
+    Player *getPlayer();
+
     QRectF boundingRect() const;
 
 

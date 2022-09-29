@@ -19,7 +19,7 @@ void Controller::sendPlayerCommand(int command)
         stepX = 1;
         break;
     default:
-        break;
+        return;
     }
 
     if(curPos->y() == 0 and command == UP)
@@ -31,7 +31,7 @@ void Controller::sendPlayerCommand(int command)
     else if(curPos->x() == fieldScene->getCountCellsX()-1 and command == RIGHT)
         stepX = -(fieldScene->getCountCellsX()-1);
 
-    if(fieldScene->getCellView(curPos->x() + stepX, curPos->y() + stepY)->isCellPassable())
-        fieldScene->getPlayerView()->moving(stepX, stepY);
+    if(fieldScene->getCellView(curPos->x() + stepX, curPos->y() + stepY)->isCellPassable()) // fieldscene должно решать этот вопрос
+        fieldScene->playerMove(stepX, stepY);
 
 }

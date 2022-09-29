@@ -7,7 +7,6 @@ void Cell::changeStatus()
 
     cell_type = next_cell_type;
     next_cell_type = EMPTY;
-
 }
 
 bool Cell::getIsPassable() const
@@ -25,11 +24,12 @@ Cell::TypeOfCell Cell::getCell_type() const
     return cell_type;
 }
 
-void Cell::triggerForPlayer(Player *player)
+int Cell::triggerForPlayer()
 {
+    int ret = 0;
     switch (cell_type) {
     case GRASS:
-        player->regenHealth(5);
+        //player->regenHealth(5);
         break;
     case LAVA:
         player->destruction();
@@ -38,8 +38,15 @@ void Cell::triggerForPlayer(Player *player)
         player->takeDamage(40);
         next_cell_type = BROKEN_TRAP;
         changeStatus();
+        ret = 1;
         break;
     default:
         break;
     }
+    return ret;
+}
+
+void Cell::setPlayer(Player *newPlayer)
+{
+    player = newPlayer;
 }

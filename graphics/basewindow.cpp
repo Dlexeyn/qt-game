@@ -26,13 +26,20 @@ BaseWindow::BaseWindow(QWidget *parent)
 
         ui->graphicsView->setScene(fieldScene->getGameScene());
 
-        //ui->graphicsView->setRenderHint(QPainter::Antialiasing);
+        ui->graphicsView->setRenderHint(QPainter::Antialiasing);
         ui->graphicsView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
         ui->graphicsView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
-        timerForPlayer = new QTimer();
-        connect(timerForPlayer, &QTimer::timeout, this, &BaseWindow::slotPlayerTimer);
-        timerForPlayer->start(1);
+        ui->HealthLabel->setText(QString::number(fieldScene->getPlayerView()->getHealth()));
+
+        timerForPlayer = new QTimer(this);
+        connect(timerForPlayer, SIGNAL(timeout()), this, SLOT(slotPlayerTimer()));
+        timerForPlayer->start(150);
+
+        indicatorsTimer = new QTimer(this);
+        indicatorsTimer->setInterval(100);
+        connect(indicatorsTimer, SIGNAL(timeout()), this, SLOT(updateHealthLabel()));
+        indicatorsTimer->start();
     }
 }
 
@@ -69,17 +76,19 @@ void BaseWindow::keyPressEvent(QKeyEvent *event)
 void BaseWindow::updateHealthLabel()
 {
     ui->HealthLabel->setText(QString::number(fieldScene->getPlayerView()->getHealth()));
+    this->update();
 }
 
 void BaseWindow::slotPlayerTimer()
 {
-    if(key)
-        controller->sendPlayerCommand(key);
 
-    setUpdatesEnabled(true);
-    repaint();
-    setUpdatesEnabled(false);
-    key = 0;
-    updateHealthLabel();
+    if(key)
+    {
+        controller->sendPlayerCommand(key);
+        fieldScene->getGameScene()->update();
+        key = 0;
+    }
+
+
 }
 
