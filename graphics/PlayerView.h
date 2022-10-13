@@ -3,6 +3,7 @@
 
 #include <QPainter>
 #include <QGraphicsItem>
+#include "game/Mediator.h"
 #include "objects/Player.h"
 #include "View.h"
 
@@ -10,7 +11,7 @@ class PlayerView : public View, public QGraphicsItem
 {
 
 public:
-    PlayerView(int width, int height, int x, int y, Player *player, int step);
+    PlayerView(int width, int height, int x, int y, int step);
 
     void changeView();
 
@@ -19,6 +20,8 @@ public:
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr);
 
     int getHealth();
+
+    int getPoints();
 
     Player *getPlayer();
 

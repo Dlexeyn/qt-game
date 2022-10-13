@@ -3,12 +3,13 @@
 
 #include <QPoint>
 #include "graphics/FieldScene.h"
+#include "GlobalComponent.h"
+#include "GlobalMediator.h"
 
-
-class Controller
+class Controller: public GlobalComponent
 {
 public:
-    Controller(FieldScene *fieldScene): fieldScene(fieldScene){}
+    Controller(){}
 
     enum commands{
         UP = Qt::Key_W,
@@ -17,9 +18,15 @@ public:
         RIGHT = Qt::Key_D
     };
 
+    void sendCignal();
+
     void sendPlayerCommand(int command);
+    int getStepX() const;
+
+    int getStepY() const;
+
 private:
-    FieldScene *fieldScene = nullptr;
+    int stepX, stepY;
 };
 
 #endif // CONTROLLER_H

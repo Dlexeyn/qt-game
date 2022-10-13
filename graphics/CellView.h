@@ -9,6 +9,8 @@
 #include "map/Cell.h"
 #include "objects/Player.h"
 
+using namespace CellSpace;
+
 class CellView : public QGraphicsItem, public View
 {
 public:
@@ -28,15 +30,15 @@ public:
     void playerIsGone();
 
 private:
-    Cell::TypeOfCell type;
-    QMap<Cell::TypeOfCell, Qt::GlobalColor> TypeColor = {{Cell::DIRT, Qt::gray},
-                                                         {Cell::GRASS, Qt::green},
-                                                         {Cell::LAVA, Qt::red},
-                                                         {Cell::SAND, Qt::yellow},
-                                                         {Cell::WATER, Qt::blue},
-                                                         {Cell::TRAP, Qt::cyan},
-                                                         {Cell::BROKEN_TRAP, Qt::darkCyan},
-                                                         {Cell::WALL, Qt::darkGray}};
+    TypeOfCell type;
+    QMap<TypeOfCell, Qt::GlobalColor> TypeColor = {{DIRT, Qt::gray},
+                                                         {GRASS, Qt::green},
+                                                         {TRAP, Qt::cyan},
+                                                         {BROKEN_TRAP, Qt::darkCyan},
+                                                         {WALL, Qt::darkGray},
+                                                         {TARGET_BOX, Qt::yellow},
+                                                         {TARGET_WITH_BOX, Qt::darkGreen},
+                                                   {END_CELL, Qt::red}};
 
 };
 

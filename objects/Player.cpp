@@ -1,28 +1,31 @@
 #include "Player.h"
 
-Player::Player(unsigned maxHealth, unsigned maxAmmunition, unsigned timeReload)
+Player::Player(unsigned maxHealth)
 {
     this->maxHealth = maxHealth;
     this->curHealth = maxHealth;
-    this->timeReload = timeReload;
-    this->maxAmmunition = maxAmmunition;
-    this->curAmmunition = maxAmmunition;
-    this->curExp = 0;
+    this->victoryPoints = 0;
+    isAlive = true;
 }
 
-Player::Player(const Player &other)
+void Player::sendCignal(int type)
 {
-    maxHealth = other.maxHealth;
-    curHealth = other.maxHealth;
-    timeReload = other.timeReload;
-    maxAmmunition = other.maxAmmunition;
-    curAmmunition = other.maxAmmunition;
-    curExp = other.curExp;
+
 }
+
+//Player::Player(const Player &other)
+//{
+//    maxHealth = other.maxHealth;
+//    curHealth = other.maxHealth;
+//    timeReload = other.timeReload;
+//    maxAmmunition = other.maxAmmunition;
+//    curAmmunition = other.maxAmmunition;
+//    curExp = other.curExp;
+//}
 
 void Player::changeStatus()
 {
-
+    isAlive = false;
 }
 
 void Player::takeDamage(int damage)
@@ -45,6 +48,31 @@ void Player::regenHealth(int addHealth)
 const unsigned &Player::getCurHealth() const
 {
     return curHealth;
+}
+
+void Player::addVictoryPoint()
+{
+    victoryPoints++;
+}
+
+void Player::deleteVictoryPoint()
+{
+    victoryPoints--;
+}
+
+const unsigned &Player::getVictoryPoints() const
+{
+    return victoryPoints;
+}
+
+void Player::setIsAlive(bool newIsAlive)
+{
+    isAlive = newIsAlive;
+}
+
+bool Player::getIsAlive() const
+{
+    return isAlive;
 }
 
 void Player::destruction()

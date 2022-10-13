@@ -41,9 +41,8 @@ QRectF CellView::boundingRect() const
 void CellView::playerOnCell(Player *player)
 {
     (dynamic_cast<Cell*>(object))->setPlayer(player);
-    int changes = (dynamic_cast<Cell*>(object))->triggerForPlayer();
-    if(changes)
-        changeView();
+    changeView();
+
 }
 
 void CellView::playerIsGone()

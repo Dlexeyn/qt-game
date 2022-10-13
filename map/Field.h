@@ -2,81 +2,39 @@
 #define FIELD_H
 
 #include <vector>
-#include "Cell.h"
-#include "objects/Player.h"
-#include "MapObject.h"
 
-class Field: public MapObject
+#include "Cell.h"
+#include "Box.h"
+#include "objects/Player.h"
+
+#include "MapObject.h"
+#include "map/MapComponent.h"
+#include "game/Mediator.h"
+
+class Field: public MapComponent
 {
 public:
 
-    Field(unsigned map_height, unsigned map_width);
+    Field(unsigned map_height, unsigned map_width,
+          const std::vector<std::vector<CellSpace::TypeOfCell>> & arr, int numBox);
 
-    Field(const Field& field) : map_height(field.map_height), map_width(field.map_width) {
-        map_field = std::vector<std::vector<Cell*>> (map_height, std::vector<Cell*>(map_width, nullptr));
+    Field(const Field& field);
 
-        for(int y = 0; y < map_height; y++)
-            for(int x = 0; x < map_width; x++)
-            {
-                map_field[y][x] = new Cell(Cell::TypeOfCell::GRASS, true);
-                *map_field[y][x] = *field.map_field[y][x];
-            }
-        player = field.player;
-    }
+    Field(Field&& field);
 
-    Field(Field&& field) : map_height(field.map_height), map_width(field.map_width) {
-        map_field = std::vector<std::vector<Cell*>> (map_height, std::vector<Cell*>(map_width, nullptr));
+    Field &operator=(const Field &other);
 
-        for(int y = 0; y < map_height; y++)
-            for(int x = 0; x < map_width; x++)
-                std::swap(map_field[x][y], field.map_field[x][y]);
+    Field &operator=(Field &&other);
 
-        std::swap(player, field.player);
-    }
+    void changeStatus(); //
 
-    Field& operator=(const Field &other)
-    {
-        if(this != &other)
-        {
-            for(int y = 0; y < map_height; y++)
-                for(int x = 0; x < map_width; x++)
-                    delete map_field[y][x];
-        }
-        map_height = other.map_height;
-        map_width = other.map_width;
-        player = other.player;
+    void sendCignal(int type);
 
-        map_field = std::vector<std::vector<Cell*>> (map_height, std::vector<Cell*>(map_width, nullptr));
-        for(int y = 0; y < map_height; y++)
-            for(int x = 0; x < map_width; x++)
-            {
-                map_field[y][x] = new Cell(Cell::TypeOfCell::GRASS, true);
-                *map_field[y][x] = *other.map_field[y][x];
-            }
-        return *this;
-    }
+    void setMediator(Mediator *mediator);
 
-    Field& operator=(Field &&other)
-    {
-        if(this != &other)
-        {
-            for(int y = 0; y < map_height; y++)
-                for(int x = 0; x < map_width; x++)
-                    delete map_field[y][x];
-        }
-        map_height = other.map_height;
-        map_width = other.map_width;
-        player = other.player;
+    void setMap(const std::vector<std::vector<CellSpace::TypeOfCell> > &arr);
 
-        map_field = std::vector<std::vector<Cell*>> (map_height, std::vector<Cell*>(map_width, nullptr));
-        for(int y = 0; y < map_height; y++)
-            for(int x = 0; x < map_width; x++)
-                std::swap(map_field[y][x], other.map_field[y][x]);
-
-        return *this;
-    }
-
-    void changeStatus();
+    void setBoxList(int num);
 
     const unsigned &getMap_height() const;
     void setMap_height(const unsigned &newMap_height);
@@ -84,17 +42,20 @@ public:
     const unsigned &getMap_width() const;
     void setMap_width(const unsigned &newMap_width);
 
-    Cell* getCell(unsigned yIndex, unsigned xIndex);
+    CellSpace::Cell *getCell(unsigned yIndex, unsigned xIndex);
 
-    Cell::TypeOfCell getCellType(unsigned yIndex, unsigned xIndex);
+    CellSpace::TypeOfCell getCellType(unsigned yIndex, unsigned xIndex);
+
+    Box *getBox(unsigned index);
 
     bool getPassability(unsigned yIndex, unsigned xIndex);
 
-    Player *getPlayer() const;
+    //Player *getPlayer() const;
 
 private:
     Player *player = nullptr;
-    std::vector<std::vector<Cell*>> map_field;
+    std::vector<std::vector<CellSpace::Cell*>> map_field;
+    std::vector<Box*> list_box;
     int map_height, map_width; // size in cells
 };
 #endif // FIELD_H
