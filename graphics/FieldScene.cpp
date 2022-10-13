@@ -1,32 +1,36 @@
 #include "FieldScene.h"
 #include "map/Field.h"
 
-FieldScene::FieldScene(int countCellsX, int countCellsY, int sizeCellPx)
+FieldScene::FieldScene(LevelReader *lvlReader, int sizeCellPx)
 {
-    this->countCellsX = countCellsX;
-    this->countCellsY = countCellsY;
+    this->countCellsX = lvlReader->getWidth();
+    this->countCellsY = lvlReader->getHeight();
     this->sizeCellPx = sizeCellPx;
 
-    width = countCellsX * sizeCellPx;
-    height = countCellsY * sizeCellPx;
+    width = this->countCellsX * sizeCellPx;
+    height = this->countCellsY * sizeCellPx;
+
     startW = -(width/2-sizeCellPx/2);
     startH = -(height/2-sizeCellPx/2);
 
-    object = new Field(countCellsY, countCellsX);
-    object = dynamic_cast<Field*>(object);
+    hiddenDoor.setX(lvlReader->getHidDoorXY().x());
+    hiddenDoor.setY(lvlReader->getHidDoorXY().y());
+
+    object = new Field(this->countCellsY, this->countCellsX,
+                       lvlReader->getType_map(), lvlReader->getNumBox());
+
     gameScene = new QGraphicsScene();
-
     gameScene->setSceneRect(-width/2, -height/2, width, height);
-
     gameScene->addLine(-width/2,-height/2, width/2,-height/2, QPen(Qt::black));
     gameScene->addLine(-width/2, height/2, width/2, height/2, QPen(Qt::black));
     gameScene->addLine(-width/2,-height/2,-width/2, height/2, QPen(Qt::black));
     gameScene->addLine(width/2,-height/2, width/2, height/2, QPen(Qt::black));
 
-    mapViewField = std::vector<std::vector<CellView*>>(countCellsY, std::vector<CellView*>(countCellsX, nullptr));
+    mapViewField = std::vector<std::vector<CellView*>>(this->countCellsY,
+                                               std::vector<CellView*>(this->countCellsX, nullptr));
 
-    for(int indexY = 0; indexY < countCellsY; indexY++)
-        for(int indexX = 0; indexX < countCellsX; indexX++)
+    for(int indexY = 0; indexY < this->countCellsY; indexY++)
+        for(int indexX = 0; indexX < this->countCellsX; indexX++)
         {
             mapViewField[indexY][indexX] = new CellView(sizeCellPx, sizeCellPx,
                                                         (dynamic_cast<Field*>(object))->getCell(indexY, indexX),
@@ -35,13 +39,39 @@ FieldScene::FieldScene(int countCellsX, int countCellsY, int sizeCellPx)
             mapViewField[indexY][indexX]->setPos(startW + sizeCellPx * indexX, startH + sizeCellPx * indexY);
         }
 
-    playerView = new PlayerView(sizeCellPx-10, sizeCellPx-10, countCellsX/2, countCellsY/2,
-                                (dynamic_cast<Field*>(object))->getPlayer(), sizeCellPx);
+    listBoxView = std::vector<BoxView*>(lvlReader->getNumBox(), nullptr);
+
+    for(int index = 0; index < lvlReader->getNumBox(); index++)
+    {
+        listBoxView[index] = new BoxView(sizeCellPx/1.4f, sizeCellPx/1.4f,
+                                         lvlReader->getBoxXY()[index],
+                                         (dynamic_cast<Field*>(object))->getBox(index),
+                                         sizeCellPx);
+        gameScene->addItem(listBoxView[index]);
+        listBoxView[index]->setPos(startW + sizeCellPx * listBoxView[index]->getXY()->x(),
+                                   startH + sizeCellPx * listBoxView[index]->getXY()->y());
+    }
+
+
+    playerView = new PlayerView(sizeCellPx-10, sizeCellPx-10, this->countCellsX/2,
+                                this->countCellsY/2, sizeCellPx);
     gameScene->addItem(playerView);
-    playerView->setPos(startW + sizeCellPx * (countCellsX/2), startH + sizeCellPx * (countCellsY/2));
+    playerView->setPos(startW + sizeCellPx * (this->countCellsX/2), startH + sizeCellPx * (countCellsY/2));
 
     mapViewField[playerView->getXY()->y()][playerView->getXY()->x()]->
             playerOnCell(playerView->getPlayer());
+
+    GameMediator *gameMediator = new GameMediator(dynamic_cast<MapComponent*>(object),
+                                    dynamic_cast<MapComponent*>(playerView->getObject()),
+                                                  lvlReader);
+
+    dynamic_cast<Field*>(object)->setMediator(gameMediator);
+    dynamic_cast<Player*>(playerView->getObject())->setEventMediator(gameMediator);
+}
+
+void FieldScene::sendCignal()
+{
+    game->notify(this, "fieldScene");
 }
 
 void FieldScene::changeView()
@@ -64,6 +94,17 @@ CellView *FieldScene::getCellView(int x, int y)
     return mapViewField[y][x];
 }
 
+BoxView *FieldScene::isBox(int x, int y)
+{
+    for(auto curBox : listBoxView)
+    {
+        if(curBox->getXY()->x() == x and
+                curBox->getXY()->y() == y)
+            return curBox;
+    }
+    return nullptr;
+}
+
 int FieldScene::getCountCellsX() const
 {
     return countCellsX;
@@ -76,10 +117,50 @@ int FieldScene::getCountCellsY() const
 
 void FieldScene::playerMove(int stepX, int stepY)
 {
-    mapViewField[playerView->getXY()->y()][playerView->getXY()->x()]->playerIsGone();
+    if(getCellView(playerView->getXY()->x() + stepX, playerView->getXY()->y() + stepY)->isCellPassable())   // проверка на проходимость
+    {
+        BoxView *box = isBox(playerView->getXY()->x() + stepX, playerView->getXY()->y() + stepY);
+        if(box and !getCellView(playerView->getXY()->x() + 2*stepX, playerView->getXY()->y() + 2*stepY)->isCellPassable()) // проверка на ящик
+            return;                                                                                     // и проходимость за ящиком
+        else if(box) // если нет гранцицы карты
+        {
+            if(isBox(playerView->getXY()->x() + 2*stepX, playerView->getXY()->y() + 2*stepY)) // проверка на два ящика подряд
+                return;
 
-    playerView->moving(stepX, stepY);
+            dynamic_cast<Field*>(object)->getCell(box->getXY()->y(), box->getXY()->x())->sendCignal(1);
+            dynamic_cast<Field*>(object)->getCell(box->getXY()->y()+stepY, box->getXY()->x()+stepX)->sendCignal(1);
 
-    mapViewField[playerView->getXY()->y()][playerView->getXY()->x()]->
-            playerOnCell(playerView->getPlayer());
+            box->moving(stepX, stepY);
+            mapViewField[box->getXY()->y()][box->getXY()->x()]->changeView();
+            mapViewField[hiddenDoor.y()][hiddenDoor.x()]->changeView();
+
+        }
+        mapViewField[playerView->getXY()->y()][playerView->getXY()->x()]->playerIsGone();
+
+        playerView->moving(stepX, stepY);
+
+        mapViewField[playerView->getXY()->y()][playerView->getXY()->x()]->
+                playerOnCell(playerView->getPlayer());
+
+        dynamic_cast<Field*>(object)->getCell(playerView->getXY()->y(), playerView->getXY()->x())->sendCignal(1);
+        sendCignal();
+
+    }
+
+}
+
+void FieldScene::checkPlayerStep(int stepX, int stepY)
+{
+    QPoint *curPos = getPlayerView()->getXY();
+
+    if(curPos->y() == 0 and stepY == -1)
+        stepY = getCountCellsY()-1;
+    else if(curPos->y() == getCountCellsY()-1 and stepY == 1)
+        stepY = -(getCountCellsY()-1);
+    else if(curPos->x() == 0 and stepX == -1)
+        stepX = getCountCellsX()-1;
+    else if(curPos->x() == getCountCellsX()-1 and stepX == 1)
+        stepX = -(getCountCellsX()-1);
+
+    playerMove(stepX, stepY);
 }

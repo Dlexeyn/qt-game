@@ -5,39 +5,118 @@
 #include <iterator>
 
 
-Field::Field(unsigned map_height, unsigned map_width)
+Field::Field(unsigned map_height, unsigned map_width, const std::vector<std::vector<CellSpace::TypeOfCell> > &arr, int numBox)
 {
-    map_field = std::vector<std::vector<Cell*>>(map_height, std::vector<Cell*>(map_width, nullptr));
-    for(unsigned y = 0; y < map_height; y++)
-        for(unsigned x = 0; x < map_width; x++)
-            map_field[y][x] = new Cell(Cell::TypeOfCell::GRASS, true);
-
-    for(unsigned x = 0; x < map_width/3; x++)
-    {
-        delete map_field[9][x];
-        map_field[9][x] = new Cell(Cell::TypeOfCell::WALL, false);
-    }
-
-    for(unsigned x = map_width-1; x >= 4; x--)
-    {
-        delete map_field[4][x];
-        map_field[4][x] = new Cell(Cell::TypeOfCell::WALL, false);
-    }
-
-
-    for(unsigned y = 0; y < map_height-3; y+=4)
-        for(unsigned x = 2; x < map_width/3; x+=2)
-        {
-            delete map_field[y][x];
-            map_field[y][x] = new Cell(Cell::TypeOfCell::TRAP, true);
-        }
-
-    player = new Player();
+    map_field = std::vector<std::vector<CellSpace::Cell*>>(map_height, std::vector<CellSpace::Cell*>(map_width, nullptr));
+    this->map_height = map_height;
+    this->map_width = map_width;
+    setMap(arr);
+    setBoxList(numBox);
+    //player = new Player();
 }
+
+//Field::Field(const Field &field) : map_height(field.map_height), map_width(field.map_width) {
+//    map_field = std::vector<std::vector<Cell*>> (map_height, std::vector<Cell*>(map_width, nullptr));
+
+//    for(int y = 0; y < map_height; y++)
+//        for(int x = 0; x < map_width; x++)
+//        {
+//            map_field[y][x] = new Cell(Cell::TypeOfCell::GRASS, true);
+//            *map_field[y][x] = *field.map_field[y][x];
+//        }
+//    player = field.player;
+//}
+
+//Field::Field(Field &&field) : map_height(field.map_height), map_width(field.map_width) {
+//    map_field = std::vector<std::vector<Cell*>> (map_height, std::vector<Cell*>(map_width, nullptr));
+
+//    for(int y = 0; y < map_height; y++)
+//        for(int x = 0; x < map_width; x++)
+//            std::swap(map_field[x][y], field.map_field[x][y]);
+
+//    std::swap(player, field.player);
+//}
+
+//Field &Field::operator=(Field &&other)
+//{
+//    if(this != &other)
+//    {
+//        for(int y = 0; y < map_height; y++)
+//            for(int x = 0; x < map_width; x++)
+//                delete map_field[y][x];
+//    }
+//    map_height = other.map_height;
+//    map_width = other.map_width;
+//    player = other.player;
+
+//    map_field = std::vector<std::vector<Cell*>> (map_height, std::vector<Cell*>(map_width, nullptr));
+//    for(int y = 0; y < map_height; y++)
+//        for(int x = 0; x < map_width; x++)
+//            std::swap(map_field[y][x], other.map_field[y][x]);
+
+//    return *this;
+//}
+
+//Field &Field::operator=(const Field &other)
+//{
+//    if(this != &other)
+//    {
+//        for(int y = 0; y < map_height; y++)
+//            for(int x = 0; x < map_width; x++)
+//                delete map_field[y][x];
+//    }
+//    map_height = other.map_height;
+//    map_width = other.map_width;
+//    player = other.player;
+
+//    map_field = std::vector<std::vector<Cell*>> (map_height, std::vector<Cell*>(map_width, nullptr));
+//    for(int y = 0; y < map_height; y++)
+//        for(int x = 0; x < map_width; x++)
+//        {
+//            map_field[y][x] = new Cell(Cell::TypeOfCell::GRASS, true);
+//            *map_field[y][x] = *other.map_field[y][x];
+//        }
+//    return *this;
+//}
 
 void Field::changeStatus()
 {
 
+}
+
+void Field::sendCignal(int type)
+{
+
+}
+
+void Field::setMediator(Mediator *mediator)
+{
+    setEventMediator(mediator);
+    for(int y = 0; y < map_height; y++)
+        for(int x = 0; x < map_width; x++)
+            map_field[y][x]->setEventMediator(mediator);
+
+    for(auto box : list_box)
+        box->setEventMediator(mediator);
+
+}
+
+void Field::setMap(const std::vector<std::vector<CellSpace::TypeOfCell>> &arr)
+{
+    for(int y = 0; y < map_height; y++)
+        for(int x = 0; x < map_width; x++)
+        {
+            map_field[y][x] = new CellSpace::Cell(arr[y][x],(arr[y][x] == CellSpace::WALL) ? false : true);
+        }
+}
+
+void Field::setBoxList(int num)
+{
+    list_box = std::vector<Box*>(num, nullptr);
+    for(int index = 0; index < num; index++)
+    {
+        list_box[index] = new Box(false);
+    }
 }
 
 
@@ -61,14 +140,19 @@ void Field::setMap_width(const unsigned &newMap_width)
     map_width = newMap_width;
 }
 
-Cell *Field::getCell(unsigned yIndex, unsigned xIndex)
+CellSpace::Cell *Field::getCell(unsigned yIndex, unsigned xIndex)
 {
     return map_field[yIndex][xIndex];
 }
 
-Cell::TypeOfCell Field::getCellType(unsigned yIndex, unsigned xIndex)
+CellSpace::TypeOfCell Field::getCellType(unsigned yIndex, unsigned xIndex)
 {
     return map_field[yIndex][xIndex]->getCell_type();
+}
+
+Box *Field::getBox(unsigned index)
+{
+    return list_box[index];
 }
 
 bool Field::getPassability(unsigned yIndex, unsigned xIndex)
@@ -76,7 +160,7 @@ bool Field::getPassability(unsigned yIndex, unsigned xIndex)
     return map_field[yIndex][xIndex]->getIsPassable();
 }
 
-Player *Field::getPlayer() const
-{
-    return player;
-}
+//Player *Field::getPlayer() const
+//{
+//    return player;
+//}

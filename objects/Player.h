@@ -2,26 +2,39 @@
 #define PLAYER_H
 
 #include "map/MapObject.h"
+#include "map/MapComponent.h"
+#include "game/Mediator.h"
 
-class Player: public MapObject
+class Player: public MapComponent
 {
 public:
-    Player(unsigned maxHealth = 100, unsigned maxAmmunition = 10, unsigned timeReload = 5);
+    Player(unsigned maxHealth = 100);
 
     Player(const Player& other);
+
+    void sendCignal(int type);
 
     void changeStatus();
 
     void takeDamage(int damage);
-    void strike();
     void destruction();
     void regenHealth(int addHealth);
 
     const unsigned &getCurHealth() const;
 
+    void addVictoryPoint();
+    void deleteVictoryPoint();
+    const unsigned &getVictoryPoints() const;
+
+    void setIsAlive(bool newIsAlive);
+
+    bool getIsAlive() const;
+
 private:
-        unsigned maxHealth, maxAmmunition, timeReload;
-        unsigned curHealth, curExp, curAmmunition;
+        unsigned maxHealth;
+        unsigned curHealth;
+        unsigned victoryPoints;
+        bool isAlive;
 };
 
 #endif // PLAYER_H

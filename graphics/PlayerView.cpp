@@ -1,11 +1,11 @@
 #include "PlayerView.h"
 
-PlayerView::PlayerView(int width, int height, int x, int y, Player *player, int step)
+PlayerView::PlayerView(int width, int height, int x, int y, int step)
 {
     this->width = width;
     this->height = height;
     this->setXY(new QPoint(x, y));
-    this->object = player;
+    this->object = new Player();
     this->step = step;
 }
 
@@ -34,6 +34,11 @@ void PlayerView::paint(QPainter *painter, const QStyleOptionGraphicsItem *option
 int PlayerView::getHealth()
 {
     return (dynamic_cast<Player*>(object))->getCurHealth();
+}
+
+int PlayerView::getPoints()
+{
+    return (dynamic_cast<Player*>(object))->getVictoryPoints();
 }
 
 Player *PlayerView::getPlayer()
