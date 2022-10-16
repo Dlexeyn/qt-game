@@ -32,12 +32,13 @@ public:
 private:
     TypeOfCell type;
     QMap<TypeOfCell, Qt::GlobalColor> TypeColor = {{DIRT, Qt::gray},
-                                                         {GRASS, Qt::green},
-                                                         {TRAP, Qt::cyan},
-                                                         {BROKEN_TRAP, Qt::darkCyan},
-                                                         {WALL, Qt::darkGray},
-                                                         {TARGET_BOX, Qt::yellow},
-                                                         {TARGET_WITH_BOX, Qt::darkGreen},
+                                                   {GRASS, Qt::green},
+                                                   {TRAP, Qt::cyan},
+                                                   {BROKEN_TRAP, Qt::darkCyan},
+                                                   {WALL, Qt::darkGray},
+                                                   {TEMP_WALL, Qt::darkGray},
+                                                   {TARGET_BOX, Qt::yellow},
+                                                   {TARGET_WITH_BOX, Qt::darkGreen},
                                                    {END_CELL, Qt::red}};
 
 };

@@ -28,6 +28,26 @@ void Player::changeStatus()
     isAlive = false;
 }
 
+int Player::getFirstAttribute() const
+{
+    return curHealth;
+}
+
+int Player::getSecondAttribute() const
+{
+    return victoryPoints;
+}
+
+void Player::setFirstAttribute(int newAttribute)
+{
+    curHealth = newAttribute;
+}
+
+void Player::setSecondAttribute(int newAttribute)
+{
+    victoryPoints = newAttribute;
+}
+
 void Player::takeDamage(int damage)
 {
     curHealth -= damage;

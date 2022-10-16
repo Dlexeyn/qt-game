@@ -2,22 +2,33 @@
 #define MAPCOMPONENT_H
 
 #include "game/Mediator.h"
-#include "map/MapObject.h"
+#include "Ivents/ObjectEvent.h"
 
 class MapComponent: public MapObject
 {
 public:
-    virtual void sendCignal(int type) = 0;
-
+    void setEvent(Event *newEvent);
     void setEventMediator(Mediator *newEventMediator);
+    Event *getEvent() const;
 
 protected:
     Mediator *eventMediator = nullptr;
+    Event *event = nullptr;
 };
 
 inline void MapComponent::setEventMediator(Mediator *newEventMediator)
 {
     eventMediator = newEventMediator;
+}
+
+inline Event *MapComponent::getEvent() const
+{
+    return event;
+}
+
+inline void MapComponent::setEvent(Event *newEvent)
+{
+    event = newEvent;
 }
 
 #endif // MAPCOMPONENT_H

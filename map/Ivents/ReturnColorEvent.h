@@ -2,11 +2,12 @@
 #define RETURNCOLOREVENT_H
 
 #include "ObjectEvent.h"
+#include "map/Cell.h"
 
 class ReturnColorEvent : public ObjectEvent
 {
 public:
-    ReturnColorEvent();
+    ReturnColorEvent(MapObject *obj) : ObjectEvent(obj){}
     void trigger();
 };
 

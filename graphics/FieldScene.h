@@ -37,6 +37,8 @@ public:
 
     void playerMove(int stepX, int stepY);
 
+    bool boxMove(int stepX, int stepY);
+
     void checkPlayerStep(int stepX, int stepY);
 
 private:

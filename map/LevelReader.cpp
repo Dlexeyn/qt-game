@@ -67,6 +67,8 @@ CellSpace::TypeOfCell LevelReader::getType(QChar ch)
     switch (ch.unicode()) {
     case 'w':
         return CellSpace::WALL;
+    case 'W':
+        return CellSpace::TEMP_WALL;
     case 'g':
         return CellSpace::GRASS;
     case 't':

@@ -9,6 +9,11 @@ class Box : public MapComponent
 {
 public:
     void sendCignal(int type);
+
+    int getFirstAttribute() const;  // return bool isTargetPos
+    int getSecondAttribute() const;
+    void setFirstAttribute(int newAttribute);
+    void setSecondAttribute(int newAttribute);
     Box(bool isTargetPos) : isTargetPos(isTargetPos) {}
     bool getIsTargetPos() const;
     void setIsTargetPos(bool newIsTargetPos);

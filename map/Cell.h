@@ -1,7 +1,7 @@
 #ifndef CELL_H
 #define CELL_H
 
-#include "map/Ivents/Event.h"
+#include "Ivents/Event.h"
 #include "objects/Player.h"
 #include "map/MapObject.h"
 #include "map/MapComponent.h"
@@ -9,21 +9,25 @@
 
 namespace CellSpace {
 enum TypeOfCell{
-    DIRT,
-    SAND,
-    GRASS,
-    WALL,
-    BROKEN_WALL,
-    TRAP,
-    BROKEN_TRAP,
-    TARGET_BOX,
-    TARGET_WITH_BOX,
-    END_CELL,
-    EMPTY
+    DIRT = 1,
+    SAND = 2,
+    GRASS = 3,
+    WALL = 4,
+    TEMP_WALL = 5,
+    BROKEN_WALL = 6,
+    TRAP = 7,
+    BROKEN_TRAP = 8,
+    TARGET_BOX = 9,
+    TARGET_WITH_BOX = 10,
+    END_CELL = 11,
+    EMPTY = 12
 };
 
 enum TypeOfSignal{
-    CURRENT_CELL = 1
+    BOX_EVENT = 1,
+    RANDOM_EVENT = 2,
+    CONDITION_IS_TRUE = 3,
+    GET_EVENT = 4
 };
 
 class Cell: public MapComponent
@@ -37,6 +41,14 @@ public:
 
     void sendCignal(int type);
 
+    int getFirstAttribute() const;  // return cell type
+
+    int getSecondAttribute() const; // return future cell type
+
+    void setFirstAttribute(int newAttribute);
+
+    void setSecondAttribute(int newAttribute);
+
     void changeStatus();
 
     bool getIsPassable() const;
@@ -45,11 +57,11 @@ public:
 
     TypeOfCell getCell_type() const;
 
-    //int triggerForPlayer(); // 0 - nothing to do, 1 - change view of cell
-
     void setPlayer(Player *newPlayer);
 
     void setNext_cell_type(TypeOfCell newNext_cell_type);
+
+    Player *getPlayer() const;
 
 private:
     TypeOfCell cell_type;

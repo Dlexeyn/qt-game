@@ -15,7 +15,9 @@
 
 enum ReactType{
     ADD_Point,
-    DELETE_POINT
+    DELETE_POINT,
+    OPEN_SUBLEVEL,
+    IMPACT_ON_PLAYER
 };
 
 class GameMediator : public Mediator
@@ -32,6 +34,8 @@ public:
 
     void reactOnPlayer(ReactType type);
 
+    void reactOnCell(ReactType type, MapComponent *cell);
+
 private:
     MapComponent *field = nullptr;
     MapComponent *player = nullptr;
@@ -40,7 +44,7 @@ private:
 
     LevelReader *lvlReader = nullptr;
 
-    EventFactory *objectEventFactory = nullptr;
+    ObjectEventFactory *objectEventFactory = nullptr;
 
     Event *colorBox = nullptr;
     Event *returnColor = nullptr;

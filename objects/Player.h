@@ -16,6 +16,12 @@ public:
 
     void changeStatus();
 
+    int getFirstAttribute() const;
+    int getSecondAttribute() const;
+
+    void setFirstAttribute(int newAttribute);
+    void setSecondAttribute(int newAttribute);
+
     void takeDamage(int damage);
     void destruction();
     void regenHealth(int addHealth);

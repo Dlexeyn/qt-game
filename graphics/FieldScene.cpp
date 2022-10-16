@@ -65,8 +65,8 @@ FieldScene::FieldScene(LevelReader *lvlReader, int sizeCellPx)
                                     dynamic_cast<MapComponent*>(playerView->getObject()),
                                                   lvlReader);
 
-    dynamic_cast<Field*>(object)->setMediator(gameMediator);
-    dynamic_cast<Player*>(playerView->getObject())->setEventMediator(gameMediator);
+    object->setEventMediator(gameMediator);
+    playerView->getObject()->setEventMediator(gameMediator);
 }
 
 void FieldScene::sendCignal()
@@ -117,36 +117,36 @@ int FieldScene::getCountCellsY() const
 
 void FieldScene::playerMove(int stepX, int stepY)
 {
-    if(getCellView(playerView->getXY()->x() + stepX, playerView->getXY()->y() + stepY)->isCellPassable())   // проверка на проходимость
+    if(mapViewField[playerView->getXY()->y() + stepY][playerView->getXY()->x() + stepX]->isCellPassable())   // проверка на проходимость
     {
-        BoxView *box = isBox(playerView->getXY()->x() + stepX, playerView->getXY()->y() + stepY);
-        if(box and !getCellView(playerView->getXY()->x() + 2*stepX, playerView->getXY()->y() + 2*stepY)->isCellPassable()) // проверка на ящик
-            return;                                                                                     // и проходимость за ящиком
-        else if(box) // если нет гранцицы карты
-        {
-            if(isBox(playerView->getXY()->x() + 2*stepX, playerView->getXY()->y() + 2*stepY)) // проверка на два ящика подряд
-                return;
 
-            dynamic_cast<Field*>(object)->getCell(box->getXY()->y(), box->getXY()->x())->sendCignal(1);
-            dynamic_cast<Field*>(object)->getCell(box->getXY()->y()+stepY, box->getXY()->x()+stepX)->sendCignal(1);
-
-            box->moving(stepX, stepY);
-            mapViewField[box->getXY()->y()][box->getXY()->x()]->changeView();
-            mapViewField[hiddenDoor.y()][hiddenDoor.x()]->changeView();
-
-        }
         mapViewField[playerView->getXY()->y()][playerView->getXY()->x()]->playerIsGone();
 
         playerView->moving(stepX, stepY);
 
         mapViewField[playerView->getXY()->y()][playerView->getXY()->x()]->
                 playerOnCell(playerView->getPlayer());
-
-        dynamic_cast<Field*>(object)->getCell(playerView->getXY()->y(), playerView->getXY()->x())->sendCignal(1);
         sendCignal();
-
     }
 
+}
+
+bool FieldScene::boxMove(int stepX, int stepY)
+{
+    BoxView *box = isBox(playerView->getXY()->x() + stepX, playerView->getXY()->y() + stepY);
+    if(box and !mapViewField[playerView->getXY()->y() + 2*stepY][playerView->getXY()->x() + 2*stepX]->isCellPassable()) // проверка на ящик
+        return false;                                                                                     // и проходимость за ящиком
+    else if(box) // если нет гранцицы карты
+    {
+        if(isBox(playerView->getXY()->x() + 2*stepX, playerView->getXY()->y() + 2*stepY)) // проверка на два ящика подряд
+            return false;
+
+        mapViewField[box->getXY()->y()][box->getXY()->x()]->changeView();
+        box->moving(stepX, stepY);
+        mapViewField[box->getXY()->y()][box->getXY()->x()]->changeView();
+        mapViewField[hiddenDoor.y()][hiddenDoor.x()]->changeView();
+    }
+    return true;
 }
 
 void FieldScene::checkPlayerStep(int stepX, int stepY)
@@ -162,5 +162,6 @@ void FieldScene::checkPlayerStep(int stepX, int stepY)
     else if(curPos->x() == getCountCellsX()-1 and stepX == 1)
         stepX = -(getCountCellsX()-1);
 
-    playerMove(stepX, stepY);
+    if(boxMove(stepX, stepY))
+        playerMove(stepX, stepY);
 }
