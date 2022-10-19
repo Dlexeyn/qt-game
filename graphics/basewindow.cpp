@@ -7,10 +7,6 @@ BaseWindow::BaseWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-//    dialog = new DialogSize();
-//    dialog->show();
-//    dialog->exec();
-
     dialogLevel = new DialogLevel();
     dialogLevel->show();
     dialogLevel->exec();
@@ -23,17 +19,10 @@ BaseWindow::BaseWindow(QWidget *parent)
     else
     {
         this->show();
-//        lvlReader = new LevelReader(dialogLevel->getLevel());
-//        fieldScene = new FieldScene(lvlReader, sizeCellPx);
-
-//        this->resize(lvlReader->getWidth()*sizeCellPx + 100, lvlReader->getHeight()*sizeCellPx + 100);
-//        this->setFixedSize(14*sizeCellPx + 100, 7*sizeCellPx  + 100);
 
         ui->graphicsView->setRenderHint(QPainter::Antialiasing);
         ui->graphicsView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
         ui->graphicsView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-
-        //ui->HealthLabel->setText(QString::number(fieldScene->getPlayerView()->getHealth()));
 
         timerForPlayer = new QTimer(this);
         connect(timerForPlayer, SIGNAL(timeout()), this, SLOT(slotPlayerTimer()));
@@ -54,9 +43,6 @@ BaseWindow::~BaseWindow()
 void BaseWindow::callVictoryDialog()
 {
     QMessageBox::information(this, "Победа", "Уровень пройден!");
-//    this->hide();
-//    dialogLevel->show();
-//    dialogLevel->exec();
     qApp->quit();
 
 }
@@ -75,16 +61,22 @@ void BaseWindow::callExitDialog()
 
 void BaseWindow::sendCignal()
 {
-    game->notify(this, "basewindow");
+    game->notify("basewindow");
 }
 
-void BaseWindow::init(LevelReader *lvlReader, FieldScene *scene)
+void BaseWindow::init(ReadData *readData, QGraphicsScene *scene, View *player)
 {
-    this->lvlReader = lvlReader;
-    this->player = scene->getPlayerView();
-    this->resize(lvlReader->getWidth()*sizeCellPx + 100, lvlReader->getHeight()*sizeCellPx + 100);
-    this->setFixedSize(lvlReader->getWidth()*sizeCellPx + 100, lvlReader->getHeight()*sizeCellPx + 100);
-    ui->graphicsView->setScene(scene->getGameScene());
+    this->resize(readData->getWidth()*sizeCellPx + 100, readData->getHeight()*sizeCellPx + 100);
+    this->setFixedSize(readData->getWidth()*sizeCellPx + 100, readData->getHeight()*sizeCellPx + 100);
+    this->player = player;
+    int width = readData->getWidth() * readData->getSizeCell();
+    int height = readData->getHeight() * readData->getSizeCell();
+    scene->setSceneRect(-width/2, -height/2, width, height);
+    scene->addLine(-width/2,-height/2, width/2,-height/2, QPen(Qt::black));
+    scene->addLine(-width/2, height/2, width/2, height/2, QPen(Qt::black));
+    scene->addLine(-width/2,-height/2,-width/2, height/2, QPen(Qt::black));
+    scene->addLine(width/2,-height/2, width/2, height/2, QPen(Qt::black));
+    ui->graphicsView->setScene(scene);
 
 }
 
@@ -115,8 +107,8 @@ void BaseWindow::keyPressEvent(QKeyEvent *event)
 
 void BaseWindow::updateLabels()
 {
-    ui->HealthLabel->setText(QString::number(player->getHealth()));
-    ui->PointsLabel->setText(QString::number(player->getPoints()));
+    ui->HealthLabel->setText(QString::number(player->getObject()->getFirstAttribute()));
+    ui->PointsLabel->setText(QString::number(player->getObject()->getSecondAttribute()));
     this->update();
 }
 

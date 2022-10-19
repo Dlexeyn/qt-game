@@ -41,3 +41,11 @@ bool DialogLevel::getIsExit() const
     return isExit;
 }
 
+
+void DialogLevel::on_lvl2Button_clicked()
+{
+    level = 2;
+    disconnect(this, &QDialog::rejected, this, &DialogLevel::on_exitButton_clicked);
+    this->close();
+}
+

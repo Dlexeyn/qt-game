@@ -25,6 +25,8 @@ private slots:
 
     void on_exitButton_clicked();
 
+    void on_lvl2Button_clicked();
+
 private:
     Ui::DialogLevel *ui;
 

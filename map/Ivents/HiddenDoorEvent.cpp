@@ -2,6 +2,6 @@
 
 void DeleteObjectEvent::trigger()
 {
-    object->setSecondAttribute(CellSpace::GRASS);
-    object->changeStatus();
+    cell->setCell_type(GRASS);
+    cell->setIsPassable(true);
 }

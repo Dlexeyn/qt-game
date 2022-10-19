@@ -2,6 +2,7 @@
 
 void ReturnColorEvent::trigger()
 {
-    object->setSecondAttribute(CellSpace::TARGET_BOX);
-    object->changeStatus();
+    cell->setCell_type(CellSpace::TARGET_BOX);
+//    object->setSecondAttribute(CellSpace::TARGET_BOX);
+//    object->changeStatus();
 }

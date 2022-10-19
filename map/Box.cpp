@@ -35,7 +35,17 @@ void Box::setIsTargetPos(bool newIsTargetPos)
     isTargetPos = newIsTargetPos;
 }
 
-void Box::changeStatus()
+bool Box::checkState()
+{
+    return isTargetPos;
+}
+
+int Box::changeStatus()
+{
+    return 1;
+}
+
+int Box::callAnObject(std::string mes)
 {
 
 }

@@ -1,12 +1,17 @@
 #include "BoxView.h"
 
-BoxView::BoxView(int width, int height, QPoint *XY, Box *box, int step)
+BoxView::BoxView(MapObject *object, ReadData *readData, int index, QGraphicsScene *scene) : View(object, scene)
 {
-    this->width = width;
-    this->height = height;
-    this->XY = XY;
-    this->object = box;
-    this->step = step;
+    this->width = readData->getSizeCell()/1.4f;
+    this->height = readData->getSizeCell()/1.4f;
+    this->step = readData->getSizeCell();
+    this->XY = new QPoint();
+    this->XY->setX(readData->getBoxXY()[index]->x());
+    this->XY->setY(readData->getBoxXY()[index]->y());
+    this->XY = readData->getBoxXY()[index];
+    scene->addItem(this);
+    this->setPos(readData->getStartW() + readData->getSizeCell() * XY->x(),
+                 readData->getStartH() + readData->getSizeCell() * XY->y());
 }
 
 void BoxView::changeView()
@@ -14,12 +19,12 @@ void BoxView::changeView()
 
 }
 
-void BoxView::moving(int stepX, int stepY)
+void BoxView::moving(int &stepX, int &stepY)
 {
     setPos(mapToParent(step*stepX, step*stepY));
     XY->rx() += stepX;
     XY->ry() += stepY;
-    dynamic_cast<Box*>(object)->sendCignal(1);
+
 }
 
 void BoxView::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)

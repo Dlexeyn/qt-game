@@ -8,13 +8,18 @@
 class Player: public MapComponent
 {
 public:
-    Player(unsigned maxHealth = 100);
+    enum signalType{
+        DESTROYING = 1,
+        POINTS_FOR_DOOR = 3
+    };
+
+    Player();
 
     Player(const Player& other);
 
     void sendCignal(int type);
 
-    void changeStatus();
+    int changeStatus();
 
     int getFirstAttribute() const;
     int getSecondAttribute() const;
@@ -22,19 +27,13 @@ public:
     void setFirstAttribute(int newAttribute);
     void setSecondAttribute(int newAttribute);
 
-    void takeDamage(int damage);
-    void destruction();
-    void regenHealth(int addHealth);
-
-    const unsigned &getCurHealth() const;
-
-    void addVictoryPoint();
-    void deleteVictoryPoint();
-    const unsigned &getVictoryPoints() const;
-
     void setIsAlive(bool newIsAlive);
 
     bool getIsAlive() const;
+
+    int callAnObject(std::string mes = "");
+
+    bool checkState();
 
 private:
         unsigned maxHealth;

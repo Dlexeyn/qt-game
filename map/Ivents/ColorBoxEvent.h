@@ -1,13 +1,13 @@
 #ifndef COLORBOXEVENT_H
 #define COLORBOXEVENT_H
 
-#include "ObjectEvent.h"
+#include "CellEvent.h"
 #include "map/Cell.h"
 
-class ColorBoxEvent : public ObjectEvent
+class ColorBoxEvent : public CellEvent
 {
 public:
-    ColorBoxEvent(MapObject *obj) : ObjectEvent(obj){}
+    ColorBoxEvent(Cell *newCell = nullptr) : CellEvent(newCell){}
     void trigger();
 };
 

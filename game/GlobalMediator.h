@@ -7,7 +7,7 @@ class GlobalComponent;
 class GlobalMediator
 {
 public:
-    virtual void notify(GlobalComponent *sender, std::string mes = "") = 0;
+    virtual void notify(std::string mes = "") = 0;
 };
 
 #endif // GLOBALMEDIATOR_H
