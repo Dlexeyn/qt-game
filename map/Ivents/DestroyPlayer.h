@@ -6,7 +6,7 @@
 class DestroyPlayer : public ObjectEvent
 {
 public:
-    DestroyPlayer();
+    DestroyPlayer(MapObject *obj) : ObjectEvent(obj){}
     void trigger();
 };
 

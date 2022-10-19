@@ -21,9 +21,9 @@ public:
     void sendCignal();
 
     void sendPlayerCommand(int command);
-    int getStepX() const;
+    int &getStepX();
 
-    int getStepY() const;
+    int &getStepY();
 
 private:
     int stepX, stepY;

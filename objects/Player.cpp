@@ -1,11 +1,19 @@
 #include "Player.h"
 
-Player::Player(unsigned maxHealth)
+Player::Player()
 {
-    this->maxHealth = maxHealth;
-    this->curHealth = maxHealth;
+    this->maxHealth = 100;
+    this->curHealth = 100;
     this->victoryPoints = 0;
     isAlive = true;
+}
+
+Player::Player(const Player &other)
+{
+    maxHealth = other.maxHealth;
+    curHealth = other.curHealth;
+    victoryPoints = other.victoryPoints;
+    isAlive = other.isAlive;
 }
 
 void Player::sendCignal(int type)
@@ -13,56 +21,31 @@ void Player::sendCignal(int type)
 
 }
 
-//Player::Player(const Player &other)
-//{
-//    maxHealth = other.maxHealth;
-//    curHealth = other.maxHealth;
-//    timeReload = other.timeReload;
-//    maxAmmunition = other.maxAmmunition;
-//    curAmmunition = other.maxAmmunition;
-//    curExp = other.curExp;
-//}
 
-void Player::changeStatus()
+int Player::changeStatus()
 {
     isAlive = false;
+    return isAlive;
 }
 
-void Player::takeDamage(int damage)
-{
-    curHealth -= damage;
-    if(curHealth <= 0)
-        destruction();
-}
-
-void Player::regenHealth(int addHealth)
-{
-    if(curHealth != maxHealth)
-    {
-        curHealth += addHealth;
-        if(curHealth > maxHealth)
-            curHealth = maxHealth;
-    }
-}
-
-const unsigned &Player::getCurHealth() const
+int Player::getFirstAttribute() const
 {
     return curHealth;
 }
 
-void Player::addVictoryPoint()
-{
-    victoryPoints++;
-}
-
-void Player::deleteVictoryPoint()
-{
-    victoryPoints--;
-}
-
-const unsigned &Player::getVictoryPoints() const
+int Player::getSecondAttribute() const
 {
     return victoryPoints;
+}
+
+void Player::setFirstAttribute(int newAttribute)
+{
+    curHealth = newAttribute;
+}
+
+void Player::setSecondAttribute(int newAttribute)
+{
+    victoryPoints = newAttribute;
 }
 
 void Player::setIsAlive(bool newIsAlive)
@@ -75,7 +58,13 @@ bool Player::getIsAlive() const
     return isAlive;
 }
 
-void Player::destruction()
+int Player::callAnObject(std::string mes)
 {
-
+    return 1;   // future
 }
+
+bool Player::checkState()
+{
+    return isAlive;
+}
+

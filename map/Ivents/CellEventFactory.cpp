@@ -1,6 +1,6 @@
-#include "ObjectEventFactory.h"
+#include "CellEventFactory.h"
 
-Event *ObjectEventFactory::createEvent()
+Event *CellEventFactory::createEvent()
 {
     switch (currentType) {
     case COLOR_BOX:
@@ -10,15 +10,13 @@ Event *ObjectEventFactory::createEvent()
         return new ReturnColorEvent(object);
     case HIDDEN_DOOR:
         return new DeleteObjectEvent(object);
-    case DESTROY_PLAYER:
-        return new DestroyPlayer(object);
     default:
         return nullptr;
         break;
     }
 }
 
-void ObjectEventFactory::setCurrentType(ObjectEventType newCurrentType, MapObject *newObject)
+void CellEventFactory::setCurrentType(CellEventType newCurrentType, Cell *newObject)
 {
     currentType = newCurrentType;
     object = newObject;

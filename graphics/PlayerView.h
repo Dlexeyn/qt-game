@@ -4,6 +4,7 @@
 #include <QPainter>
 #include <QGraphicsItem>
 #include "game/Mediator.h"
+#include "map/ReadData.h"
 #include "objects/Player.h"
 #include "View.h"
 
@@ -11,19 +12,19 @@ class PlayerView : public View, public QGraphicsItem
 {
 
 public:
-    PlayerView(int width, int height, int x, int y, int step);
+    PlayerView(MapObject *object, ReadData *readData, QGraphicsScene *scene);
 
     void changeView();
 
-    void moving(int stepX, int stepY);
+    void moving(int &stepX, int &stepY);
 
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr);
 
-    int getHealth();
+//    int getHealth();
 
-    int getPoints();
+//    int getPoints();
 
-    Player *getPlayer();
+//    Player *getPlayer();
 
     QRectF boundingRect() const;
 

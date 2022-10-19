@@ -12,9 +12,9 @@ SOURCES += \
     game/Controller.cpp \
     game/Game.cpp \
     graphics/BoxView.cpp \
-    graphics/CellView.cpp \
+    graphics/CellPainter.cpp \
     graphics/DialogSize.cpp \
-    graphics/FieldScene.cpp \
+    graphics/FieldView.cpp \
     graphics/PlayerView.cpp \
     graphics/dialoglevel.cpp \
     main.cpp \
@@ -23,20 +23,20 @@ SOURCES += \
     map/Cell.cpp \
     map/Field.cpp \
     map/GameMediator.cpp \
+    map/Ivents/CellEvent.cpp \
+    map/Ivents/CellEventFactory.cpp \
     map/Ivents/ColorBoxEvent.cpp \
-    map/Ivents/DestroyPlayer.cpp \
     map/Ivents/EventFactory.cpp \
     map/Ivents/ExitEvent.cpp \
     map/Ivents/GlobalEvent.cpp \
     map/Ivents/GlobalEventFactory.cpp \
     map/Ivents/HiddenDoorEvent.cpp \
     map/Ivents/LoseEvent.cpp \
-    map/Ivents/ObjectEvent.cpp \
-    map/Ivents/ObjectEventFactory.cpp \
     map/Ivents/RestartEvent.cpp \
     map/Ivents/ReturnColorEvent.cpp \
     map/Ivents/VictoryEvent.cpp \
     map/LevelReader.cpp \
+    map/ReadData.cpp \
     objects/Player.cpp
 
 HEADERS += \
@@ -44,13 +44,14 @@ HEADERS += \
     game/GlobalMediator.h \
     game/Mediator.h \
     graphics/BoxView.h \
+    graphics/CellPainter.h \
     graphics/DialogSize.h \
     graphics/EventWindow.h \
-    graphics/FieldScene.h \
+    graphics/FieldView.h \
+    graphics/MapView.h \
     graphics/basewindow.h \
     game/Controller.h \
     game/Game.h \
-    graphics/CellView.h \
     graphics/PlayerView.h \
     graphics/View.h \
     graphics/dialoglevel.h \
@@ -58,8 +59,9 @@ HEADERS += \
     map/Cell.h \
     map/Field.h \
     map/GameMediator.h \
+    map/Ivents/CellEvent.h \
+    map/Ivents/CellEventFactory.h \
     map/Ivents/ColorBoxEvent.h \
-    map/Ivents/DestroyPlayer.h \
     map/Ivents/Event.h \
     map/Ivents/EventFactory.h \
     map/Ivents/ExitEvent.h \
@@ -67,14 +69,13 @@ HEADERS += \
     map/Ivents/GlobalEventFactory.h \
     map/Ivents/HiddenDoorEvent.h \
     map/Ivents/LoseEvent.h \
-    map/Ivents/ObjectEvent.h \
-    map/Ivents/ObjectEventFactory.h \
     map/Ivents/RestartEvent.h \
     map/Ivents/ReturnColorEvent.h \
     map/Ivents/VictoryEvent.h \
     map/LevelReader.h \
     map/MapComponent.h \
     map/MapObject.h \
+    map/ReadData.h \
     objects/Player.h
 
 FORMS += \

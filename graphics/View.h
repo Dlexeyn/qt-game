@@ -8,7 +8,8 @@
 class View
 {
 public:
-    virtual void changeView() = 0;
+    virtual void moving(int &stepX, int &stepY) = 0;
+    View(MapObject *object, QGraphicsScene *scene) : object(object), gameScene(scene) {}
     virtual ~View() = default;
 
     int getWidth() const;
@@ -21,6 +22,11 @@ public:
     void setXY(QPoint *newXY);
 
     MapObject *getObject() const;
+
+    void setObject(MapObject *newObject);
+
+    QGraphicsScene *getGameScene() const;
+    void setGameScene(QGraphicsScene *newGameScene);
 
 protected:
     int width, height;
@@ -62,6 +68,21 @@ inline void View::setXY(QPoint *newXY)
 inline MapObject *View::getObject() const
 {
     return object;
+}
+
+inline void View::setObject(MapObject *newObject)
+{
+    object = newObject;
+}
+
+inline QGraphicsScene *View::getGameScene() const
+{
+    return gameScene;
+}
+
+inline void View::setGameScene(QGraphicsScene *newGameScene)
+{
+    gameScene = newGameScene;
 }
 
 

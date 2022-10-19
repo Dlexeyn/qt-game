@@ -12,7 +12,7 @@
 #include "graphics/PlayerView.h"
 #include "graphics/dialoglevel.h"
 #include "game/Controller.h"
-#include "map/LevelReader.h"
+#include "map/ReadData.h"
 #include "game/GlobalComponent.h"
 #include "game/GlobalMediator.h"
 #include "EventWindow.h"
@@ -37,7 +37,7 @@ public:
 
     void sendCignal();
 
-    void init(LevelReader *lvlReader, FieldScene *scene);
+    void init(ReadData *readData, QGraphicsScene *scene, View *player);
 
     int getKey() const;
 
@@ -50,8 +50,7 @@ public:
 private:
     Ui::BaseWindow *ui;
 
-    LevelReader *lvlReader = nullptr;
-    PlayerView *player = nullptr;
+    View *player = nullptr;
     DialogSize *dialog = nullptr;
     DialogLevel *dialogLevel = nullptr;
     QTimer *timerForPlayer = nullptr;

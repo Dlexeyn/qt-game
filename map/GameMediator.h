@@ -5,8 +5,8 @@
 #include "map/Ivents/Event.h"
 #include "map/Ivents/EventFactory.h"
 #include "map/Ivents/GlobalEventFactory.h"
-#include "map/Ivents/ObjectEventFactory.h"
-#include "map/LevelReader.h"
+#include "map/Ivents/CellEventFactory.h"
+#include "map/ReadData.h"
 #include "map/MapComponent.h"
 #include "map/Box.h"
 #include "map/Cell.h"
@@ -14,33 +14,30 @@
 #include "objects/Player.h"
 
 enum ReactType{
-    ADD_Point,
-    DELETE_POINT
+    ADD_Point = 1,
+    DELETE_POINT = 2,
+    OPEN_SUBLEVEL = 3,
+    DESTROY_PLAYER = 4
 };
 
 class GameMediator : public Mediator
 {
 public:
-    GameMediator(MapComponent *field, MapComponent *player, LevelReader *lvlReader);
+    GameMediator(MapComponent *field, MapComponent *player,  std::vector <MapComponent*> &listBox, ReadData *readData);
     void notify(MapComponent *sender, std::string mes = "");
 
     void reactOnCell();
-
-    void setField(Field *newField);
-
-    void setPlayer(Player *newPlayer);
 
     void reactOnPlayer(ReactType type);
 
 private:
     MapComponent *field = nullptr;
     MapComponent *player = nullptr;
-    MapComponent *curBox = nullptr;
-    MapComponent *curCell = nullptr;
+    std::vector <MapComponent*> listBox;
 
-    LevelReader *lvlReader = nullptr;
+    ReadData *readData = nullptr;
 
-    EventFactory *objectEventFactory = nullptr;
+    //ObjectEventFactory *objectEventFactory = nullptr;
 
     Event *colorBox = nullptr;
     Event *returnColor = nullptr;

@@ -3,10 +3,6 @@
 
 #include "Event.h"
 #include "map/MapObject.h"
-#include "map/Cell.h"
-#include "map/Box.h"
-#include "map/Field.h"
-
 
 
 class ObjectEvent: public Event

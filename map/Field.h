@@ -4,21 +4,17 @@
 #include <vector>
 
 #include "Cell.h"
-#include "Box.h"
-#include "objects/Player.h"
-
-#include "MapObject.h"
 #include "map/MapComponent.h"
 #include "game/Mediator.h"
+#include "Ivents/CellEventFactory.h"
+#include "map/ReadData.h"
 
 class Field: public MapComponent
 {
 public:
+    Field(ReadData *readData);
 
-    Field(unsigned map_height, unsigned map_width,
-          const std::vector<std::vector<CellSpace::TypeOfCell>> & arr, int numBox);
-
-    Field(const Field& field);
+    Field(const Field& otherfield);
 
     Field(Field&& field);
 
@@ -26,36 +22,28 @@ public:
 
     Field &operator=(Field &&other);
 
-    void changeStatus(); //
+    int changeStatus();
 
     void sendCignal(int type);
 
-    void setMediator(Mediator *mediator);
+    void setMap(std::vector<std::vector<CellSpace::TypeOfCell>> &arr);
 
-    void setMap(const std::vector<std::vector<CellSpace::TypeOfCell> > &arr);
+    int getFirstAttribute() const; // return x current point
+    int getSecondAttribute() const; // return y current point
 
-    void setBoxList(int num);
+    void setFirstAttribute(int newAttribute);   // set x current point
+    void setSecondAttribute(int newAttribute);  // set y current point
 
-    const unsigned &getMap_height() const;
-    void setMap_height(const unsigned &newMap_height);
+    int callAnObject(std::string mes = "");
 
-    const unsigned &getMap_width() const;
-    void setMap_width(const unsigned &newMap_width);
-
-    CellSpace::Cell *getCell(unsigned yIndex, unsigned xIndex);
-
-    CellSpace::TypeOfCell getCellType(unsigned yIndex, unsigned xIndex);
-
-    Box *getBox(unsigned index);
-
-    bool getPassability(unsigned yIndex, unsigned xIndex);
-
-    //Player *getPlayer() const;
+    bool checkState();
 
 private:
-    Player *player = nullptr;
     std::vector<std::vector<CellSpace::Cell*>> map_field;
-    std::vector<Box*> list_box;
+    CellEventFactory *eventFactory = nullptr;
     int map_height, map_width; // size in cells
+    QPoint curPoint;
+    QPoint curPlayer;
+    QPoint hidDoor;
 };
 #endif // FIELD_H

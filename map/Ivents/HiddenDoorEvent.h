@@ -1,12 +1,13 @@
 #ifndef HIDDENDOOREVENT_H
 #define HIDDENDOOREVENT_H
 
-#include "ObjectEvent.h"
+#include "CellEvent.h"
+#include "map/Cell.h"
 
-class DeleteObjectEvent : public ObjectEvent
+class DeleteObjectEvent : public CellEvent
 {
 public:
-    DeleteObjectEvent();
+    DeleteObjectEvent(Cell *newCell = nullptr) : CellEvent(newCell){}
     void trigger();
 };
 

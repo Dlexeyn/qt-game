@@ -1,85 +1,44 @@
 #include "GameMediator.h"
 #include <QDebug>
 
-GameMediator::GameMediator(MapComponent *field, MapComponent *player, LevelReader *lvlReader)
-: field(field), player(player), lvlReader(lvlReader)
+GameMediator::GameMediator(MapComponent *field, MapComponent *player, std::vector<MapComponent *> &listBox, ReadData *readData)
+: field(field), player(player), listBox(listBox), readData(readData)
 {
-    objectEventFactory = new ObjectEventFactory(ObjectEventFactory::COLOR_BOX);
-    colorBox = objectEventFactory->createEvent();
-
-    dynamic_cast<ObjectEventFactory*>(objectEventFactory)->setCurrentType(ObjectEventFactory::RETURN_COLOR);
-    returnColor = objectEventFactory->createEvent();
-
-
-    dynamic_cast<ObjectEventFactory*>(objectEventFactory)->setCurrentType(ObjectEventFactory::HIDDEN_DOOR);
-    hiddenDoors = objectEventFactory->createEvent();
-    dynamic_cast<ObjectEvent*>(hiddenDoors)->setObject(
-                dynamic_cast<Field*>(field)->getCell(lvlReader->getHidDoorXY().y(), lvlReader->getHidDoorXY().x()));
-
-    dynamic_cast<ObjectEventFactory*>(objectEventFactory)->setCurrentType(ObjectEventFactory::DESTROY_PLAYER);
-    destroyPlayer = objectEventFactory->createEvent();
 
 }
 
 void GameMediator::notify(MapComponent *sender, std::string mes)
 {
-
-    if(mes == "Cell")
+    if(mes == "OpenDoorCondition")
     {
-        curCell = sender;
-        if(dynamic_cast<CellSpace::Cell*>(curCell)->getCell_type() == CellSpace::TARGET_WITH_BOX)
-        {
-            dynamic_cast<ObjectEvent*>(returnColor)->setObject(curCell);
-            returnColor->trigger();
-            reactOnPlayer(DELETE_POINT);
-        }
-        if(dynamic_cast<CellSpace::Cell*>(curCell)->getCell_type() == CellSpace::END_CELL)
-        {
-            dynamic_cast<ObjectEvent*>(destroyPlayer)->setObject(player);
-            destroyPlayer->trigger();
-        }
+        if(player->getSecondAttribute() == readData->getConditionHiddenDoors())
+            reactOnCell();
     }
-    else if(mes == "Box")
-    {
-        curBox = sender;
-        if(dynamic_cast<CellSpace::Cell*>(curCell)->getCell_type() == CellSpace::TARGET_BOX)
-        {
-
-            dynamic_cast<ObjectEvent*>(colorBox)->setObject(curCell);
-            colorBox->trigger();
-            reactOnPlayer(ADD_Point);
-
-            if(dynamic_cast<Player*>(player)->getVictoryPoints() == lvlReader->getConditionHiddenDoors())
-            {
-                hiddenDoors->trigger();
-                delete hiddenDoors;
-                hiddenDoors = nullptr;
-            }
-        }
-    }
-}
-
-
-void GameMediator::setField(Field *newField)
-{
-    field = newField;
-}
-
-void GameMediator::setPlayer(Player *newPlayer)
-{
-    player = newPlayer;
+    else if(mes == "addPoint")
+        reactOnPlayer(ADD_Point);
+    else if(mes == "removePoint")
+        reactOnPlayer(DELETE_POINT);
+    else if(mes == "destroyPlayer")
+        reactOnPlayer(DESTROY_PLAYER);
 }
 
 void GameMediator::reactOnPlayer(ReactType type)
 {
     switch (type) {
     case ADD_Point:
-        dynamic_cast<Player*>(player)->addVictoryPoint();
+        player->setSecondAttribute(player->getSecondAttribute() + 1);
         break;
     case DELETE_POINT:
-        dynamic_cast<Player*>(player)->deleteVictoryPoint();
+        player->setSecondAttribute(player->getSecondAttribute() - 1);
         break;
+    case DESTROY_PLAYER:
+        player->setFirstAttribute(0);
     default:
         break;
     }
+}
+
+void GameMediator::reactOnCell()
+{
+    field->sendCignal(OPEN_SUBLEVEL);
 }

@@ -1,12 +1,16 @@
 #include "PlayerView.h"
 
-PlayerView::PlayerView(int width, int height, int x, int y, int step)
+PlayerView::PlayerView(MapObject *object, ReadData *readData, QGraphicsScene *scene) : View(object, scene)
 {
-    this->width = width;
-    this->height = height;
-    this->setXY(new QPoint(x, y));
-    this->object = new Player();
-    this->step = step;
+    this->width = readData->getSizeCell()-10;
+    this->height = readData->getSizeCell()-10;
+    this->XY = new QPoint();
+    this->XY->setX(readData->getPlayerXY()->x());
+    this->XY->setY(readData->getPlayerXY()->y());
+    this->step = readData->getSizeCell();
+    gameScene->addItem(this);
+    this->setPos(readData->getStartW() + readData->getSizeCell() * XY->x(),
+                 readData->getStartH() + readData->getSizeCell() * XY->y());
 }
 
 void PlayerView::changeView()
@@ -14,7 +18,7 @@ void PlayerView::changeView()
 
 }
 
-void PlayerView::moving(int stepX, int stepY)
+void PlayerView::moving(int &stepX, int &stepY)
 {
     setPos(mapToParent(step*stepX, step*stepY));
     XY->rx() += stepX;
@@ -31,20 +35,20 @@ void PlayerView::paint(QPainter *painter, const QStyleOptionGraphicsItem *option
     Q_UNUSED(widget);
 }
 
-int PlayerView::getHealth()
-{
-    return (dynamic_cast<Player*>(object))->getCurHealth();
-}
+//int PlayerView::getHealth()
+//{
+//    return (dynamic_cast<Player*>(object))->getCurHealth();
+//}
 
-int PlayerView::getPoints()
-{
-    return (dynamic_cast<Player*>(object))->getVictoryPoints();
-}
+//int PlayerView::getPoints()
+//{
+//    return (dynamic_cast<Player*>(object))->getVictoryPoints();
+//}
 
-Player *PlayerView::getPlayer()
-{
-    return (dynamic_cast<Player*>(object));
-}
+//Player *PlayerView::getPlayer()
+//{
+//    return (dynamic_cast<Player*>(object));
+//}
 
 QRectF PlayerView::boundingRect() const
 {

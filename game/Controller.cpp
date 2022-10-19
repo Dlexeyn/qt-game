@@ -2,7 +2,7 @@
 
 void Controller::sendCignal()
 {
-    game->notify(this, "controller");
+    game->notify("controller");
 }
 
 void Controller::sendPlayerCommand(int command)
@@ -27,12 +27,12 @@ void Controller::sendPlayerCommand(int command)
     sendCignal();
 }
 
-int Controller::getStepX() const
+int &Controller::getStepX()
 {
     return stepX;
 }
 
-int Controller::getStepY() const
+int &Controller::getStepY()
 {
     return stepY;
 }

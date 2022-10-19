@@ -1,43 +1,32 @@
 #ifndef CELL_H
 #define CELL_H
 
-#include "map/Ivents/Event.h"
-#include "objects/Player.h"
-#include "map/MapObject.h"
 #include "map/MapComponent.h"
-#include "game/Mediator.h"
+#include "map/Ivents/Event.h"
 
 namespace CellSpace {
 enum TypeOfCell{
-    DIRT,
-    SAND,
-    GRASS,
-    WALL,
-    BROKEN_WALL,
-    TRAP,
-    BROKEN_TRAP,
-    TARGET_BOX,
-    TARGET_WITH_BOX,
-    END_CELL,
-    EMPTY
+    DIRT = 1,
+    SAND = 2,
+    GRASS = 3,
+    WALL = 4,
+    TEMP_WALL = 5,
+    BROKEN_WALL = 6,
+    TRAP = 7,
+    BROKEN_TRAP = 8,
+    TARGET_BOX = 9,
+    TARGET_WITH_BOX = 10,
+    END_CELL = 11,
+    EMPTY = 12
 };
 
-enum TypeOfSignal{
-    CURRENT_CELL = 1
-};
-
-class Cell: public MapComponent
+class Cell
 {
 
 public:
-
-    Cell(TypeOfCell type, bool isPass, TypeOfCell nextType = EMPTY): cell_type(type),
-        next_cell_type(nextType), isPassable(isPass) {}
+    Cell(TypeOfCell type, bool isPass): cell_type(type),
+        isPassable(isPass) {}
     ~Cell(){}
-
-    void sendCignal(int type);
-
-    void changeStatus();
 
     bool getIsPassable() const;
 
@@ -45,17 +34,16 @@ public:
 
     TypeOfCell getCell_type() const;
 
-    //int triggerForPlayer(); // 0 - nothing to do, 1 - change view of cell
+    void setEvent(Event* newEvent);
 
-    void setPlayer(Player *newPlayer);
+    Event *getEvent() const;
 
-    void setNext_cell_type(TypeOfCell newNext_cell_type);
+    void setCell_type(TypeOfCell newCell_type);
 
 private:
+    Event *event = nullptr;
     TypeOfCell cell_type;
-    TypeOfCell next_cell_type = EMPTY;
     bool isPassable;
-    Player *player = nullptr;
 };
 
 

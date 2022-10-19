@@ -1,6 +1,7 @@
 #ifndef OBJECTEVENTFACTORY_H
 #define OBJECTEVENTFACTORY_H
 
+
 #include "EventFactory.h"
 #include "ObjectEvent.h"
 #include "ReturnColorEvent.h"
@@ -23,10 +24,11 @@ public:
 
     ObjectEventFactory(ObjectEventType type): currentType(type){}
     Event* createEvent();
-    void setCurrentType(ObjectEventType newCurrentType);
+    void setCurrentType(ObjectEventType newCurrentType, MapObject *object);
 
 private:
     ObjectEventType currentType;
+    MapObject *object = nullptr;
 };
 
 #endif // OBJECTEVENTFACTORY_H

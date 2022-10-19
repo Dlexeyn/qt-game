@@ -7,15 +7,16 @@
 #include "View.h"
 #include "map/Box.h"
 #include "map/GameMediator.h"
+#include "map/ReadData.h"
 
 class BoxView : public QGraphicsItem, public View
 {
 public:
-    BoxView(int width, int height, QPoint *XY, Box *box, int step);
+    BoxView(MapObject *object, ReadData *readData, int index, QGraphicsScene *scene);
 
     void changeView();
 
-    void moving(int stepX, int stepY);
+    void moving(int &stepX, int &stepY);
 
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr);
 

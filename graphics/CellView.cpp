@@ -13,7 +13,9 @@ CellView::CellView(int width, int height, Cell *cell, QGraphicsScene *gameScene)
 
 void CellView::changeView()
 {
-    type = (dynamic_cast<Cell*>(object))->getCell_type();
+    object->sendCignal(BOX_EVENT);
+    type = TypeOfCell(object->getFirstAttribute());
+    //type = (dynamic_cast<Cell*>(object))->getCell_type();
     this->hide();
     this->show();
 }
@@ -41,8 +43,7 @@ QRectF CellView::boundingRect() const
 void CellView::playerOnCell(Player *player)
 {
     (dynamic_cast<Cell*>(object))->setPlayer(player);
-    changeView();
-
+    object->sendCignal(GET_EVENT);
 }
 
 void CellView::playerIsGone()

@@ -3,17 +3,22 @@
 #include <vector>
 #include <algorithm>
 #include <iterator>
+#include "Ivents/CellEventFactory.h"
 
 
-Field::Field(unsigned map_height, unsigned map_width, const std::vector<std::vector<CellSpace::TypeOfCell> > &arr, int numBox)
+Field::Field(ReadData *readData) : map_height(readData->getHeight()), map_width(readData->getWidth())
 {
-    map_field = std::vector<std::vector<CellSpace::Cell*>>(map_height, std::vector<CellSpace::Cell*>(map_width, nullptr));
-    this->map_height = map_height;
-    this->map_width = map_width;
-    setMap(arr);
-    setBoxList(numBox);
-    //player = new Player();
+    eventFactory = new CellEventFactory(CellEventFactory::COLOR_BOX);
+    setMap(readData->getType_map());
+    curPlayer.setX(readData->getPlayerXY()->x());
+    curPlayer.setY(readData->getPlayerXY()->y());
 }
+
+//Field::Field(const Field &otherfield)
+//{
+//    map_height = otherfield.getMap_height();
+//    map_width = otherfield.getMap_width();
+//}
 
 //Field::Field(const Field &field) : map_height(field.map_height), map_width(field.map_width) {
 //    map_field = std::vector<std::vector<Cell*>> (map_height, std::vector<Cell*>(map_width, nullptr));
@@ -79,88 +84,96 @@ Field::Field(unsigned map_height, unsigned map_width, const std::vector<std::vec
 //    return *this;
 //}
 
-void Field::changeStatus()
+int Field::changeStatus()
 {
+    TypeOfCell curType;
+    if(curPlayer != curPoint)
+    {
+        if(map_field[curPoint.y()][curPoint.x()]->getEvent())
+            map_field[curPoint.y()][curPoint.x()]->getEvent()->trigger();
 
+        curType = map_field[curPoint.y()][curPoint.x()]->getCell_type();
+
+        if(curType == TARGET_BOX)
+        {
+            eventFactory->setCurrentType(CellEventFactory::COLOR_BOX, map_field[curPoint.y()][curPoint.x()]);
+            map_field[curPoint.y()][curPoint.x()]->setEvent(eventFactory->createEvent());
+            eventMediator->notify(this, "removePoint");
+        }
+        else if(curType == TARGET_WITH_BOX)
+        {
+            eventFactory->setCurrentType(CellEventFactory::RETURN_COLOR, map_field[curPoint.y()][curPoint.x()]);
+            map_field[curPoint.y()][curPoint.x()]->setEvent(eventFactory->createEvent());
+            eventMediator->notify(this, "addPoint");
+        }
+    }
+    else
+    {
+        curType = map_field[curPlayer.y()][curPlayer.x()]->getCell_type();
+        if(curType == END_CELL)
+            eventMediator->notify(this, "destroyPlayer");
+    }
+    return curType;
 }
 
 void Field::sendCignal(int type)
 {
-
+    map_field[hidDoor.y()][hidDoor.x()]->getEvent()->trigger();
 }
 
-void Field::setMediator(Mediator *mediator)
+void Field::setMap(std::vector<std::vector<CellSpace::TypeOfCell> > &arr)
 {
-    setEventMediator(mediator);
-    for(int y = 0; y < map_height; y++)
-        for(int x = 0; x < map_width; x++)
-            map_field[y][x]->setEventMediator(mediator);
-
-    for(auto box : list_box)
-        box->setEventMediator(mediator);
-
-}
-
-void Field::setMap(const std::vector<std::vector<CellSpace::TypeOfCell>> &arr)
-{
+    map_field = std::vector<std::vector<Cell*>> (map_height, std::vector<Cell*>(map_width, nullptr));
     for(int y = 0; y < map_height; y++)
         for(int x = 0; x < map_width; x++)
         {
-            map_field[y][x] = new CellSpace::Cell(arr[y][x],(arr[y][x] == CellSpace::WALL) ? false : true);
+            map_field[y][x] = new CellSpace::Cell(arr[y][x],(arr[y][x] == CellSpace::WALL or arr[y][x] == CellSpace::TEMP_WALL) ? false : true);
+            if(arr[y][x] == CellSpace::TARGET_BOX)
+            {
+                eventFactory->setCurrentType(CellEventFactory::COLOR_BOX, map_field[y][x]);
+                map_field[y][x]->setEvent(eventFactory->createEvent());
+            }
+            else if(arr[y][x] == CellSpace::TEMP_WALL)
+            {
+                eventFactory->setCurrentType(CellEventFactory::HIDDEN_DOOR, map_field[y][x]);
+                map_field[y][x]->setEvent(eventFactory->createEvent());
+                hidDoor.setX(x);
+                hidDoor.setY(y);
+            }
         }
 }
 
-void Field::setBoxList(int num)
+int Field::getFirstAttribute() const
 {
-    list_box = std::vector<Box*>(num, nullptr);
-    for(int index = 0; index < num; index++)
-    {
-        list_box[index] = new Box(false);
-    }
+    return curPoint.x();
 }
 
-
-const unsigned &Field::getMap_height() const
+int Field::getSecondAttribute() const
 {
-    return map_height;
+    return curPoint.y();
 }
 
-void Field::setMap_height(const unsigned &newMap_height)
+void Field::setFirstAttribute(int newAttribute)
 {
-    map_height = newMap_height;
+    curPoint.setX(newAttribute);
 }
 
-const unsigned &Field::getMap_width() const
+void Field::setSecondAttribute(int newAttribute)
 {
-    return map_width;
+    curPoint.setY(newAttribute);
 }
 
-void Field::setMap_width(const unsigned &newMap_width)
+int Field::callAnObject(std::string mes)
 {
-    map_width = newMap_width;
+    curPlayer.setX(curPoint.x());
+    curPlayer.setY(curPoint.y());
+    if(hidDoor.x() != 0 and hidDoor.y() != 0)
+        eventMediator->notify(this, "OpenDoorCondition");
+    return map_field[hidDoor.y()][hidDoor.x()]->getCell_type();
 }
 
-CellSpace::Cell *Field::getCell(unsigned yIndex, unsigned xIndex)
+bool Field::checkState()
 {
-    return map_field[yIndex][xIndex];
+    return map_field[curPoint.y()][curPoint.x()]->getIsPassable();
 }
 
-CellSpace::TypeOfCell Field::getCellType(unsigned yIndex, unsigned xIndex)
-{
-    return map_field[yIndex][xIndex]->getCell_type();
-}
-
-Box *Field::getBox(unsigned index)
-{
-    return list_box[index];
-}
-
-bool Field::getPassability(unsigned yIndex, unsigned xIndex)
-{
-    return map_field[yIndex][xIndex]->getIsPassable();
-}
-
-//Player *Field::getPlayer() const
-//{
-//    return player;
-//}
