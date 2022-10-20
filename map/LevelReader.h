@@ -22,12 +22,15 @@ public:
 
     ReadData *getReadData() const;
 
+    bool getIsReading() const;
+
 private:
     ReadData *readData = nullptr;
     QFile *levelFile = nullptr;
     QTextStream *in = nullptr;
 
     CellSpace::TypeOfCell getType(QChar ch);
+    bool isReading = false;
 };
 
 #endif // LEVELREADER_H

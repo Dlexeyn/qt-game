@@ -67,7 +67,11 @@ void LevelReader::readFile()
         levelFile->close();
         delete levelFile;
         levelFile = nullptr;
+
+        isReading = true;
     }
+    else
+        isReading = false;
 }
 
 ReadData *LevelReader::getReadData() const
@@ -91,4 +95,9 @@ CellSpace::TypeOfCell LevelReader::getType(QChar ch)
     default:
         break;
     }
+}
+
+bool LevelReader::getIsReading() const
+{
+    return isReading;
 }
