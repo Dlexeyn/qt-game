@@ -11,6 +11,8 @@ CONFIG += c++17
 SOURCES += \
     game/Controller.cpp \
     game/Game.cpp \
+    game/GamePool.cpp \
+    game/GlobalPool.cpp \
     graphics/BoxView.cpp \
     graphics/CellPainter.cpp \
     graphics/DialogSize.cpp \
@@ -40,8 +42,10 @@ SOURCES += \
     objects/Player.cpp
 
 HEADERS += \
+    game/GamePool.h \
     game/GlobalComponent.h \
     game/GlobalMediator.h \
+    game/GlobalPool.h \
     game/Mediator.h \
     graphics/BoxView.h \
     graphics/CellPainter.h \
