@@ -7,7 +7,7 @@
 class ReturnColorEvent : public CellEvent
 {
 public:
-    ReturnColorEvent(Cell *newCell = nullptr) : CellEvent(newCell){}
+    using CellEvent::CellEvent;
     void trigger();
 };
 

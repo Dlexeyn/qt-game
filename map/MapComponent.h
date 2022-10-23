@@ -3,11 +3,13 @@
 
 #include "game/Mediator.h"
 #include "map/MapObject.h"
+#include "log/LogObject.h"
 
-class MapComponent: public MapObject
+class MapComponent: public MapObject, public LogObject
 {
 public:
     //void setEvent(Event *newEvent);
+    virtual ~MapComponent() = default;
     void setEventMediator(Mediator *newEventMediator);
     //Event *getEvent() const;
 

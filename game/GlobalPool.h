@@ -12,7 +12,7 @@
 class GlobalPool
 {
 public:
-    GlobalPool();
+    GlobalPool(EventSubscriber *logger);
     LevelReader *getLvlReader() const;
 
     void startGame(MapView *fieldView, View *playerView, std::vector<View *> &listBoxView);

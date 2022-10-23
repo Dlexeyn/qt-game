@@ -3,4 +3,5 @@
 void ColorBoxEvent::trigger()
 {
     cell->setCell_type(CellSpace::TARGET_WITH_BOX);
+    notifySubscriber("the \"ColorBox\" event triggered");
 }

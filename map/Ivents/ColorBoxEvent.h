@@ -7,7 +7,7 @@
 class ColorBoxEvent : public CellEvent
 {
 public:
-    ColorBoxEvent(Cell *newCell = nullptr) : CellEvent(newCell){}
+    using CellEvent::CellEvent;
     void trigger();
 };
 

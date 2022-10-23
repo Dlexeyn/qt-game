@@ -7,7 +7,7 @@
 class DeleteObjectEvent : public CellEvent
 {
 public:
-    DeleteObjectEvent(Cell *newCell = nullptr) : CellEvent(newCell){}
+    using CellEvent::CellEvent;
     void trigger();
 };
 

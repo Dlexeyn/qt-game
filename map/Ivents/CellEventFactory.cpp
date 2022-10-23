@@ -4,12 +4,12 @@ Event *CellEventFactory::createEvent()
 {
     switch (currentType) {
     case COLOR_BOX:
-        return new ColorBoxEvent(object);
+        return new ColorBoxEvent(logger, object);
         break;
     case RETURN_COLOR:
-        return new ReturnColorEvent(object);
+        return new ReturnColorEvent(logger, object);
     case HIDDEN_DOOR:
-        return new DeleteObjectEvent(object);
+        return new DeleteObjectEvent(logger, object);
     default:
         return nullptr;
         break;

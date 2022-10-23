@@ -10,13 +10,15 @@
 #include "graphics/PlayerView.h"
 #include "map/LevelReader.h"
 #include "map/GameMediator.h"
+#include "log/Logger.h"
 #include <vector>
 #include <QApplication>
 
 class GamePool
 {
 public:
-    GamePool(LevelReader *lvlReader, QGraphicsScene *scene);
+    GamePool(LevelReader *lvlReader, QGraphicsScene *scene, Log::EventSubscriber *logger);
+    ~GamePool();
     MapView *getFieldView();
 
     View *getPlayerView();
