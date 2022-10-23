@@ -17,6 +17,12 @@ FieldView::FieldView(MapObject *object, ReadData *readData, QGraphicsScene *scen
     setMap(readData);
 }
 
+FieldView::~FieldView()
+{
+    graphicsCellMap.clear();
+    std::vector< std::vector<CellPainter*>>( graphicsCellMap ).swap( graphicsCellMap );
+}
+
 void FieldView::moving(int &stepX, int &stepY)
 {
     object->setFirstAttribute(XY->x() + stepX);

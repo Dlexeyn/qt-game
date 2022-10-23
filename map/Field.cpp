@@ -6,12 +6,21 @@
 #include "Ivents/CellEventFactory.h"
 
 
-Field::Field(ReadData *readData) : map_height(readData->getHeight()), map_width(readData->getWidth())
+Field::Field(ReadData *readData, EventSubscriber *logger) : map_height(readData->getHeight()), map_width(readData->getWidth())
 {
-    eventFactory = new CellEventFactory(CellEventFactory::COLOR_BOX);
+    eventFactory = new CellEventFactory(CellEventFactory::COLOR_BOX, logger);
+    subscribe(logger, "obj");
+    notifySubscriber("Field : the field was created");
     setMap(readData->getType_map());
     curPlayer.setX(readData->getPlayerXY()->x());
     curPlayer.setY(readData->getPlayerXY()->y());
+}
+
+Field::~Field()
+{
+    map_field.clear();
+    std::vector< std::vector< Cell* > >( map_field ).swap( map_field );
+    delete eventFactory;
 }
 
 //Field::Field(const Field &otherfield)
@@ -99,12 +108,13 @@ int Field::changeStatus()
             eventFactory->setCurrentType(CellEventFactory::COLOR_BOX, map_field[curPoint.y()][curPoint.x()]);
             map_field[curPoint.y()][curPoint.x()]->setEvent(eventFactory->createEvent());
             eventMediator->notify(this, "removePoint");
+
         }
         else if(curType == TARGET_WITH_BOX)
         {
             eventFactory->setCurrentType(CellEventFactory::RETURN_COLOR, map_field[curPoint.y()][curPoint.x()]);
             map_field[curPoint.y()][curPoint.x()]->setEvent(eventFactory->createEvent());
-            eventMediator->notify(this, "addPoint");
+            eventMediator->notify(this, "addPoint");            
         }
     }
     else
@@ -119,6 +129,7 @@ int Field::changeStatus()
 void Field::sendCignal(int type)
 {
     map_field[hidDoor.y()][hidDoor.x()]->getEvent()->trigger();
+    isHidDoorOpen = true;
 }
 
 void Field::setMap(std::vector<std::vector<CellSpace::TypeOfCell> > &arr)
@@ -167,7 +178,7 @@ int Field::callAnObject(std::string mes)
 {
     curPlayer.setX(curPoint.x());
     curPlayer.setY(curPoint.y());
-    if(hidDoor.x() != 0 and hidDoor.y() != 0)
+    if(hidDoor.x() != 0 and hidDoor.y() != 0 and !isHidDoorOpen)
         eventMediator->notify(this, "OpenDoorCondition");
     return map_field[hidDoor.y()][hidDoor.x()]->getCell_type();
 }

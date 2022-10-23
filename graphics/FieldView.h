@@ -12,7 +12,7 @@ class FieldView : public MapView
 public:
     FieldView(MapObject *object, ReadData *readData, QGraphicsScene *scene);
     //FieldView();
-
+    ~FieldView();
     void moving(int &stepX, int &stepY);
     void setMap(ReadData *readData);
     void changeView(int type, int x, int y);

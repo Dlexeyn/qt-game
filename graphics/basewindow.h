@@ -21,7 +21,7 @@ QT_BEGIN_NAMESPACE
 namespace Ui { class BaseWindow; }
 QT_END_NAMESPACE
 
-class BaseWindow : public QMainWindow, public GlobalComponent, public EventWindow
+class BaseWindow : public QMainWindow, public GlobalComponent, public EventWindow, public LogObject
 {
     Q_OBJECT
 

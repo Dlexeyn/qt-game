@@ -10,6 +10,13 @@ Game::Game(BaseWindow *baseWindow, Controller *controller, ReadData *readData)
     loseEvent = globalEventFactory->createEvent();
 }
 
+Game::~Game()
+{
+    delete globalEventFactory;
+    delete victoryEvent;
+    delete loseEvent;
+}
+
 void Game::notify(std::string mes)
 {
     if(mes == "controller")

@@ -1,15 +1,16 @@
 #include "GamePool.h"
 
-GamePool::GamePool(LevelReader *lvlReader, QGraphicsScene *scene)
+GamePool::GamePool(LevelReader *lvlReader, QGraphicsScene *scene, EventSubscriber *logger)
 {
     if(!lvlReader->getIsReading())
         qApp->quit();
     else
     {
-        field = new Field(lvlReader->getReadData());                            // реализация поля
+        field = new Field(lvlReader->getReadData(), logger);                            // реализация поля
         fieldView = new FieldView(field, lvlReader->getReadData(), scene);     // абстракция поля
 
         player = new Player;                                                    // реализация игрока
+        player->subscribe(logger, "obj");
         playerView = new PlayerView(player, lvlReader->getReadData(), scene);  // абстракция игрока
 
         listBox = std::vector<MapComponent*>(lvlReader->getReadData()->getNumBox(), nullptr);          // реализация ящиков
@@ -26,6 +27,20 @@ GamePool::GamePool(LevelReader *lvlReader, QGraphicsScene *scene)
         for(int index = 0; index < lvlReader->getReadData()->getNumBox(); index++)
             listBox[index]->setEventMediator(objectMediator);
     }
+}
+
+GamePool::~GamePool()
+{
+    delete field;
+    delete fieldView;
+    delete player;
+    delete playerView;
+    listBox.clear();
+    std::vector< MapComponent* >( listBox ).swap( listBox );
+    listBoxView.clear();
+    std::vector< View* > ( listBoxView ).swap( listBoxView );
+    delete objectMediator;
+
 }
 
 MapView *GamePool::getFieldView()

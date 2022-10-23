@@ -43,6 +43,7 @@ BaseWindow::~BaseWindow()
 void BaseWindow::callVictoryDialog()
 {
     QMessageBox::information(this, "Победа", "Уровень пройден!");
+    notifySubscriber("the game is over");
     qApp->quit();
 
 }
@@ -55,6 +56,7 @@ void BaseWindow::callRestartDialog()
 void BaseWindow::callExitDialog()
 {
     QMessageBox::information(this, "Поражение", "Вы проиграли!");
+    notifySubscriber("the game is over");
     qApp->quit();
 
 }

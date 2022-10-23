@@ -19,6 +19,14 @@ SOURCES += \
     graphics/FieldView.cpp \
     graphics/PlayerView.cpp \
     graphics/dialoglevel.cpp \
+    log/ConsoleLogDecorator.cpp \
+    log/FileLogDecorator.cpp \
+    log/LogData.cpp \
+    log/LogDecorator.cpp \
+    log/LogManager.cpp \
+    log/LogObject.cpp \
+    log/Logger.cpp \
+    log/Message.cpp \
     main.cpp \
     graphics/basewindow.cpp \
     map/Box.cpp \
@@ -59,6 +67,17 @@ HEADERS += \
     graphics/PlayerView.h \
     graphics/View.h \
     graphics/dialoglevel.h \
+    log/ConsoleLogDecorator.h \
+    log/EventSubscriber.h \
+    log/FileLogDecorator.h \
+    log/LogData.h \
+    log/LogDecorator.h \
+    log/LogManager.h \
+    log/LogObject.h \
+    log/LogSource.h \
+    log/LogTypes.h \
+    log/Logger.h \
+    log/Message.h \
     map/Box.h \
     map/Cell.h \
     map/Field.h \

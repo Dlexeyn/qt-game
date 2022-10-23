@@ -3,13 +3,14 @@
 
 #include "Event.h"
 #include "map/Cell.h"
+#include "log/LogObject.h"
 
 using namespace CellSpace;
 
-class CellEvent: public Event
+class CellEvent: public Event, public LogObject
 {
 public:
-    CellEvent(Cell *newCell = nullptr) : cell(newCell){}
+    CellEvent(EventSubscriber *logger, Cell *newCell = nullptr);
 
     void setCell(Cell *newCell);
 

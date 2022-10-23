@@ -8,11 +8,12 @@
 #include "game/Mediator.h"
 #include "Ivents/CellEventFactory.h"
 #include "map/ReadData.h"
+#include "log/LogObject.h"
 
 class Field: public MapComponent
 {
 public:
-    Field(ReadData *readData);
+    Field(ReadData *readData, EventSubscriber *logger);
 
     Field(const Field& otherfield);
 
@@ -21,6 +22,8 @@ public:
     Field &operator=(const Field &other);
 
     Field &operator=(Field &&other);
+
+    ~Field();
 
     int changeStatus();
 
@@ -45,5 +48,6 @@ private:
     QPoint curPoint;
     QPoint curPlayer;
     QPoint hidDoor;
+    bool isHidDoorOpen = false;
 };
 #endif // FIELD_H

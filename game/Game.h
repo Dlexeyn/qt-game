@@ -15,11 +15,13 @@
 #include "map/Cell.h"
 #include "map/Field.h"
 #include "objects/Player.h"
+#include "log/LogObject.h"
 
-class Game: public GlobalMediator
+class Game: public GlobalMediator, public LogObject
 {
 public:
     Game(BaseWindow *baseWindow, Controller *controller, ReadData *readData);
+    ~Game();
     void notify(std::string mes = "");
     void initGame(MapView *fieldView, View *playerView, std::vector<View *> &listBoxView, int numBox);
 

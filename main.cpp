@@ -1,13 +1,15 @@
 #include <game/GlobalPool.h>
 #include <game/GamePool.h>
 #include <QApplication>
+#include "log/Logger.h"
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
-    GlobalPool glPool;
-    GamePool gamePool(glPool.getLvlReader(), glPool.getScene());
+    Logger logger;
+    GlobalPool glPool(&logger);
+    GamePool gamePool(glPool.getLvlReader(), glPool.getScene(), &logger);
     glPool.startGame(gamePool.getFieldView(), gamePool.getPlayerView(), gamePool.getListBoxView());
 
 

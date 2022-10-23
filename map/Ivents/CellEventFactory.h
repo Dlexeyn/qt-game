@@ -21,12 +21,14 @@ public:
         DESTROY_PLAYER
     };
 
-    CellEventFactory(CellEventType type): currentType(type){}
+    CellEventFactory(CellEventType type, EventSubscriber *logger): currentType(type),
+    logger(logger){}
     Event* createEvent();
     void setCurrentType(CellEventType newCurrentType, Cell *object);
 
 private:
     CellEventType currentType;
+    EventSubscriber *logger = nullptr;
     Cell *object = nullptr;
 };
 
