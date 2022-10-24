@@ -7,12 +7,13 @@
 #include "graphics/basewindow.h"
 #include "map/LevelReader.h"
 #include "graphics/MapView.h"
+#include "game/LogPool.h"
 
 
 class GlobalPool
 {
 public:
-    GlobalPool(EventSubscriber *logger);
+    GlobalPool(LogPool *logPool);
     LevelReader *getLvlReader() const;
 
     void startGame(MapView *fieldView, View *playerView, std::vector<View *> &listBoxView);

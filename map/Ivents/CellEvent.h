@@ -10,7 +10,7 @@ using namespace CellSpace;
 class CellEvent: public Event, public LogObject
 {
 public:
-    CellEvent(EventSubscriber *logger, Cell *newCell = nullptr);
+    CellEvent(const std::vector<EventSubscriber*> &loggers, Cell *newCell = nullptr);
 
     void setCell(Cell *newCell);
 

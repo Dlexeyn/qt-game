@@ -1,8 +1,8 @@
 #include "CellEvent.h"
 
-CellEvent::CellEvent(EventSubscriber *logger, Cell *newCell) : cell(newCell)
+CellEvent::CellEvent(const std::vector<EventSubscriber*> &loggers, Cell *newCell) : cell(newCell)
 {
-    subscribe(logger, "obj");
+    subscribe(loggers);
 }
 
 void CellEvent::setCell(Cell *newCell)

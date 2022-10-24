@@ -27,15 +27,15 @@ void GameMediator::reactOnPlayer(ReactType type)
     switch (type) {
     case ADD_Point:
         player->setSecondAttribute(player->getSecondAttribute() + 1);
-        player->notifySubscriber("Player : find one victory point");
+        player->notifySubscribers("Player : find one victory point", "object");
         break;
     case DELETE_POINT:
         player->setSecondAttribute(player->getSecondAttribute() - 1);
-        player->notifySubscriber("Player : lost one victory point");
+        player->notifySubscribers("Player : lost one victory point", "object");
         break;
     case DESTROY_PLAYER:
         player->setFirstAttribute(0);
-        player->notifySubscriber("Player : was destroyed");
+        player->notifySubscribers("Player : was destroyed", "object");
     default:
         break;
     }

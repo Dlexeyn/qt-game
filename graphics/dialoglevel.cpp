@@ -1,8 +1,9 @@
 #include "dialoglevel.h"
 #include "ui_dialoglevel.h"
 
-DialogLevel::DialogLevel(QWidget *parent) :
+DialogLevel::DialogLevel(Config::Configurator *config, QWidget *parent) :
     QDialog(parent),
+    config(config),
     ui(new Ui::DialogLevel)
 {
     ui->setupUi(this);
@@ -52,6 +53,31 @@ void DialogLevel::on_lvl2Button_clicked()
 
 void DialogLevel::on_settingsButton_clicked()
 {
+    this->setWindowTitle("Настройки");
+    ui->stackedWidget->setCurrentIndex(1);
 
+}
+
+
+void DialogLevel::on_saveButton_clicked()
+{
+    switch (ui->logComboBox->currentIndex()) {
+    case 0:
+        config->update(Config::ConfigTypes::FILE_LOG, true);
+        break;
+    case 1:
+        config->update(Config::ConfigTypes::CONSOLE_LOG, true);
+        break;
+    case 2:
+        config->update(Config::ConfigTypes::LOG, true);
+        break;
+    case 3:
+        config->update(Config::ConfigTypes::LOG, false);
+        break;
+    default:
+        break;
+    }
+    this->setWindowTitle("Выбор уровня");
+    ui->stackedWidget->setCurrentIndex(0);
 }
 

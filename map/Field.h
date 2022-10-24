@@ -13,7 +13,7 @@
 class Field: public MapComponent
 {
 public:
-    Field(ReadData *readData, EventSubscriber *logger);
+    Field(ReadData *readData, const std::vector<EventSubscriber *> &loggers);
 
     Field(const Field& otherfield);
 

@@ -6,6 +6,7 @@ Player::Player()
     this->curHealth = 100;
     this->victoryPoints = 0;
     isAlive = true;
+    notifySubscribers("Player : the player was created", "object");
 }
 
 Player::Player(const Player &other)

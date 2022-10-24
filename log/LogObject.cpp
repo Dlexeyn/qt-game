@@ -2,22 +2,13 @@
 
 
 
-void LogObject::subscribe(EventSubscriber *newLogger, std::string typeStr)
+void LogObject::subscribe(const std::vector<EventSubscriber*> &arr)
 {
-    logger = newLogger;
-    if(typeStr == "obj")
-        type = Log::Type::ObjectState;
-    else if(typeStr == "global")
-        type = Log::Type::GlobalState;
-    else
-        type = Log::Type::CriticalState;
+    loggers = arr;
 }
 
-void LogObject::notifySubscriber(std::string str, std::string type)
+void LogObject::notifySubscribers(std::string str, std::string type)
 {
-    if(type == "crit")
-        logger->generateMessage(Log::Type::CriticalState, str);
-    else
-        logger->generateMessage(this->type, str);
-
+    for(auto logger : loggers)
+        logger->generateMessage(type, str);
 }

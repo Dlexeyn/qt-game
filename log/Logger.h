@@ -9,11 +9,10 @@ namespace Log
 class Logger : public EventSubscriber
 {
 public:
-    Logger();
-    ~Logger();
-    void generateMessage(Type type, std::string mes);
+    Logger(LogManager *logManager) : logManager(logManager) {}
+    ~Logger() {}
 
-private:
+protected:
     LogManager *logManager = nullptr;
 };
 }

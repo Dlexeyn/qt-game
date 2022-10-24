@@ -41,6 +41,7 @@ void Game::initGame(MapView *fieldView, View *playerView, std::vector<View*> &li
     this->playerView = playerView;
     this->listBoxView = listBoxView;
     this->numBox = numBox;
+    notifySubscribers("The game has started", "game");
 }
 
 void Game::setReadData(ReadData *newReadData)
@@ -64,7 +65,10 @@ bool Game::boxMove(View *box, int stepX, int stepY)
     if(!box)
         return true;
     else if(isBox(box->getXY()->x() + stepX, box->getXY()->y() + stepY))
+    {
+        notifySubscribers("box : other box is on the way", "warning");
         return false;
+    }
     else
     {
         setCurPos(2 * stepX, 2 * stepY);

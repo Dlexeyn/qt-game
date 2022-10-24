@@ -36,10 +36,10 @@ public:
     bool checkState();
 
 private:
-        unsigned maxHealth;
-        unsigned curHealth;
-        unsigned victoryPoints;
-        bool isAlive;
+    unsigned maxHealth;
+    unsigned curHealth;
+    unsigned victoryPoints;
+    bool isAlive;
 };
 
 #endif // PLAYER_H

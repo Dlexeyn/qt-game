@@ -2,18 +2,18 @@
 #define LOGOBJECT_H
 
 #include "EventSubscriber.h"
+#include "vector"
 using namespace Log;
 
 class LogObject
 {
 protected:
-    EventSubscriber *logger = nullptr;
-    Type type;
+    std::vector<EventSubscriber*> loggers;
 
 public:
     LogObject(){}
-    void subscribe(EventSubscriber *newLogger, std::string typeStr);
-    void notifySubscriber(std::string str, std::string type = "");
+    void subscribe(const std::vector<EventSubscriber *> &arr);
+    void notifySubscribers(std::string str, std::string type = "");
 
 };
 

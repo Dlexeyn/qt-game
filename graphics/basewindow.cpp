@@ -1,13 +1,14 @@
 #include "graphics/basewindow.h"
 #include "ui_basewindow.h"
 
-BaseWindow::BaseWindow(QWidget *parent)
-    : QMainWindow(parent)
+BaseWindow::BaseWindow(Config::Configurator *config, QWidget *parent)
+    : QMainWindow(parent),
+      config(config)
     , ui(new Ui::BaseWindow)
 {
     ui->setupUi(this);
 
-    dialogLevel = new DialogLevel();
+    dialogLevel = new DialogLevel(config);
     dialogLevel->show();
     dialogLevel->exec();
 
@@ -43,7 +44,7 @@ BaseWindow::~BaseWindow()
 void BaseWindow::callVictoryDialog()
 {
     QMessageBox::information(this, "Победа", "Уровень пройден!");
-    notifySubscriber("the game is over");
+    notifySubscribers("the game is over", "game");
     qApp->quit();
 
 }
@@ -56,7 +57,7 @@ void BaseWindow::callRestartDialog()
 void BaseWindow::callExitDialog()
 {
     QMessageBox::information(this, "Поражение", "Вы проиграли!");
-    notifySubscriber("the game is over");
+    notifySubscribers("the game is over", "game");
     qApp->quit();
 
 }

@@ -3,14 +3,14 @@
 CellEventFactory::CellEventFactory(const CellEventFactory& otherFactory)
 {
     currentType = otherFactory.currentType;
-    logger = otherFactory.logger;
+    loggers = otherFactory.loggers;
     object = otherFactory.object;
 }
 
 CellEventFactory::CellEventFactory(CellEventFactory &&otherFactory)
 {
     std::swap(currentType, otherFactory.currentType);
-    std::swap(logger, otherFactory.logger);
+    std::swap(loggers, otherFactory.loggers);
     std::swap(object, otherFactory.object);
 }
 
@@ -18,12 +18,12 @@ Event *CellEventFactory::createEvent()
 {
     switch (currentType) {
     case COLOR_BOX:
-        return new ColorBoxEvent(logger, object);
+        return new ColorBoxEvent(loggers, object);
         break;
     case RETURN_COLOR:
-        return new ReturnColorEvent(logger, object);
+        return new ReturnColorEvent(loggers, object);
     case HIDDEN_DOOR:
-        return new DeleteObjectEvent(logger, object);
+        return new DeleteObjectEvent(loggers, object);
     default:
         return nullptr;
         break;

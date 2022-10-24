@@ -1,16 +1,16 @@
 #include "GamePool.h"
 
-GamePool::GamePool(LevelReader *lvlReader, QGraphicsScene *scene, EventSubscriber *logger)
+GamePool::GamePool(LevelReader *lvlReader, QGraphicsScene *scene, LogPool *logPool)
 {
     if(!lvlReader->getIsReading())
         qApp->quit();
     else
     {
-        field = new Field(lvlReader->getReadData(), logger);                            // реализация поля
+        field = new Field(lvlReader->getReadData(), logPool->getLoggers());                            // реализация поля
         fieldView = new FieldView(field, lvlReader->getReadData(), scene);     // абстракция поля
 
         player = new Player;                                                    // реализация игрока
-        player->subscribe(logger, "obj");
+        player->subscribe(logPool->getLoggers());
         playerView = new PlayerView(player, lvlReader->getReadData(), scene);  // абстракция игрока
 
         listBox = std::vector<MapComponent*>(lvlReader->getReadData()->getNumBox(), nullptr);          // реализация ящиков

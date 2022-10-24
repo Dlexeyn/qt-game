@@ -3,5 +3,5 @@
 void ReturnColorEvent::trigger()
 {
     cell->setCell_type(CellSpace::TARGET_BOX);
-    notifySubscriber("the \"ReturnColorBox\" event triggered");
+    notifySubscribers("the \"ReturnColorBox\" event triggered", "event");
 }

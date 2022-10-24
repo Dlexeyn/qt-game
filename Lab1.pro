@@ -9,10 +9,13 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    config/AppConfigurator.cpp \
+    config/Configurator.cpp \
     game/Controller.cpp \
     game/Game.cpp \
     game/GamePool.cpp \
     game/GlobalPool.cpp \
+    game/LogPool.cpp \
     graphics/BoxView.cpp \
     graphics/CellPainter.cpp \
     graphics/DialogSize.cpp \
@@ -21,12 +24,15 @@ SOURCES += \
     graphics/dialoglevel.cpp \
     log/ConsoleLogDecorator.cpp \
     log/FileLogDecorator.cpp \
+    log/GlobalLogger.cpp \
     log/LogData.cpp \
     log/LogDecorator.cpp \
     log/LogManager.cpp \
     log/LogObject.cpp \
     log/Logger.cpp \
     log/Message.cpp \
+    log/ObjectLogger.cpp \
+    log/StateLogger.cpp \
     main.cpp \
     graphics/basewindow.cpp \
     map/Box.cpp \
@@ -50,10 +56,14 @@ SOURCES += \
     objects/Player.cpp
 
 HEADERS += \
+    config/AppConfigurator.h \
+    config/ConfigTypes.h \
+    config/Configurator.h \
     game/GamePool.h \
     game/GlobalComponent.h \
     game/GlobalMediator.h \
     game/GlobalPool.h \
+    game/LogPool.h \
     game/Mediator.h \
     graphics/BoxView.h \
     graphics/CellPainter.h \
@@ -70,6 +80,7 @@ HEADERS += \
     log/ConsoleLogDecorator.h \
     log/EventSubscriber.h \
     log/FileLogDecorator.h \
+    log/GlobalLogger.h \
     log/LogData.h \
     log/LogDecorator.h \
     log/LogManager.h \
@@ -78,6 +89,8 @@ HEADERS += \
     log/LogTypes.h \
     log/Logger.h \
     log/Message.h \
+    log/ObjectLogger.h \
+    log/StateLogger.h \
     map/Box.h \
     map/Cell.h \
     map/Field.h \

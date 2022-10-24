@@ -6,11 +6,11 @@
 #include "Ivents/CellEventFactory.h"
 
 
-Field::Field(ReadData *readData, EventSubscriber *logger) : map_height(readData->getHeight()), map_width(readData->getWidth())
+Field::Field(ReadData *readData, const std::vector<EventSubscriber *> &loggers) : map_height(readData->getHeight()), map_width(readData->getWidth())
 {
-    eventFactory = new CellEventFactory(CellEventFactory::COLOR_BOX, logger);
-    subscribe(logger, "obj");
-    notifySubscriber("Field : the field was created");
+    eventFactory = new CellEventFactory(CellEventFactory::COLOR_BOX, loggers);
+    subscribe(loggers);
+    notifySubscribers("Field : the field was created", "object");
     setMap(readData->getType_map());
     curPlayer.setX(readData->getPlayerXY()->x());
     curPlayer.setY(readData->getPlayerXY()->y());
@@ -41,48 +41,6 @@ Field::Field(Field &&field) : map_height(field.map_height), map_width(field.map_
     std::swap(curPlayer, field.curPlayer);
     std::swap(eventFactory, field.eventFactory);
 }
-
-//Field &Field::operator=(Field &&other)
-//{
-//    if(this != &other)
-//    {
-//        for(int y = 0; y < map_height; y++)
-//            for(int x = 0; x < map_width; x++)
-//                delete map_field[y][x];
-//    }
-//    map_height = other.map_height;
-//    map_width = other.map_width;
-//    player = other.player;
-
-//    map_field = std::vector<std::vector<Cell*>> (map_height, std::vector<Cell*>(map_width, nullptr));
-//    for(int y = 0; y < map_height; y++)
-//        for(int x = 0; x < map_width; x++)
-//            std::swap(map_field[y][x], other.map_field[y][x]);
-
-//    return *this;
-//}
-
-//Field &Field::operator=(const Field &other)
-//{
-//    if(this != &other)
-//    {
-//        for(int y = 0; y < map_height; y++)
-//            for(int x = 0; x < map_width; x++)
-//                delete map_field[y][x];
-//    }
-//    map_height = other.map_height;
-//    map_width = other.map_width;
-//    player = other.player;
-
-//    map_field = std::vector<std::vector<Cell*>> (map_height, std::vector<Cell*>(map_width, nullptr));
-//    for(int y = 0; y < map_height; y++)
-//        for(int x = 0; x < map_width; x++)
-//        {
-//            map_field[y][x] = new Cell(Cell::TypeOfCell::GRASS, true);
-//            *map_field[y][x] = *other.map_field[y][x];
-//        }
-//    return *this;
-//}
 
 int Field::changeStatus()
 {
@@ -129,7 +87,8 @@ void Field::setMap(std::vector<std::vector<CellSpace::TypeOfCell> > &arr)
     for(int y = 0; y < map_height; y++)
         for(int x = 0; x < map_width; x++)
         {
-            map_field[y][x] = new CellSpace::Cell(arr[y][x],(arr[y][x] == CellSpace::WALL or arr[y][x] == CellSpace::TEMP_WALL) ? false : true);
+            map_field[y][x] = new CellSpace::Cell(arr[y][x],
+                              (arr[y][x] == CellSpace::WALL or arr[y][x] == CellSpace::TEMP_WALL) ? false : true);
             if(arr[y][x] == CellSpace::TARGET_BOX)
             {
                 eventFactory->setCurrentType(CellEventFactory::COLOR_BOX, map_field[y][x]);
@@ -178,7 +137,7 @@ bool Field::checkState()
 {
     bool var = map_field[curPoint.y()][curPoint.x()]->getIsPassable();
     if(!var)
-        notifySubscriber("object : impassable cell");
+        notifySubscribers("object : impassable cell", "warning");
     return var;
 }
 
