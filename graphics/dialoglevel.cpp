@@ -49,3 +49,9 @@ void DialogLevel::on_lvl2Button_clicked()
     this->close();
 }
 
+
+void DialogLevel::on_settingsButton_clicked()
+{
+
+}
+

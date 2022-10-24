@@ -23,33 +23,24 @@ Field::~Field()
     delete eventFactory;
 }
 
-//Field::Field(const Field &otherfield)
-//{
-//    map_height = otherfield.getMap_height();
-//    map_width = otherfield.getMap_width();
-//}
+Field::Field(const Field &field) : map_height(field.map_height), map_width(field.map_width) {
+    std::copy(field.map_field.begin(), field.map_field.end(), std::back_inserter(map_field));
+    curPlayer = field.curPlayer;
+    curPoint = field.curPoint;
+    hidDoor = field.hidDoor;
+    eventFactory = new CellEventFactory(*field.eventFactory);
+}
 
-//Field::Field(const Field &field) : map_height(field.map_height), map_width(field.map_width) {
-//    map_field = std::vector<std::vector<Cell*>> (map_height, std::vector<Cell*>(map_width, nullptr));
-
-//    for(int y = 0; y < map_height; y++)
-//        for(int x = 0; x < map_width; x++)
-//        {
-//            map_field[y][x] = new Cell(Cell::TypeOfCell::GRASS, true);
-//            *map_field[y][x] = *field.map_field[y][x];
-//        }
-//    player = field.player;
-//}
-
-//Field::Field(Field &&field) : map_height(field.map_height), map_width(field.map_width) {
-//    map_field = std::vector<std::vector<Cell*>> (map_height, std::vector<Cell*>(map_width, nullptr));
-
-//    for(int y = 0; y < map_height; y++)
-//        for(int x = 0; x < map_width; x++)
-//            std::swap(map_field[x][y], field.map_field[x][y]);
-
-//    std::swap(player, field.player);
-//}
+Field::Field(Field &&field) : map_height(field.map_height), map_width(field.map_width) {
+    map_field = std::vector<std::vector<Cell*>> (map_height, std::vector<Cell*>(map_width, nullptr));
+    for(int y = 0; y < map_height; y++)
+        for(int x = 0; x < map_width; x++)
+            std::swap(map_field[x][y], field.map_field[x][y]);
+    std::swap(curPlayer, field.curPlayer);
+    std::swap(curPlayer, field.curPlayer);
+    std::swap(curPlayer, field.curPlayer);
+    std::swap(eventFactory, field.eventFactory);
+}
 
 //Field &Field::operator=(Field &&other)
 //{
@@ -174,7 +165,7 @@ void Field::setSecondAttribute(int newAttribute)
     curPoint.setY(newAttribute);
 }
 
-int Field::callAnObject(std::string mes)
+int Field::callAnObject()
 {
     curPlayer.setX(curPoint.x());
     curPlayer.setY(curPoint.y());
@@ -185,6 +176,9 @@ int Field::callAnObject(std::string mes)
 
 bool Field::checkState()
 {
-    return map_field[curPoint.y()][curPoint.x()]->getIsPassable();
+    bool var = map_field[curPoint.y()][curPoint.x()]->getIsPassable();
+    if(!var)
+        notifySubscriber("object : impassable cell");
+    return var;
 }
 

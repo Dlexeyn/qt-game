@@ -14,7 +14,7 @@ public:
     virtual int getSecondAttribute() const = 0;
     virtual void setFirstAttribute(int newAttribute) = 0;
     virtual void setSecondAttribute(int newAttribute) = 0;
-    virtual int callAnObject(std::string mes = "") = 0;
+    virtual int callAnObject() = 0;
     virtual bool checkState() = 0;
 
     //virtual ~MapObject() = default;

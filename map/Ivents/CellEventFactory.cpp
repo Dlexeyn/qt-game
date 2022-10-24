@@ -1,5 +1,19 @@
 #include "CellEventFactory.h"
 
+CellEventFactory::CellEventFactory(const CellEventFactory& otherFactory)
+{
+    currentType = otherFactory.currentType;
+    logger = otherFactory.logger;
+    object = otherFactory.object;
+}
+
+CellEventFactory::CellEventFactory(CellEventFactory &&otherFactory)
+{
+    std::swap(currentType, otherFactory.currentType);
+    std::swap(logger, otherFactory.logger);
+    std::swap(object, otherFactory.object);
+}
+
 Event *CellEventFactory::createEvent()
 {
     switch (currentType) {

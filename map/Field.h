@@ -37,7 +37,7 @@ public:
     void setFirstAttribute(int newAttribute);   // set x current point
     void setSecondAttribute(int newAttribute);  // set y current point
 
-    int callAnObject(std::string mes = "");
+    int callAnObject();
 
     bool checkState();
 

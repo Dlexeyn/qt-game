@@ -13,7 +13,11 @@ void LogObject::subscribe(EventSubscriber *newLogger, std::string typeStr)
         type = Log::Type::CriticalState;
 }
 
-void LogObject::notifySubscriber(std::string str)
+void LogObject::notifySubscriber(std::string str, std::string type)
 {
-    logger->generateMessage(type, str);
+    if(type == "crit")
+        logger->generateMessage(Log::Type::CriticalState, str);
+    else
+        logger->generateMessage(this->type, str);
+
 }

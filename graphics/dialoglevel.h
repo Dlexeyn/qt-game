@@ -27,6 +27,8 @@ private slots:
 
     void on_lvl2Button_clicked();
 
+    void on_settingsButton_clicked();
+
 private:
     Ui::DialogLevel *ui;
 

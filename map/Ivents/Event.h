@@ -5,7 +5,7 @@ class Event
 {
 public:
     virtual void trigger() = 0;
-    //virtual ~Event() = 0;
+    virtual ~Event() = default;
 };
 
 

@@ -23,6 +23,9 @@ public:
 
     CellEventFactory(CellEventType type, EventSubscriber *logger): currentType(type),
     logger(logger){}
+    CellEventFactory(const CellEventFactory& otherFactory);
+    CellEventFactory(CellEventFactory&& otherFactory);
+    ~CellEventFactory() {}
     Event* createEvent();
     void setCurrentType(CellEventType newCurrentType, Cell *object);
 

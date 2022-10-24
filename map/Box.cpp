@@ -45,7 +45,7 @@ int Box::changeStatus()
     return 1;
 }
 
-int Box::callAnObject(std::string mes)
+int Box::callAnObject()
 {
-
+    return getIsTargetPos();
 }

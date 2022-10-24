@@ -58,7 +58,7 @@ bool Player::getIsAlive() const
     return isAlive;
 }
 
-int Player::callAnObject(std::string mes)
+int Player::callAnObject()
 {
     return 1;   // future
 }

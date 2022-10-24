@@ -13,7 +13,7 @@ protected:
 public:
     LogObject(){}
     void subscribe(EventSubscriber *newLogger, std::string typeStr);
-    void notifySubscriber(std::string str);
+    void notifySubscriber(std::string str, std::string type = "");
 
 };
 
