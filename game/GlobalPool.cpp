@@ -1,21 +1,22 @@
 #include "GlobalPool.h"
 
-GlobalPool::GlobalPool(EventSubscriber *logger)
+GlobalPool::GlobalPool(LogPool *logPool)
 {
     scene = new QGraphicsScene();
-    window = new BaseWindow();
+    window = new BaseWindow(logPool->getConfig());
     controller = new Controller();
-    window->setController(controller);
-
     lvlReader = new LevelReader(window->getDialogLevel()->getLevel());
-
     game = new Game(window, controller, lvlReader->getReadData());
-    game->subscribe(logger, "global");
-    window->subscribe(logger, "global");
+
     game->setReadData(lvlReader->getReadData());
+    window->setController(controller);  //?
+
     window->setMediator(game);
     controller->setMediator(game);
     lvlReader->setMediator(game);
+
+    window->subscribe(logPool->getLoggers());
+    game->subscribe(logPool->getLoggers());
 }
 
 LevelReader *GlobalPool::getLvlReader() const
@@ -25,8 +26,8 @@ LevelReader *GlobalPool::getLvlReader() const
 
 void GlobalPool::startGame(MapView *fieldView, View *playerView, std::vector<View *> &listBoxView)
 {
-    game->initGame(fieldView, playerView, listBoxView, lvlReader->getReadData()->getNumBox());  // клиентский код
-    game->notifySubscriber("Game : game was started");
+    game->initGame(fieldView, playerView, listBoxView, lvlReader->getReadData()->getNumBox());
+    game->notifySubscribers("Game : game was started", "state");
     window->init(lvlReader->getReadData(), scene, playerView);
 }
 

@@ -81,20 +81,27 @@ ReadData *LevelReader::getReadData() const
 
 CellSpace::TypeOfCell LevelReader::getType(QChar ch)
 {
+    CellSpace::TypeOfCell type;
     switch (ch.unicode()) {
     case 'w':
-        return CellSpace::WALL;
+        type = CellSpace::WALL;
+        break;
     case 'W':
-        return CellSpace::TEMP_WALL;
+        type = CellSpace::TEMP_WALL;
+        break;
     case 'g':
-        return CellSpace::GRASS;
+        type = CellSpace::GRASS;
+        break;
     case 't':
-        return CellSpace::TARGET_BOX;
+        type = CellSpace::TARGET_BOX;
+        break;
     case '-':
-        return CellSpace::END_CELL;
+        type = CellSpace::END_CELL;
+        break;
     default:
         break;
     }
+    return type;
 }
 
 bool LevelReader::getIsReading() const

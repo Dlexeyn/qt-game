@@ -8,7 +8,6 @@
 #include <QApplication>
 #include <QMessageBox>
 #include "graphics/DialogSize.h"
-#include "graphics/FieldScene.h"
 #include "graphics/PlayerView.h"
 #include "graphics/dialoglevel.h"
 #include "game/Controller.h"
@@ -26,7 +25,7 @@ class BaseWindow : public QMainWindow, public GlobalComponent, public EventWindo
     Q_OBJECT
 
 public:
-    BaseWindow(QWidget *parent = nullptr);
+    BaseWindow(Config::Configurator *config, QWidget *parent = nullptr);
     ~BaseWindow();
 
     void callVictoryDialog();
@@ -56,6 +55,7 @@ private:
     QTimer *timerForPlayer = nullptr;
     QTimer *indicatorsTimer = nullptr;
     Controller *controller = nullptr;
+    Config::Configurator *config = nullptr;
 
     const unsigned sizeCellPx = 50;
     int key = 0;

@@ -8,6 +8,7 @@ class Mediator
 {
 public:
     virtual void notify(MapComponent *sender, std::string mes = "") = 0;
+    virtual ~Mediator() = default;
 };
 
 #endif // MEDIATOR_H

@@ -9,7 +9,7 @@ namespace Log
 class EventSubscriber
 {
 public:
-    virtual void generateMessage(Type type, std::string mes) = 0;
+    virtual void generateMessage(std::string type, std::string mes) = 0;
     virtual ~EventSubscriber() = default;
 };
 }

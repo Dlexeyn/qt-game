@@ -13,7 +13,7 @@
 class Field: public MapComponent
 {
 public:
-    Field(ReadData *readData, EventSubscriber *logger);
+    Field(ReadData *readData, const std::vector<EventSubscriber *> &loggers);
 
     Field(const Field& otherfield);
 
@@ -37,7 +37,7 @@ public:
     void setFirstAttribute(int newAttribute);   // set x current point
     void setSecondAttribute(int newAttribute);  // set y current point
 
-    int callAnObject(std::string mes = "");
+    int callAnObject();
 
     bool checkState();
 

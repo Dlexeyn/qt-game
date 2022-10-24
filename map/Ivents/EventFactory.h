@@ -6,8 +6,8 @@
 class EventFactory
 {
 public:
-    EventFactory();
     virtual Event* createEvent() = 0;
+    virtual ~EventFactory() = default;
 };
 
 #endif // EVENTFACTORY_H

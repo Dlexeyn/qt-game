@@ -6,6 +6,7 @@ Player::Player()
     this->curHealth = 100;
     this->victoryPoints = 0;
     isAlive = true;
+    notifySubscribers("Player : the player was created", "object");
 }
 
 Player::Player(const Player &other)
@@ -58,7 +59,7 @@ bool Player::getIsAlive() const
     return isAlive;
 }
 
-int Player::callAnObject(std::string mes)
+int Player::callAnObject()
 {
     return 1;   // future
 }

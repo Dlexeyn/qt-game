@@ -31,15 +31,15 @@ public:
 
     bool getIsAlive() const;
 
-    int callAnObject(std::string mes = "");
+    int callAnObject();
 
     bool checkState();
 
 private:
-        unsigned maxHealth;
-        unsigned curHealth;
-        unsigned victoryPoints;
-        bool isAlive;
+    unsigned maxHealth;
+    unsigned curHealth;
+    unsigned victoryPoints;
+    bool isAlive;
 };
 
 #endif // PLAYER_H

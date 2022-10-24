@@ -20,7 +20,7 @@ public:
     bool checkState();
 
     int changeStatus();
-    int callAnObject(std::string mes = "");
+    int callAnObject();
 
 private:
     bool isTargetPos;
