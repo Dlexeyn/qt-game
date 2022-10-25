@@ -6,7 +6,10 @@ enum class ConfigTypes
 {
     LOG,
     FILE_LOG,
-    CONSOLE_LOG
+    CONSOLE_LOG,
+    OBJECT_STATE,
+    GAME_STATE,
+    CRITICAL_STATE
 };
 }
 

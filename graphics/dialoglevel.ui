@@ -229,6 +229,37 @@
             </item>
            </layout>
           </item>
+          <item>
+           <widget class="QSplitter" name="splitter">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <widget class="QCheckBox" name="checkBoxObj">
+             <property name="text">
+              <string>Состояние объектов</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
+            <widget class="QCheckBox" name="checkBoxGame">
+             <property name="text">
+              <string>Состояние игры</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
+            <widget class="QCheckBox" name="checkBoxCrit">
+             <property name="text">
+              <string>Критические</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </widget>
+          </item>
          </layout>
         </widget>
        </item>

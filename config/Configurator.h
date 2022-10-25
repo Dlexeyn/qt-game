@@ -9,7 +9,7 @@ class Configurator
 {
 public:
     Configurator();
-    virtual void update(ConfigTypes type, bool value) = 0;
+    virtual void update(std::string type, bool value) = 0;
 };
 }
 

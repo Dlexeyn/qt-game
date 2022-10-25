@@ -2,24 +2,18 @@
 
 namespace Config {
 
-void AppConfigurator::update(ConfigTypes type, bool value)
+AppConfigurator::AppConfigurator() {
+
+    logMap["file"] = true;
+    logMap["console"] = false;
+    logMap["object"] = true;
+    logMap["game"] = true;
+    logMap["critical"] = true;
+}
+
+void AppConfigurator::update(std::string type, bool value)
 {
-    switch (type) {
-    case ConfigTypes::LOG:
-        FileLog = value;
-        ConsoleLog = value;
-        break;
-    case ConfigTypes::FILE_LOG:
-        FileLog = value;
-        ConsoleLog = !value;
-        break;
-    case ConfigTypes::CONSOLE_LOG:
-        ConsoleLog = value;
-        FileLog = !value;
-        break;
-    default:
-        break;
-    }
+    logMap[type] = value;
 }
 
 bool AppConfigurator::getFileLog() const
@@ -30,6 +24,11 @@ bool AppConfigurator::getFileLog() const
 bool AppConfigurator::getConsoleLog() const
 {
     return ConsoleLog;
+}
+
+bool AppConfigurator::getlog(std::string option)
+{
+    return logMap[option];
 }
 
 }

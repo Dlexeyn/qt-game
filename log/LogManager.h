@@ -17,6 +17,8 @@ private:
     LogSource *source = nullptr;
     LogSource *fileSource = nullptr;
     LogSource *consoleSource = nullptr;
+
+    bool messageFilter(Log::Message *mes);
 };
 
 #endif // LOGMANAGER_H

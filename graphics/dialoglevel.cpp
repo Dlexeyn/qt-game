@@ -63,21 +63,43 @@ void DialogLevel::on_saveButton_clicked()
 {
     switch (ui->logComboBox->currentIndex()) {
     case 0:
-        config->update(Config::ConfigTypes::FILE_LOG, true);
+        config->update("file", true);
         break;
     case 1:
-        config->update(Config::ConfigTypes::CONSOLE_LOG, true);
+        config->update("console", true);
         break;
     case 2:
-        config->update(Config::ConfigTypes::LOG, true);
+        config->update("file", true);
+        config->update("console", true);
         break;
     case 3:
-        config->update(Config::ConfigTypes::LOG, false);
+        config->update("file", false);
+        config->update("console", false);
         break;
     default:
         break;
     }
+    config->update("object", ui->checkBoxObj->isChecked());
+    config->update("game", ui->checkBoxGame->isChecked());
+    config->update("critical", ui->checkBoxCrit->isChecked());
     this->setWindowTitle("Выбор уровня");
     ui->stackedWidget->setCurrentIndex(0);
+}
+
+
+void DialogLevel::on_logComboBox_currentIndexChanged(int index)
+{
+    if(index == 3)
+    {
+        ui->checkBoxObj->setDisabled(true);
+        ui->checkBoxGame->setDisabled(true);
+        ui->checkBoxCrit->setDisabled(true);
+    }
+    else
+    {
+        ui->checkBoxObj->setEnabled(true);
+        ui->checkBoxGame->setEnabled(true);
+        ui->checkBoxCrit->setEnabled(true);
+    }
 }
 
