@@ -15,7 +15,6 @@ class DialogLevel : public QDialog
 
 public:
     DialogLevel(Config::Configurator *config, QWidget *parent = nullptr);
-    //DialogLevel()
     ~DialogLevel();
 
     bool getIsExit() const;
@@ -32,6 +31,8 @@ private slots:
     void on_settingsButton_clicked();
 
     void on_saveButton_clicked();
+
+    void on_logComboBox_currentIndexChanged(int index);
 
 private:
     Ui::DialogLevel *ui;

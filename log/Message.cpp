@@ -16,4 +16,15 @@ Log::Message::Message(Type type, std::string str)
         break;
     }
     message += str;
+    this->type = type;
 }
+
+
+namespace Log {
+Type Message::getType() const
+{
+    return type;
+}
+
+}
+

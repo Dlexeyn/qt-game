@@ -18,8 +18,11 @@ public:
         return out;
     }
 
+    Type getType() const;
+
 private:
     std::string message;
+    Type type;
 
 };
 }
