@@ -12,9 +12,11 @@
 class BoxView : public QGraphicsItem, public View
 {
 public:
-    BoxView(MapObject *object, ReadData *readData, int index, QGraphicsScene *scene);
+    BoxView(MapObject *object, ReadData *readData, const std::vector<EventSubscriber *> &loggers, int index);
 
     void changeView();
+
+    void setGameScene(QGraphicsScene *newGameScene, ReadData *data);
 
     void moving(int &stepX, int &stepY);
 

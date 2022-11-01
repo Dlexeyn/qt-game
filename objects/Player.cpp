@@ -1,11 +1,12 @@
 #include "Player.h"
 
-Player::Player()
+Player::Player(const std::vector<EventSubscriber *> &loggers)
 {
     this->maxHealth = 100;
     this->curHealth = 100;
     this->victoryPoints = 0;
     isAlive = true;
+    subscribe(loggers);
     notifySubscribers("Player : the player was created", "object");
 }
 

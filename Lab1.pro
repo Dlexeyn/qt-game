@@ -9,12 +9,13 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    app/GameApplication.cpp \
     config/AppConfigurator.cpp \
     config/Configurator.cpp \
+    data/Point.cpp \
     game/Controller.cpp \
+    game/GLMessage.cpp \
     game/Game.cpp \
-    game/GamePool.cpp \
-    game/GlobalPool.cpp \
     game/LogPool.cpp \
     graphics/BoxView.cpp \
     graphics/CellPainter.cpp \
@@ -25,6 +26,7 @@ SOURCES += \
     log/ConsoleLogDecorator.cpp \
     log/FileLogDecorator.cpp \
     log/GlobalLogger.cpp \
+    log/LogArgs.cpp \
     log/LogData.cpp \
     log/LogDecorator.cpp \
     log/LogManager.cpp \
@@ -56,13 +58,15 @@ SOURCES += \
     objects/Player.cpp
 
 HEADERS += \
+    app/GameApplication.h \
     config/AppConfigurator.h \
     config/ConfigTypes.h \
     config/Configurator.h \
-    game/GamePool.h \
+    data/Point.h \
+    game/ArgsTypes.h \
+    game/GLMessage.h \
     game/GlobalComponent.h \
     game/GlobalMediator.h \
-    game/GlobalPool.h \
     game/LogPool.h \
     game/Mediator.h \
     graphics/BoxView.h \
@@ -81,6 +85,7 @@ HEADERS += \
     log/EventSubscriber.h \
     log/FileLogDecorator.h \
     log/GlobalLogger.h \
+    log/LogArgs.h \
     log/LogData.h \
     log/LogDecorator.h \
     log/LogManager.h \

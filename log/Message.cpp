@@ -26,5 +26,20 @@ Type Message::getType() const
     return type;
 }
 
+void Message::addText(std::string str)
+{
+    message += str;
+}
+
+void Message::setMessage(const std::string &newMessage)
+{
+    message = newMessage;
+}
+
+std::string Message::getMessage() const
+{
+    return message;
+}
+
 }
 

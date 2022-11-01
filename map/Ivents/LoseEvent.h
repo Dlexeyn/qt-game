@@ -6,7 +6,7 @@
 class LoseEvent : public GlobalEvent
 {
 public:
-    LoseEvent(EventWindow *window) : GlobalEvent(window) {}
+    using GlobalEvent::GlobalEvent;
     void trigger();
 };
 

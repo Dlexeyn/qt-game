@@ -4,7 +4,6 @@
 #include <QPoint>
 #include "graphics/FieldScene.h"
 #include "GlobalComponent.h"
-#include "GlobalMediator.h"
 
 class Controller: public GlobalComponent
 {
@@ -18,15 +17,15 @@ public:
         RIGHT = Qt::Key_D
     };
 
-    void sendCignal();
+    void getMessage(GLMessage *mes);
 
-    void sendPlayerCommand(int command);
     int &getStepX();
 
     int &getStepY();
 
 private:
     int stepX, stepY;
+    void sendPlayerCommand(int command);
 };
 
 #endif // CONTROLLER_H

@@ -3,14 +3,13 @@
 
 DialogLevel::DialogLevel(Config::Configurator *config, QWidget *parent) :
     QDialog(parent),
-    config(config),
-    ui(new Ui::DialogLevel)
+    ui(new Ui::DialogLevel),
+    config(config)
 {
     ui->setupUi(this);
     this->setWindowTitle("Выбор уровня");
     QPixmap pix("/home/aleksey/Projects/OOP/Lab1/Lab1/resurces/logo.jpg");
     ui->LogoLabel->setPixmap(pix);
-    connect(this, &QDialog::rejected, this, &DialogLevel::on_exitButton_clicked);
 }
 
 DialogLevel::~DialogLevel()
@@ -20,52 +19,35 @@ DialogLevel::~DialogLevel()
 
 void DialogLevel::on_lvl1Button_clicked()
 {
-    level = 1;
-    disconnect(this, &QDialog::rejected, this, &DialogLevel::on_exitButton_clicked);
-    this->close();
+    emit changeLevel(1);
 }
-
 
 void DialogLevel::on_exitButton_clicked()
 {
-    isExit = true;
-    this->close();
+    disconnect(this, &QDialog::rejected, this, &DialogLevel::on_exitButton_clicked);
+    emit endApp();
 }
-
-int DialogLevel::getLevel() const
-{
-    return level;
-}
-
-bool DialogLevel::getIsExit() const
-{
-    return isExit;
-}
-
 
 void DialogLevel::on_lvl2Button_clicked()
 {
-    level = 2;
-    disconnect(this, &QDialog::rejected, this, &DialogLevel::on_exitButton_clicked);
-    this->close();
+    emit changeLevel(2);
 }
-
 
 void DialogLevel::on_settingsButton_clicked()
 {
     this->setWindowTitle("Настройки");
     ui->stackedWidget->setCurrentIndex(1);
-
 }
-
 
 void DialogLevel::on_saveButton_clicked()
 {
     switch (ui->logComboBox->currentIndex()) {
     case 0:
         config->update("file", true);
+        config->update("console", false);
         break;
     case 1:
+        config->update("file", false);
         config->update("console", true);
         break;
     case 2:
@@ -76,14 +58,13 @@ void DialogLevel::on_saveButton_clicked()
         config->update("file", false);
         config->update("console", false);
         break;
-    default:
-        break;
     }
     config->update("object", ui->checkBoxObj->isChecked());
     config->update("game", ui->checkBoxGame->isChecked());
     config->update("critical", ui->checkBoxCrit->isChecked());
     this->setWindowTitle("Выбор уровня");
     ui->stackedWidget->setCurrentIndex(0);
+    emit changeSettings();
 }
 
 

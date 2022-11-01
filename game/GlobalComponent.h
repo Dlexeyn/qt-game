@@ -6,7 +6,8 @@
 class GlobalComponent
 {
 public:
-    virtual void sendCignal() = 0;
+    virtual void getMessage(GLMessage *mes) = 0;
+    virtual ~GlobalComponent() = default;
     void setMediator(GlobalMediator *mediator);
 
 protected:

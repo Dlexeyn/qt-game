@@ -1,9 +1,8 @@
 #include "ConsoleLogDecorator.h"
 
-
-Log::Message *ConsoleLogDecorator::sendMessage()
+Log::Message *ConsoleLogDecorator::writeMes(Log::Message *data)
 {
-    Log::Message *mes = logSource->sendMessage();
-    std::cout << mes << "\n";
-    return mes;
+    data = logSource->writeMes(data);
+    std::cout << data << "\n";
+    return data;
 }

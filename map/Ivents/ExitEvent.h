@@ -6,7 +6,7 @@
 class ExitEvent : public GlobalEvent
 {
 public:
-    ExitEvent(EventWindow *window) : GlobalEvent(window) {}
+    using GlobalEvent::GlobalEvent;
     void trigger();
 };
 

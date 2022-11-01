@@ -1,10 +1,5 @@
 #include "Controller.h"
 
-void Controller::sendCignal()
-{
-    game->notify("controller");
-}
-
 void Controller::sendPlayerCommand(int command)
 {
     stepY = stepX = 0;
@@ -24,8 +19,16 @@ void Controller::sendPlayerCommand(int command)
     default:
         return;
     }
-    sendCignal();
+    GLMessage newMes(Sender::CONTROLLER, ArgsTypes::X, stepX);
+    newMes.addArg(ArgsTypes::Y, stepY);
+    game->notify(this, &newMes);
 }
+
+void Controller::getMessage(GLMessage* mes)
+{
+    sendPlayerCommand(mes->getArg(ArgsTypes::KEY));
+}
+
 
 int &Controller::getStepX()
 {

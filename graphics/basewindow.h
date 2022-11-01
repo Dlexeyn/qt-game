@@ -7,13 +7,11 @@
 #include <QKeyEvent>
 #include <QApplication>
 #include <QMessageBox>
-#include "graphics/DialogSize.h"
-#include "graphics/PlayerView.h"
-#include "graphics/dialoglevel.h"
+#include "View.h"
+#include "config/Configurator.h"
 #include "game/Controller.h"
 #include "map/ReadData.h"
 #include "game/GlobalComponent.h"
-#include "game/GlobalMediator.h"
 #include "EventWindow.h"
 
 QT_BEGIN_NAMESPACE
@@ -34,38 +32,33 @@ public:
 
     void callExitDialog();
 
-    void sendCignal();
-
     void init(ReadData *readData, QGraphicsScene *scene, View *player);
 
-    int getKey() const;
+    void setController(Controller *newController);  // ref
 
-    void setController(Controller *newController);
+    void getMessage(GLMessage *mes);
 
-    bool getCloseApp() const;
+    void setEnd(bool newEnd);
 
-    DialogLevel *getDialogLevel() const;
+    bool getEnd() const;
+
+    void closeEvent( QCloseEvent* event );
+
+signals:
+    void endApp();
 
 private:
     Ui::BaseWindow *ui;
 
     View *player = nullptr;
-    DialogSize *dialog = nullptr;
-    DialogLevel *dialogLevel = nullptr;
-    QTimer *timerForPlayer = nullptr;
-    QTimer *indicatorsTimer = nullptr;
     Controller *controller = nullptr;
     Config::Configurator *config = nullptr;
 
     const unsigned sizeCellPx = 50;
-    int key = 0;
-    bool closeApp = false;
-
+    bool end = false;
+    int key;
     void keyPressEvent(QKeyEvent *event);
-
-
-private slots:
+public slots:
     void slotPlayerTimer();
-    void updateLabels();
 };
 #endif // BASEWINDOW_H

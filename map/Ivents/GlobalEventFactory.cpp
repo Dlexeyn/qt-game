@@ -8,7 +8,7 @@ Event *GlobalEventFactory::createEvent()
         break;
     case Lose:
         return new LoseEvent(window);
-    default:
+    case Restart:
         break;
     }
 }

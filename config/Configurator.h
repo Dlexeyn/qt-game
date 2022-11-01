@@ -9,6 +9,7 @@ class Configurator
 {
 public:
     Configurator();
+    virtual ~Configurator() = default;
     virtual void update(std::string type, bool value) = 0;
 };
 }

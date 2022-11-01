@@ -13,7 +13,7 @@ public:
         POINTS_FOR_DOOR = 3
     };
 
-    Player();
+    Player(const std::vector<EventSubscriber *> &loggers);
 
     Player(const Player& other);
 

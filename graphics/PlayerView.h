@@ -12,9 +12,11 @@ class PlayerView : public View, public QGraphicsItem
 {
 
 public:
-    PlayerView(MapObject *object, ReadData *readData, QGraphicsScene *scene);
+    PlayerView(MapObject *object, const std::vector<EventSubscriber *> &loggers, ReadData *readData);
 
     void changeView();
+
+    void setGameScene(QGraphicsScene *newGameScene, ReadData *data);
 
     void moving(int &stepX, int &stepY);
 

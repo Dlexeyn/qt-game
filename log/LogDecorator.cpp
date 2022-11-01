@@ -1,11 +1,6 @@
 #include "LogDecorator.h"
 
-Log::Message *LogDecorator::sendMessage()
+Log::Message *LogDecorator::writeMes(Log::Message *data)
 {
-    return logSource->sendMessage();
-}
-
-void LogDecorator::setLogSource(LogSource *newLogSource)
-{
-    logSource = newLogSource;
+    return logSource->writeMes(data);
 }

@@ -1,6 +1,7 @@
 #include "FieldView.h"
 
-FieldView::FieldView(MapObject *object, ReadData *readData, QGraphicsScene *scene) : MapView(object, scene)
+FieldView::FieldView(MapObject *object, const std::vector<EventSubscriber *> &loggers, ReadData *readData)
+    : MapView(object, loggers)
 {
     this->height = readData->getHeight();
     this->width = readData->getWidth();
@@ -14,7 +15,9 @@ FieldView::FieldView(MapObject *object, ReadData *readData, QGraphicsScene *scen
     this->XYHidDoor->setY(readData->getHidDoorXY()->y());
 
     this->sizeCell = readData->getSizeCell();
-    setMap(readData);
+    graphicsCellMap = std::vector<std::vector<CellPainter*>>
+    (height, std::vector<CellPainter*>(width, nullptr));
+    typeMap = readData->getType_map();
 }
 
 FieldView::~FieldView()
@@ -33,6 +36,7 @@ void FieldView::moving(int &stepX, int &stepY)
         XY->ry() += stepY;
         changeView(object->callAnObject(), XYHidDoor->x(), XYHidDoor->y());
         changeView(object->changeStatus(), XY->x(), XY->y());
+        notifySubscribers("Player changes position to ", "object", new LogArgs(ArgsLog::XY, XY->x(), XY->y()));
     }
     else
     {
@@ -40,18 +44,6 @@ void FieldView::moving(int &stepX, int &stepY)
         object->setSecondAttribute(XY->y());
         stepX = stepY = 0;
     }
-}
-
-void FieldView::setMap(ReadData *readData)
-{
-    graphicsCellMap = std::vector<std::vector<CellPainter*>> (height, std::vector<CellPainter*>(width, nullptr));
-    for(int y = 0; y < height; y++)
-        for(int x = 0; x < width; x++)
-        {
-            graphicsCellMap[y][x] = new CellPainter(sizeCell, readData->getType_map()[y][x]);
-            gameScene->addItem(graphicsCellMap[y][x]);
-            graphicsCellMap[y][x]->setPos(readData->getStartW() + sizeCell * x, readData->getStartH() + sizeCell * y);
-        }
 }
 
 void FieldView::changeView(int type, int x, int y)
@@ -62,4 +54,15 @@ void FieldView::changeView(int type, int x, int y)
         graphicsCellMap[y][x]->hide();
         graphicsCellMap[y][x]->show();
     }
+}
+
+void FieldView::setGameScene(QGraphicsScene *newGameScene, ReadData *data)
+{
+    for(int y = 0; y < height; y++)
+        for(int x = 0; x < width; x++)
+        {
+            graphicsCellMap[y][x] = new CellPainter(sizeCell, data->getType_map()[y][x]);
+            newGameScene->addItem(graphicsCellMap[y][x]);
+            graphicsCellMap[y][x]->setPos(data->getStartW() + sizeCell * x, data->getStartH() + sizeCell * y);
+        }
 }

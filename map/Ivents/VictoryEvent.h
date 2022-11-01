@@ -6,7 +6,7 @@
 class VictoryEvent : public GlobalEvent
 {
 public:
-    VictoryEvent(EventWindow *window) : GlobalEvent(window) {}
+    using GlobalEvent::GlobalEvent;
     void trigger();
 };
 

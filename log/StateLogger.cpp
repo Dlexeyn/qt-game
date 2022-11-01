@@ -1,6 +1,6 @@
 #include "StateLogger.h"
 
-void StateLogger::generateMessage(std::string type, std::string mes)
+void StateLogger::generateMessage(std::string type, std::string mes, LogArgs *logArgs)
 {
     if(type == "warning")
     {

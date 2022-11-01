@@ -6,11 +6,12 @@
 #include "Ivents/CellEventFactory.h"
 
 
-Field::Field(ReadData *readData, const std::vector<EventSubscriber *> &loggers) : map_height(readData->getHeight()), map_width(readData->getWidth())
+Field::Field(ReadData *readData, const std::vector<EventSubscriber *> &loggers)
+    : map_height(readData->getHeight()), map_width(readData->getWidth())
 {
     eventFactory = new CellEventFactory(CellEventFactory::COLOR_BOX, loggers);
     subscribe(loggers);
-    notifySubscribers("Field : the field was created", "object");
+    notifySubscribers("Field : the field was created with size ", "object", new LogArgs(ArgsLog::SIZE_WH, map_width, map_height));
     setMap(readData->getType_map());
     curPlayer.setX(readData->getPlayerXY()->x());
     curPlayer.setY(readData->getPlayerXY()->y());

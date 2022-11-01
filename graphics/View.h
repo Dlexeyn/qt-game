@@ -3,14 +3,21 @@
 
 #include <QPoint>
 #include <QGraphicsScene>
+#include <log/LogObject.h>
+#include "map/ReadData.h"
 #include "map/MapObject.h"
 
-class View
+class View: public LogObject
 {
 public:
-    virtual void moving(int &stepX, int &stepY) = 0;
-    View(MapObject *object, QGraphicsScene *scene) : object(object), gameScene(scene) {}
+    View(MapObject *object, const std::vector<EventSubscriber *> &loggers) : object(object)
+    {
+        subscribe(loggers);
+    }
     virtual ~View() = default;
+
+    virtual void moving(int &stepX, int &stepY) = 0;
+    virtual void setGameScene(QGraphicsScene *newGameScene, ReadData *data) = 0;
 
     int getWidth() const;
     void setWidth(int newWidth);
@@ -26,7 +33,7 @@ public:
     void setObject(MapObject *newObject);
 
     QGraphicsScene *getGameScene() const;
-    void setGameScene(QGraphicsScene *newGameScene);
+
 
 protected:
     int width, height;
@@ -78,11 +85,6 @@ inline void View::setObject(MapObject *newObject)
 inline QGraphicsScene *View::getGameScene() const
 {
     return gameScene;
-}
-
-inline void View::setGameScene(QGraphicsScene *newGameScene)
-{
-    gameScene = newGameScene;
 }
 
 

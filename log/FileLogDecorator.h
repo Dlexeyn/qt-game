@@ -7,9 +7,9 @@
 class FileLogDecorator : public LogDecorator
 {
 public:
-    FileLogDecorator();
+    FileLogDecorator(LogSource *logSource);
     ~FileLogDecorator();
-    Log::Message *sendMessage();
+    Log::Message *writeMes(Log::Message *data);
 
 private:
     std::ofstream fout;
