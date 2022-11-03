@@ -23,6 +23,7 @@ SOURCES += \
     graphics/CellPainter.cpp \
     graphics/DialogSize.cpp \
     graphics/FieldView.cpp \
+    graphics/MenuWidget.cpp \
     graphics/PlayerView.cpp \
     graphics/dialoglevel.cpp \
     log/ConsoleLogDecorator.cpp \
@@ -82,6 +83,7 @@ HEADERS += \
     graphics/EventWindow.h \
     graphics/FieldView.h \
     graphics/MapView.h \
+    graphics/MenuWidget.h \
     graphics/basewindow.h \
     game/Controller.h \
     game/Game.h \
@@ -128,6 +130,7 @@ HEADERS += \
 
 FORMS += \
     graphics/DialogSize.ui \
+    graphics/MenuWidget.ui \
     graphics/basewindow.ui \
     graphics/dialoglevel.ui
 
