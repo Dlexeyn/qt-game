@@ -13,10 +13,12 @@ SOURCES += \
     config/AppConfigurator.cpp \
     config/Configurator.cpp \
     data/Point.cpp \
+    game/CommandReader.cpp \
     game/Controller.cpp \
     game/GLMessage.cpp \
     game/Game.cpp \
     game/LogPool.cpp \
+    game/Reader.cpp \
     graphics/BoxView.cpp \
     graphics/CellPainter.cpp \
     graphics/DialogSize.cpp \
@@ -63,12 +65,17 @@ HEADERS += \
     config/ConfigTypes.h \
     config/Configurator.h \
     data/Point.h \
+    game/AbstractReader.h \
     game/ArgsTypes.h \
+    game/Command.h \
+    game/CommandReader.h \
     game/GLMessage.h \
     game/GlobalComponent.h \
     game/GlobalMediator.h \
     game/LogPool.h \
     game/Mediator.h \
+    game/Reader.h \
+    graphics/BaseWindowStatus.h \
     graphics/BoxView.h \
     graphics/CellPainter.h \
     graphics/DialogSize.h \

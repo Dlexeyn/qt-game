@@ -7,15 +7,19 @@ GameApplication::GameApplication(QApplication *app, QObject *parent)
     config = new Config::AppConfigurator(); // Настройки игры
     levelWindow = new DialogLevel(config);  // Окно меню
     baseWindow = new BaseWindow(config);    // Окно уровня
-    controller = new Controller();
-    logPool = new LogPool(config);
+
+    logPool = new LogPool(config);          // Логи
+    changeConfigs();
+
+    controller = new Controller(logPool->getLoggers()); // Класс, отвечающий за команды от пользователя
     baseWindow->subscribe(logPool->getLoggers());
+
     connect(levelWindow, SIGNAL(changeLevel(int)), this, SLOT(setLevel(int)));
     connect(levelWindow, SIGNAL(changeSettings()), this, SLOT(changeConfigs()));
     connect(&gameTimer, SIGNAL(timeout()), this, SLOT(changeLevel()));
     connect(levelWindow, SIGNAL(endApp()), this, SLOT(exit()));
     connect(baseWindow, SIGNAL(endApp()), this, SLOT(exit()));
-    changeConfigs();
+
     baseWindow->notifySubscribers("Starting the application", "global");
 }
 
@@ -31,7 +35,6 @@ void GameApplication::start()
 {
     connect(levelWindow, &QDialog::rejected, levelWindow, &DialogLevel::on_exitButton_clicked);
     levelWindow->show();
-    //levelWindow->exec();
 }
 
 void GameApplication::setLevel(int level)

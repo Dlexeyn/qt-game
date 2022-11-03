@@ -1,34 +1,80 @@
 #include "Controller.h"
 
-void Controller::sendPlayerCommand(int command)
+void Controller::sendCommand(Commands command)
 {
-    stepY = stepX = 0;
+    std::vector<int> args = { 0 };
+    std::vector<ArgsTypes> types;
+    GLMessage newMes(Sender::CONTROLLER_PLAYER);
+
+    if(!getMoveArgs(command, args, types))
+    {
+        getOtherArgs(command, args, types);
+        newMes.setSender(Sender::CONTROLLER_GAME);
+    }
+
+    for(size_t index = 0; index < args.size(); index++)
+        newMes.addArg(types[index], args[index]);
+
+    game->notify(this, &newMes);
+}
+
+bool Controller::getMoveArgs(const Commands command, std::vector<int> &args, std::vector<ArgsTypes> &types)
+{
     switch (command) {
-    case UP:
-        stepY = -1;
+    case Commands::UP:
+        args.push_back(-1);
+        types.insert(types.cend(), {ArgsTypes::X, ArgsTypes::Y});
         break;
-    case DOWN:
-        stepY = 1;
+    case Commands::DOWN:
+        args.push_back(1);
+        types.insert(types.cend(), {ArgsTypes::X, ArgsTypes::Y});
         break;
-    case LEFT:
-        stepX = -1;
+    case Commands::LEFT:
+        args.insert(args.cbegin(), -1);
+        types.insert(types.cend(), {ArgsTypes::X, ArgsTypes::Y});
         break;
-    case RIGHT:
-        stepX = 1;
+    case Commands::RIGHT:
+        args.insert(args.cbegin(), 1);
+        types.insert(types.cend(), {ArgsTypes::X, ArgsTypes::Y});
         break;
     default:
-        return;
+        return false;
+        break;
     }
-    GLMessage newMes(Sender::CONTROLLER, ArgsTypes::X, stepX);
-    newMes.addArg(ArgsTypes::Y, stepY);
-    game->notify(this, &newMes);
+    return true;
+}
+
+void Controller::getOtherArgs(const Commands command, std::vector<int> &args, std::vector<ArgsTypes> &types)
+{
+    types.push_back(ArgsTypes::STATUS);
+    switch (command) {
+    case Commands::PAUSE:
+        args[0] = int(WindowStatus::PAUSE);
+        break;
+    case Commands::SAVE:
+        args[0] = int(WindowStatus::SAVE);
+        break;
+    case Commands::NEW_GAME:
+        args[0] = int(WindowStatus::NEW_GAME);
+        break;
+    case Commands::EXIT_GAME:
+        args[0] = int(WindowStatus::EXIT);
+        break;
+    case Commands::MENU:
+        args[0] = int(WindowStatus::MENU);
+        break;
+    default:
+        break;
+    }
 }
 
 void Controller::getMessage(GLMessage* mes)
 {
-    sendPlayerCommand(mes->getArg(ArgsTypes::KEY));
+    int key = mes->getArg(ArgsTypes::KEY);
+    std::map <int, Commands>:: iterator it = KeyCommands.find(key);
+    if(it != KeyCommands.end())
+        sendCommand(KeyCommands.at(key));
 }
-
 
 int &Controller::getStepX()
 {

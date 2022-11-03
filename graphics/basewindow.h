@@ -13,6 +13,7 @@
 #include "map/ReadData.h"
 #include "game/GlobalComponent.h"
 #include "EventWindow.h"
+#include "BaseWindowStatus.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class BaseWindow; }
@@ -53,11 +54,12 @@ private:
     View *player = nullptr;
     Controller *controller = nullptr;
     Config::Configurator *config = nullptr;
+    WindowStatus status;
 
     const unsigned sizeCellPx = 50;
     bool end = false;
     int key;
-    void keyPressEvent(QKeyEvent *event);
+    virtual void keyPressEvent(QKeyEvent *event);
 public slots:
     void slotPlayerTimer();
 };

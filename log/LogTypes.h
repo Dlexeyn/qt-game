@@ -15,7 +15,8 @@ enum class ArgsLog{
     XY,
     SIZE_WH,
     SIZE,
-    LEVEL
+    LEVEL,
+    COUNT
 };
 
 }

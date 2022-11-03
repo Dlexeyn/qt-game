@@ -10,6 +10,7 @@ class Logger : public EventSubscriber
 {
 public:
     Logger(LogManager *logManager) : logManager(logManager) {}
+    virtual void addExtraArgs(std::string &mes, LogArgs *args) = 0;
     ~Logger() {}
 
 protected:

@@ -45,16 +45,19 @@ void Game::notify(GlobalComponent* sender, GLMessage *mes)
 {
     switch(mes->getSender())
     {
-        case Sender::CONTROLLER:
-            movement(mes->getArg(ArgsTypes::X),
-                     mes->getArg(ArgsTypes::Y),
-                     fieldView->getXY());
+    case Sender::CONTROLLER_PLAYER:
+        movement(mes->getArg(ArgsTypes::X),
+                mes->getArg(ArgsTypes::Y),
+                fieldView->getXY());
         break;
-        case Sender::WINDOW:
-            controller->getMessage(mes);
-            break;
-        default:
-            break;
+    case Sender::CONTROLLER_GAME:
+        baseWindow->getMessage(mes);
+        break;
+    case Sender::WINDOW:
+        controller->getMessage(mes);
+        break;
+    default:
+        break;
     }
 }
 

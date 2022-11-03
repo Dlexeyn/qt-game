@@ -12,6 +12,7 @@ BaseWindow::BaseWindow(Config::Configurator *config, QWidget *parent)
     ui->graphicsView->setRenderHint(QPainter::Antialiasing);
     ui->graphicsView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     ui->graphicsView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    setFocusPolicy(Qt::StrongFocus);
 }
 
 BaseWindow::~BaseWindow()
@@ -38,6 +39,7 @@ void BaseWindow::callExitDialog()
 
 void BaseWindow::init(ReadData *readData, QGraphicsScene *scene, View *player)
 {
+    this->setWindowTitle("Sokoban");
     this->resize(readData->getWidth()*sizeCellPx + 100, readData->getHeight()*sizeCellPx + 100);
     this->setFixedSize(readData->getWidth()*sizeCellPx + 100, readData->getHeight()*sizeCellPx + 100);
     this->player = player;
@@ -58,7 +60,7 @@ void BaseWindow::setController(Controller *newController)
 
 void BaseWindow::getMessage(GLMessage* mes)
 {
-
+    status = WindowStatus(mes->getArg(ArgsTypes::STATUS));
 }
 
 void BaseWindow::setEnd(bool newEnd)
@@ -81,6 +83,7 @@ void BaseWindow::closeEvent(QCloseEvent *event)
 void BaseWindow::keyPressEvent(QKeyEvent *event)
 {
     key = event->key();
+    QMainWindow::keyPressEvent(event);
 }
 
 void BaseWindow::slotPlayerTimer()
