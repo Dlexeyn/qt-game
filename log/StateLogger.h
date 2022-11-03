@@ -9,7 +9,8 @@ class StateLogger : public Logger
 {
 public:
     using Logger::Logger;
-    void generateMessage(std::string type, std::string mes);
+    void generateMessage(std::string type, std::string mes, LogArgs *logArgs = nullptr);
+    void addExtraArgs(std::string &mes, LogArgs *args);
 };
 
 #endif // STATELOGGER_H

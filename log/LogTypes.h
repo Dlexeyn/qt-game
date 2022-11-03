@@ -11,5 +11,13 @@ enum class Type
     CriticalState
 };
 
+enum class ArgsLog{
+    XY,
+    SIZE_WH,
+    SIZE,
+    LEVEL,
+    COUNT
+};
+
 }
 #endif // LOGTYPES_H

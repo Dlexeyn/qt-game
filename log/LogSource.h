@@ -2,12 +2,13 @@
 #define LOGSOURCE_H
 
 #include "EventSubscriber.h"
+#include "Message.h"
+
 
 class LogSource
 {
 public:
-    virtual Log::Message *sendMessage() = 0;
-    virtual void setLogSource(LogSource *newLogSource) = 0;
+    virtual Log::Message *writeMes(Log::Message *data) = 0;
     virtual ~LogSource() = default;
 };
 

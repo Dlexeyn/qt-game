@@ -5,7 +5,7 @@
 class MapView: public View
 {
 public:
-    MapView(MapObject *object, QGraphicsScene *scene) : View(object, scene) {}
+    using View::View;
     virtual void changeView(int type, int x, int y) = 0;
 protected:
     QPoint *XYHidDoor = nullptr;

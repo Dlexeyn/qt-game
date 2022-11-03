@@ -1,5 +1,10 @@
 #include "Box.h"
 
+Box::Box(bool isTargetPos, const std::vector<EventSubscriber *> &loggers) : isTargetPos(isTargetPos)
+{
+    subscribe(loggers);
+}
+
 void Box::sendCignal(int type)
 {
     eventMediator->notify(this, "Box");

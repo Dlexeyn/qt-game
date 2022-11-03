@@ -1,8 +1,9 @@
 #include "FileLogDecorator.h"
 
-FileLogDecorator::FileLogDecorator()
+FileLogDecorator::FileLogDecorator(LogSource *logSource)
+    : LogDecorator(logSource)
 {
-    fout.open("Logs.txt");
+    fout.open("Logs.txt", std::ios::app);
 }
 
 FileLogDecorator::~FileLogDecorator()
@@ -10,9 +11,9 @@ FileLogDecorator::~FileLogDecorator()
     fout.close();
 }
 
-Log::Message *FileLogDecorator::sendMessage()
+Log::Message *FileLogDecorator::writeMes(Log::Message *data)
 {
-    Log::Message *mes = logSource->sendMessage();
-    fout << mes << "\n";
-    return mes;
+    data = logSource->writeMes(data);
+    fout << data << "\n";
+    return data;
 }

@@ -3,4 +3,5 @@
 void LoseEvent::trigger()
 {
     baseWindow->callExitDialog();
+    baseWindow->setEnd(true);
 }

@@ -20,7 +20,12 @@ const std::vector<EventSubscriber *> &LogPool::getLoggers() const
     return loggers;
 }
 
-Config::AppConfigurator *LogPool::getConfig() const
+LogManager *LogPool::getLogManager() const
 {
-    return config;
+    return logManager;
 }
+
+//Config::AppConfigurator *LogPool::getConfig() const
+//{
+//    return config;
+//}

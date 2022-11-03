@@ -7,16 +7,13 @@
 #include <vector>
 #include <QTextStream>
 #include <map/Cell.h>
-#include "game/GlobalComponent.h"
 #include "map/ReadData.h"
 
-class LevelReader: public GlobalComponent
+class LevelReader
 {
 public:
     LevelReader(int level);
     std::vector<std::vector<CellSpace::TypeOfCell> > &getType_map();
-
-    void sendCignal();
 
     void readFile();
 

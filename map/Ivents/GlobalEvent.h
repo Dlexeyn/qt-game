@@ -2,15 +2,15 @@
 #define GLOBALEVENT_H
 
 #include "Event.h"
-#include "graphics/EventWindow.h"
+#include "graphics/basewindow.h"
 
 class GlobalEvent: public Event
 {
 public:
-    GlobalEvent(EventWindow *baseWindow) : baseWindow(baseWindow){}
+    GlobalEvent(BaseWindow *baseWindow) : baseWindow(baseWindow){}
 
 protected:
-    EventWindow *baseWindow = nullptr;
+    BaseWindow *baseWindow = nullptr;
 };
 
 

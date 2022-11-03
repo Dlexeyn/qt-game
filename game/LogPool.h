@@ -11,17 +11,15 @@ public:
     LogPool(Config::AppConfigurator *config);
     ~LogPool();
     const std::vector<EventSubscriber *> &getLoggers() const;
+    //Config::AppConfigurator *getConfig() const;
 
-    Config::AppConfigurator *getConfig() const;
+    LogManager *getLogManager() const;
 
 private:
-    const unsigned NumLoggers = 3;
     LogManager *logManager = nullptr;
     Config::AppConfigurator *config = nullptr;
     std::vector< EventSubscriber* > loggers;
-//    GlobalLogger *gLogger = nullptr;
-//    StateLogger *sLogger = nullptr;
-//    ObjectLogger *oLogger = nullptr;
+
 };
 
 #endif // LOGPOOL_H

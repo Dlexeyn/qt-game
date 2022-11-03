@@ -6,7 +6,7 @@
 #include "VictoryEvent.h"
 #include "RestartEvent.h"
 #include "LoseEvent.h"
-#include "graphics/EventWindow.h"
+#include "graphics/basewindow.h"
 
 class GlobalEventFactory : public EventFactory
 {
@@ -17,14 +17,14 @@ public:
         Lose
     };
 
-    GlobalEventFactory(GlobalEventType type, EventWindow *window) :
+    GlobalEventFactory(GlobalEventType type, BaseWindow *window) :
         currentType(type), window(window){}
     Event *createEvent();
     void setCurrentType(GlobalEventType newCurrentType);
 
 private:
     GlobalEventType currentType;
-    EventWindow *window;
+    BaseWindow *window;
 };
 
 #endif // GLOBALEVENTFACTORY_H

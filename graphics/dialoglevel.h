@@ -18,13 +18,18 @@ public:
     ~DialogLevel();
 
     bool getIsExit() const;
+signals:
+    void changeLevel(int level);
 
-    int getLevel() const;
+    void changeSettings();
+
+    void endApp();
+
+public slots:
+    void on_exitButton_clicked();
 
 private slots:
     void on_lvl1Button_clicked();
-
-    void on_exitButton_clicked();
 
     void on_lvl2Button_clicked();
 
@@ -38,7 +43,6 @@ private:
     Ui::DialogLevel *ui;
     Config::Configurator *config = nullptr;
     bool isExit = false;
-    int level = 0;
 };
 
 #endif // DIALOGLEVEL_H

@@ -2,14 +2,15 @@
 #define EVENTSUBSCRIBER_H
 
 #include <string>
-#include "Message.h"
+#include <vector>
+#include "LogArgs.h"
 
 namespace Log
 {
 class EventSubscriber
 {
 public:
-    virtual void generateMessage(std::string type, std::string mes) = 0;
+    virtual void generateMessage(std::string type, std::string mes, LogArgs *logArgs = nullptr) = 0;
     virtual ~EventSubscriber() = default;
 };
 }

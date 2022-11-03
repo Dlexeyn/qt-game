@@ -8,11 +8,6 @@ LevelReader::LevelReader(int level)
     readFile();
 }
 
-void LevelReader::sendCignal()
-{
-    game->notify("lvlReader");
-}
-
 void LevelReader::readFile()
 {
     if(levelFile->open(QIODevice::ReadOnly | QIODevice::Text))
@@ -97,8 +92,6 @@ CellSpace::TypeOfCell LevelReader::getType(QChar ch)
         break;
     case '-':
         type = CellSpace::END_CELL;
-        break;
-    default:
         break;
     }
     return type;

@@ -8,8 +8,8 @@ class LogDecorator : public LogSource
 public:
     LogDecorator(LogSource *logSource) : logSource(logSource) {}
     LogDecorator() {}
-    Log::Message *sendMessage();
-    void setLogSource(LogSource *newLogSource);
+    Log::Message *writeMes(Log::Message *data);
+
 
 protected:
     LogSource *logSource = nullptr;

@@ -1,6 +1,8 @@
 #include "BoxView.h"
 
-BoxView::BoxView(MapObject *object, ReadData *readData, int index, QGraphicsScene *scene) : View(object, scene)
+BoxView::BoxView(MapObject *object, ReadData *readData,
+                 const std::vector<EventSubscriber *> &loggers, int index)
+    : View(object, loggers)
 {
     this->width = readData->getSizeCell()/1.4f;
     this->height = readData->getSizeCell()/1.4f;
@@ -9,14 +11,18 @@ BoxView::BoxView(MapObject *object, ReadData *readData, int index, QGraphicsScen
     this->XY->setX(readData->getBoxXY()[index]->x());
     this->XY->setY(readData->getBoxXY()[index]->y());
     this->XY = readData->getBoxXY()[index];
-    scene->addItem(this);
-    this->setPos(readData->getStartW() + readData->getSizeCell() * XY->x(),
-                 readData->getStartH() + readData->getSizeCell() * XY->y());
 }
 
 void BoxView::changeView()
 {
 
+}
+
+void BoxView::setGameScene(QGraphicsScene *newGameScene, ReadData *data)
+{
+     newGameScene->addItem(this);
+     this->setPos(data->getStartW() + data->getSizeCell() * XY->x(),
+                  data->getStartH() + data->getSizeCell() * XY->y());
 }
 
 void BoxView::moving(int &stepX, int &stepY)

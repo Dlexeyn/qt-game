@@ -8,7 +8,7 @@ class ConsoleLogDecorator : public LogDecorator
 {
 public:
     using LogDecorator::LogDecorator;
-    Log::Message *sendMessage();
+    Log::Message *writeMes(Log::Message *data);
 };
 
 #endif // CONSOLELOGDECORATOR_H

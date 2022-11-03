@@ -1,6 +1,7 @@
 #include "PlayerView.h"
 
-PlayerView::PlayerView(MapObject *object, ReadData *readData, QGraphicsScene *scene) : View(object, scene)
+PlayerView::PlayerView(MapObject *object, const std::vector<EventSubscriber *> &loggers, ReadData *readData)
+    : View(object, loggers)
 {
     this->width = readData->getSizeCell()-10;
     this->height = readData->getSizeCell()-10;
@@ -8,14 +9,18 @@ PlayerView::PlayerView(MapObject *object, ReadData *readData, QGraphicsScene *sc
     this->XY->setX(readData->getPlayerXY()->x());
     this->XY->setY(readData->getPlayerXY()->y());
     this->step = readData->getSizeCell();
-    gameScene->addItem(this);
-    this->setPos(readData->getStartW() + readData->getSizeCell() * XY->x(),
-                 readData->getStartH() + readData->getSizeCell() * XY->y());
 }
 
 void PlayerView::changeView()
 {
 
+}
+
+void PlayerView::setGameScene(QGraphicsScene *newGameScene, ReadData *data)
+{
+    newGameScene->addItem(this);
+    this->setPos(data->getStartW() + data->getSizeCell() * XY->x(),
+                 data->getStartH() + data->getSizeCell() * XY->y());
 }
 
 void PlayerView::moving(int &stepX, int &stepY)

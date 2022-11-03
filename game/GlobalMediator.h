@@ -2,12 +2,14 @@
 #define GLOBALMEDIATOR_H
 
 #include <string>
+#include "GLMessage.h"
 
 class GlobalComponent;
 class GlobalMediator
 {
 public:
-    virtual void notify(std::string mes = "") = 0;
+    virtual void notify(GlobalComponent* sender, GLMessage *mes) = 0;
+    virtual ~GlobalMediator() = default;
 };
 
 #endif // GLOBALMEDIATOR_H

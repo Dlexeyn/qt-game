@@ -1,42 +1,32 @@
 #include "LogManager.h"
 
-LogManager::LogManager(Config::AppConfigurator *config) : config(config)
-{
-    fileSource = new FileLogDecorator();
-    consoleSource = new ConsoleLogDecorator();
-}
-
 LogManager::~LogManager()
 {
-    delete fileSource;
-    delete consoleSource;
+    clearDecorators();
     delete source;
 }
 
 Log::Message *LogManager::writeSource(Log::Message *mes)
 {
-    if(messageFilter(mes))
-    {
-        source = new LogData(mes);
-        if(config->getlog("file") and config->getlog("console"))
-        {
-            consoleSource->setLogSource(source);
-            fileSource->setLogSource(consoleSource);
-            mes = fileSource->sendMessage();
-        }
-        else if(config->getlog("console"))
-        {
-            consoleSource->setLogSource(source);
-            mes = consoleSource->sendMessage();
-        }
-        else if(config->getlog("file"))
-        {
-            fileSource->setLogSource(source);
-            mes = fileSource->sendMessage();
-        }
-    }
-
+    if(!decorators.empty() and messageFilter(mes))
+        decorators.back()->writeMes(mes);
     return mes;
+}
+
+void LogManager::initDecorators()
+{
+    clearDecorators();
+    bool console = config->getlog("console");
+    bool file = config->getlog("file");
+    if(file and console)
+    {
+        decorators.push_back(new ConsoleLogDecorator(source));
+        decorators.push_back(new FileLogDecorator(decorators.back()));
+    }
+    else if(console)
+        decorators.push_back(new ConsoleLogDecorator(source));
+    else if(file)
+        decorators.push_back(new FileLogDecorator(source));
 }
 
 bool LogManager::messageFilter(Log::Message *mes)
@@ -57,4 +47,11 @@ bool LogManager::messageFilter(Log::Message *mes)
         break;
     }
     return value;
+}
+
+void LogManager::clearDecorators()
+{
+    for(auto decorator : decorators)
+        delete decorator;
+    decorators.clear();
 }
