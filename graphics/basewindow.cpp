@@ -37,6 +37,18 @@ void BaseWindow::callExitDialog()
     notifySubscribers("the \"Lose\" event triggered", "game");
 }
 
+void BaseWindow::callPauseDialog()
+{
+    QMessageBox::information(this, "Пауза", "Игра приостановлена...");
+    notifySubscribers("the pause", "game");
+    emit endStatus();
+}
+
+void BaseWindow::callMenuDialog()
+{
+    menu.show();
+}
+
 void BaseWindow::init(ReadData *readData, QGraphicsScene *scene, View *player)
 {
     this->setWindowTitle("Sokoban");
@@ -51,6 +63,7 @@ void BaseWindow::init(ReadData *readData, QGraphicsScene *scene, View *player)
     scene->addLine(-width/2,-height/2,-width/2, height/2, QPen(Qt::black));
     scene->addLine(width/2,-height/2, width/2, height/2, QPen(Qt::black));
     ui->graphicsView->setScene(scene);
+    setFocus();
 }
 
 void BaseWindow::setController(Controller *newController)
@@ -73,12 +86,30 @@ bool BaseWindow::getEnd() const
     return end;
 }
 
+//bool BaseWindow::event(QEvent *event)
+//{
+//    if(event->type() == QEvent::KeyPress)
+//    {
+
+//    }
+//    return QWidget::event(event);
+//}
+
 void BaseWindow::closeEvent(QCloseEvent *event)
 {
     emit endApp();
     event->accept();
 }
 
+WindowStatus BaseWindow::getStatus() const
+{
+    return status;
+}
+
+void BaseWindow::setStatus(WindowStatus newStatus)
+{
+    status = newStatus;
+}
 
 void BaseWindow::keyPressEvent(QKeyEvent *event)
 {

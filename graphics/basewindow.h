@@ -14,6 +14,7 @@
 #include "game/GlobalComponent.h"
 #include "EventWindow.h"
 #include "BaseWindowStatus.h"
+#include "MenuWidget.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class BaseWindow; }
@@ -33,6 +34,14 @@ public:
 
     void callExitDialog();
 
+    void callPauseDialog();
+
+    void callSaveDialog();
+
+    void callNewGameDialog();
+
+    void callMenuDialog();
+
     void init(ReadData *readData, QGraphicsScene *scene, View *player);
 
     void setController(Controller *newController);  // ref
@@ -45,8 +54,13 @@ public:
 
     void closeEvent( QCloseEvent* event );
 
+    WindowStatus getStatus() const;
+
+    void setStatus(WindowStatus newStatus);
+
 signals:
     void endApp();
+    void endStatus();
 
 private:
     Ui::BaseWindow *ui;
@@ -55,6 +69,7 @@ private:
     Controller *controller = nullptr;
     Config::Configurator *config = nullptr;
     WindowStatus status;
+    MenuWidget menu;
 
     const unsigned sizeCellPx = 50;
     bool end = false;

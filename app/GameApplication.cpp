@@ -19,6 +19,7 @@ GameApplication::GameApplication(QApplication *app, QObject *parent)
     connect(&gameTimer, SIGNAL(timeout()), this, SLOT(changeLevel()));
     connect(levelWindow, SIGNAL(endApp()), this, SLOT(exit()));
     connect(baseWindow, SIGNAL(endApp()), this, SLOT(exit()));
+    connect(baseWindow, SIGNAL(endStatus()), this, SLOT(continueGame()));
 
     baseWindow->notifySubscribers("Starting the application", "global");
 }
@@ -35,6 +36,32 @@ void GameApplication::start()
 {
     connect(levelWindow, &QDialog::rejected, levelWindow, &DialogLevel::on_exitButton_clicked);
     levelWindow->show();
+}
+
+void GameApplication::callStateFunction(WindowStatus status)
+{
+    gameTimer.stop();
+    if(status == WindowStatus::GAME)
+        return;
+    switch (status) {
+    case WindowStatus::PAUSE:
+        baseWindow->callPauseDialog();
+        break;
+    case WindowStatus::MENU:
+        baseWindow->callMenuDialog();           // menu class
+        break;
+//    case WindowStatus::NEW_GAME:
+//        baseWindow->callNewGameDialog();        // restart level
+//        break;
+//    case WindowStatus::SAVE:
+//        baseWindow->callSaveDialog();           // save level into txt
+//        break;
+//    case WindowStatus::EXIT:
+//        //ref
+//        break;
+    default:
+        break;
+    }
 }
 
 void GameApplication::setLevel(int level)
@@ -67,6 +94,8 @@ void GameApplication::changeConfigs()
 void GameApplication::changeLevel()
 {
     baseWindow->slotPlayerTimer();
+    callStateFunction(baseWindow->getStatus());
+
     if(baseWindow->getEnd())
     {
         baseWindow->setEnd(false);
@@ -76,6 +105,12 @@ void GameApplication::changeLevel()
         delete scene;
         levelWindow->show();
     }
+}
+
+void GameApplication::continueGame()
+{
+    baseWindow->setStatus(WindowStatus::GAME);
+    gameTimer.start(150);
 }
 
 void GameApplication::exit()

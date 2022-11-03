@@ -30,10 +30,13 @@ private:
     LogPool *logPool = nullptr;
     QGraphicsScene *scene = nullptr;
     Game *game = nullptr;
+
+    void callStateFunction(WindowStatus status);
 private slots:
     void setLevel(int level);
     void changeConfigs();
     void changeLevel();
+    void continueGame();
     void exit();
 };
 
