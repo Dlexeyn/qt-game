@@ -11,18 +11,18 @@ Game::Game(ReadData *readData, const std::vector<EventSubscriber *> &loggers, co
 {
     subscribe(loggers);
     notifySubscribers("Level ", "global", new LogArgs(ArgsLog::LEVEL, level));
-    field = new Field(readData, loggers);            // реализация поля
-    fieldView = new FieldView(field, loggers, readData);     // абстракция поля
+    field = new Field(readData, loggers);                                           // реализация поля
+    fieldView = new FieldView(field, loggers, readData);                            // абстракция поля
 
-    player = new Player(loggers);                    // реализация игрока
-    playerView = new PlayerView(player, loggers, readData);  // абстракция игрока
+    player = new Player(loggers);                                                   // реализация игрока
+    playerView = new PlayerView(player, loggers, readData);                         // абстракция игрока
 
-    listBox = std::vector<MapComponent*>(readData->getNumBox(), nullptr);         // реализация ящиков
-    listBoxView = std::vector<View*>(readData->getNumBox(), nullptr);            // абстракция ящиков
-    for(int index = 0; index < readData->getNumBox(); index++)                  //
-    {                                                                          //
-        listBox[index] = new Box(false, loggers);                                      //
-        listBoxView[index] = new BoxView(listBox[index], readData, loggers, index);   //
+    listBox = std::vector<MapComponent*>(readData->getNumBox(), nullptr);           // реализация ящиков
+    listBoxView = std::vector<View*>(readData->getNumBox(), nullptr);               // абстракция ящиков
+    for(int index = 0; index < readData->getNumBox(); index++)
+    {
+        listBox[index] = new Box(false, loggers);
+        listBoxView[index] = new BoxView(listBox[index], readData, loggers, index);
     }
 
     objectMediator = new GameMediator(field, player, listBox, readData);
@@ -41,14 +41,15 @@ Game::~Game()
     delete loseEvent;
 }
 
-void Game::notify(GlobalComponent* sender, GLMessage *mes)
+void Game::notify(GLMessage *mes)
 {
     switch(mes->getSender())
     {
     case Sender::CONTROLLER_PLAYER:
         movement(mes->getArg(ArgsTypes::X),
                 mes->getArg(ArgsTypes::Y),
-                fieldView->getXY());
+                fieldView->getXY()->rx(),
+                 fieldView->getXY()->ry());
         break;
     case Sender::CONTROLLER_GAME:
         baseWindow->getMessage(mes);
@@ -92,56 +93,51 @@ View *Game::isBox(int x, int y)
     return nullptr;
 }
 
-void Game::movement(int x, int y, QPoint* posPlayer)
+void Game::movement(int stepX, int stepY, int &x, int &y)
 {
-    View *box = isBox(posPlayer->x() + x, posPlayer->y() + y);
-    if(boxMove(box, x, y))
+    View *box = isBox(x + stepX, y + stepY);
+    if(boxMove(box, stepX, stepY))
     {
-        fieldView->moving(x, y);
-        playerView->moving(x, y);
+        if(fieldView->isMoving(x + stepX, y + stepY)) // Проверка на проходимость
+        {
+            playerView->moving(stepX, stepY);
+            fieldView->moving(stepX, stepY);
+            fieldView->impactOnObject(ObjectType::PLAYER, x, y);
+        }
     }
-    if(playerView->getObject()->getSecondAttribute() == readData->getConditionVictory())
+    if(playerView->getObject()->getAttribute(ObjectAttribute::POINTS) == readData->getConditionVictory())
         victoryEvent->trigger();
-    if(playerView->getObject()->getFirstAttribute() == 0)
+    if(playerView->getObject()->getAttribute(ObjectAttribute::HEALTH) == 0)
         loseEvent->trigger();
 }
 
 
 bool Game::boxMove(View *box, int stepX, int stepY)
 {
-    if(!box)
+    if(!box)                                    // Коробки на пути нет
         return true;
-    else if(isBox(box->getXY()->x() + stepX, box->getXY()->y() + stepY))
-    {
-        notifySubscribers("box : other box is on the way", "warning");
-        return false;
-    }
-    else
-    {
-        setCurPos(2 * stepX, 2 * stepY);
-        if(!fieldView->getObject()->checkState())
+    else{
+        int &x = box->getXY()->rx();
+        int &y = box->getXY()->ry();
+        if(isBox(x + stepX, y + stepY))         // две коробки на пути
         {
-            setCurPos();
+            notifySubscribers("box : other box is on the way", "warning");
             return false;
         }
         else
         {
-            setCurPos(stepX, stepY);
-            fieldView->changeView(fieldView->getObject()->changeStatus(), box->getXY()->x(), box->getXY()->y());
-            box->moving(stepX, stepY);
-
-            setCurPos(2*stepX, 2*stepY);
-            fieldView->changeView(fieldView->getObject()->changeStatus(), box->getXY()->x(), box->getXY()->y());
-            setCurPos();
-            return true;
+            if(!fieldView->isMoving(x + stepX, y + stepY))  // проверка на проходимость за коробкой
+                return false;
+            else
+            {
+                fieldView->changeView(x, y);                // Событие в клетке с коробкой - старая позиция
+                box->moving(stepX, stepY);                  // движение коробки
+                fieldView->changeView(x, y);                // Событие в клетке с коробкой - новая позиция
+                fieldView->impactOnObject(ObjectType::BOX, x, y);
+                return true;
+            }
         }
     }
-}
-
-void Game::setCurPos(int addX, int addY)
-{
-    fieldView->getObject()->setFirstAttribute(playerView->getXY()->x() + addX);
-    fieldView->getObject()->setSecondAttribute(playerView->getXY()->y() + addY);
 }
 
 View * Game::getPlayerView() const

@@ -30,7 +30,6 @@ public:
 
     QRectF boundingRect() const;
 
-
 private:
     int step;
 };

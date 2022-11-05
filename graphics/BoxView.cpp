@@ -47,3 +47,4 @@ QRectF BoxView::boundingRect() const
 {
     return QRectF(-width/2, height/2, width, height);
 }
+

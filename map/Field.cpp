@@ -46,39 +46,35 @@ Field::Field(Field &&field) : map_height(field.map_height), map_width(field.map_
 int Field::changeStatus()
 {
     TypeOfCell curType;
-    if(curPlayer != curPoint)
+    if(map_field[curPoint.y()][curPoint.x()]->getEvent())
+        map_field[curPoint.y()][curPoint.x()]->getEvent()->trigger();
+
+    curType = map_field[curPoint.y()][curPoint.x()]->getCell_type();
+
+    if(curType == TARGET_BOX)
     {
-        if(map_field[curPoint.y()][curPoint.x()]->getEvent())
-            map_field[curPoint.y()][curPoint.x()]->getEvent()->trigger();
+        eventFactory->setCurrentType(CellEventFactory::COLOR_BOX, map_field[curPoint.y()][curPoint.x()]);
+        map_field[curPoint.y()][curPoint.x()]->setEvent(eventFactory->createEvent());
+        eventMediator->notify("removePoint");
 
-        curType = map_field[curPoint.y()][curPoint.x()]->getCell_type();
-
-        if(curType == TARGET_BOX)
-        {
-            eventFactory->setCurrentType(CellEventFactory::COLOR_BOX, map_field[curPoint.y()][curPoint.x()]);
-            map_field[curPoint.y()][curPoint.x()]->setEvent(eventFactory->createEvent());
-            eventMediator->notify(this, "removePoint");
-
-        }
-        else if(curType == TARGET_WITH_BOX)
-        {
-            eventFactory->setCurrentType(CellEventFactory::RETURN_COLOR, map_field[curPoint.y()][curPoint.x()]);
-            map_field[curPoint.y()][curPoint.x()]->setEvent(eventFactory->createEvent());
-            eventMediator->notify(this, "addPoint");            
-        }
     }
-    else
+    else if(curType == TARGET_WITH_BOX)
     {
-        curType = map_field[curPlayer.y()][curPlayer.x()]->getCell_type();
-        if(curType == END_CELL)
-            eventMediator->notify(this, "destroyPlayer");
+        eventFactory->setCurrentType(CellEventFactory::RETURN_COLOR, map_field[curPoint.y()][curPoint.x()]);
+        map_field[curPoint.y()][curPoint.x()]->setEvent(eventFactory->createEvent());
+        eventMediator->notify("addPoint");
     }
     return curType;
 }
 
-void Field::sendCignal(int type)
+void Field::sendCignal()
 {
-    map_field[hidDoor.y()][hidDoor.x()]->getEvent()->trigger();
+    int y = hidDoor.y(), x = hidDoor.x();
+    eventFactory->setCurrentType(CellEventFactory::HIDDEN_DOOR, map_field[y][x]);
+    map_field[y][x]->setEvent(eventFactory->createEvent());
+
+    map_field[y][x]->getEvent()->trigger();
+    map_field[hidDoor.y()][hidDoor.x()]->clearEvent();
     isHidDoorOpen = true;
 }
 
@@ -97,41 +93,54 @@ void Field::setMap(std::vector<std::vector<CellSpace::TypeOfCell> > &arr)
             }
             else if(arr[y][x] == CellSpace::TEMP_WALL)
             {
-                eventFactory->setCurrentType(CellEventFactory::HIDDEN_DOOR, map_field[y][x]);
-                map_field[y][x]->setEvent(eventFactory->createEvent());
                 hidDoor.setX(x);
                 hidDoor.setY(y);
             }
         }
 }
 
-int Field::getFirstAttribute() const
+int Field::getAttribute(ObjectAttribute at) const
 {
-    return curPoint.x();
+    switch (at) {
+    case ObjectAttribute::OBJECT:
+        return int(cur);
+    case ObjectAttribute::CUR_X:
+        return curPoint.x();
+    case ObjectAttribute::CUR_Y:
+        return curPoint.y();
+    default:
+        return 0;
+    }
 }
 
-int Field::getSecondAttribute() const
+void Field::setAttribute(ObjectAttribute at, int arg)
 {
-    return curPoint.y();
+    switch (at) {
+    case ObjectAttribute::OBJECT:
+        cur = Object(arg);
+        break;
+    case ObjectAttribute::CUR_X:
+        curPoint.setX(arg);
+        break;
+    case ObjectAttribute::CUR_Y:
+        curPoint.setY(arg);
+        break;
+    default:
+        break;
+    }
 }
 
-void Field::setFirstAttribute(int newAttribute)
+void Field::callAnObject()
 {
-    curPoint.setX(newAttribute);
-}
-
-void Field::setSecondAttribute(int newAttribute)
-{
-    curPoint.setY(newAttribute);
-}
-
-int Field::callAnObject()
-{
-    curPlayer.setX(curPoint.x());
-    curPlayer.setY(curPoint.y());
-    if(hidDoor.x() != 0 and hidDoor.y() != 0 and !isHidDoorOpen)
-        eventMediator->notify(this, "OpenDoorCondition");
-    return map_field[hidDoor.y()][hidDoor.x()]->getCell_type();
+    TypeOfCell curType = map_field[curPoint.y()][curPoint.x()]->getCell_type();
+    switch (cur) {
+    case Object::BOX:
+        break;
+    case Object::PLAYER:
+        if(curType == END_CELL)
+                eventMediator->notify("destroyPlayer");
+        break;
+    }
 }
 
 bool Field::checkState()
@@ -141,4 +150,5 @@ bool Field::checkState()
         notifySubscribers("object : impassable cell", "warning");
     return var;
 }
+
 

@@ -18,7 +18,7 @@ Player::Player(const Player &other)
     isAlive = other.isAlive;
 }
 
-void Player::sendCignal(int type)
+void Player::sendCignal()
 {
 
 }
@@ -30,24 +30,30 @@ int Player::changeStatus()
     return isAlive;
 }
 
-int Player::getFirstAttribute() const
+int Player::getAttribute(ObjectAttribute at) const
 {
-    return curHealth;
+    switch (at) {
+    case ObjectAttribute::HEALTH:
+        return curHealth;
+    case ObjectAttribute::POINTS:
+        return victoryPoints;
+    default:
+        return 0;
+    }
 }
 
-int Player::getSecondAttribute() const
+void Player::setAttribute(ObjectAttribute at, int arg)
 {
-    return victoryPoints;
-}
-
-void Player::setFirstAttribute(int newAttribute)
-{
-    curHealth = newAttribute;
-}
-
-void Player::setSecondAttribute(int newAttribute)
-{
-    victoryPoints = newAttribute;
+    switch (at) {
+    case ObjectAttribute::HEALTH:
+        curHealth = arg;
+        break;
+    case ObjectAttribute::POINTS:
+        victoryPoints = arg;
+        break;
+    default:
+        break;
+    }
 }
 
 void Player::setIsAlive(bool newIsAlive)
@@ -60,9 +66,8 @@ bool Player::getIsAlive() const
     return isAlive;
 }
 
-int Player::callAnObject()
+void Player::callAnObject()
 {
-    return 1;   // future
 }
 
 bool Player::checkState()

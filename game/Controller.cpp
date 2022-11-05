@@ -1,4 +1,5 @@
 #include "Controller.h"
+#include "graphics/BaseWindowStatus.h"
 
 void Controller::sendCommand(Commands command)
 {
@@ -15,7 +16,7 @@ void Controller::sendCommand(Commands command)
     for(size_t index = 0; index < args.size(); index++)
         newMes.addArg(types[index], args[index]);
 
-    game->notify(this, &newMes);
+    game->notify(&newMes);
 }
 
 bool Controller::getMoveArgs(const Commands command, std::vector<int> &args, std::vector<ArgsTypes> &types)
@@ -39,7 +40,6 @@ bool Controller::getMoveArgs(const Commands command, std::vector<int> &args, std
         break;
     default:
         return false;
-        break;
     }
     return true;
 }
@@ -68,20 +68,15 @@ void Controller::getOtherArgs(const Commands command, std::vector<int> &args, st
     }
 }
 
+const std::map<int, Commands> &Controller::getKeyCommands() const
+{
+    return KeyCommands;
+}
+
 void Controller::getMessage(GLMessage* mes)
 {
     int key = mes->getArg(ArgsTypes::KEY);
     std::map <int, Commands>:: iterator it = KeyCommands.find(key);
     if(it != KeyCommands.end())
         sendCommand(KeyCommands.at(key));
-}
-
-int &Controller::getStepX()
-{
-    return stepX;
-}
-
-int &Controller::getStepY()
-{
-    return stepY;
 }

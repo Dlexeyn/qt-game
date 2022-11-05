@@ -10,6 +10,11 @@
 #include "map/ReadData.h"
 #include "log/LogObject.h"
 
+enum class Object{
+    PLAYER = 1,
+    BOX = 2
+};
+
 class Field: public MapComponent
 {
 public:
@@ -27,17 +32,15 @@ public:
 
     int changeStatus();
 
-    void sendCignal(int type);
+    void sendCignal();
 
     void setMap(std::vector<std::vector<CellSpace::TypeOfCell>> &arr);
 
-    int getFirstAttribute() const; // return x current point
-    int getSecondAttribute() const; // return y current point
+    int getAttribute(ObjectAttribute at) const;
 
-    void setFirstAttribute(int newAttribute);   // set x current point
-    void setSecondAttribute(int newAttribute);  // set y current point
+    void setAttribute(ObjectAttribute at, int arg);
 
-    int callAnObject();
+    void callAnObject();
 
     bool checkState();
 
@@ -48,6 +51,8 @@ private:
     QPoint curPoint;
     QPoint curPlayer;
     QPoint hidDoor;
+    Object cur;
+
     bool isHidDoorOpen = false;
 };
 #endif // FIELD_H

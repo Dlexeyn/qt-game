@@ -17,9 +17,10 @@ TypeOfCell Cell::getCell_type() const
     return cell_type;
 }
 
-void Cell::setEvent(Event *newEvent)
+void Cell::clearEvent()
 {
-    event = newEvent;
+    delete event;
+    event = nullptr;
 }
 
 Event *Cell::getEvent() const
@@ -30,5 +31,10 @@ Event *Cell::getEvent() const
 void Cell::setCell_type(TypeOfCell newCell_type)
 {
     cell_type = newCell_type;
+}
+
+void Cell::setEvent(Event *newEvent)
+{
+    event = newEvent;
 }
 }

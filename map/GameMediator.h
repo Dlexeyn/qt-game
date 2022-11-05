@@ -3,15 +3,9 @@
 
 #include <game/Mediator.h>
 #include "map/Ivents/Event.h"
-#include "map/Ivents/EventFactory.h"
-#include "map/Ivents/GlobalEventFactory.h"
-#include "map/Ivents/CellEventFactory.h"
 #include "map/ReadData.h"
 #include "map/MapComponent.h"
-#include "map/Box.h"
-#include "map/Cell.h"
-#include "map/Field.h"
-#include "objects/Player.h"
+
 
 enum ReactType{
     ADD_Point = 1,
@@ -24,7 +18,7 @@ class GameMediator : public Mediator
 {
 public:
     GameMediator(MapComponent *field, MapComponent *player,  std::vector <MapComponent*> &listBox, ReadData *readData);
-    void notify(MapComponent *sender, std::string mes = "");
+    void notify(std::string mes = "");
 
     void reactOnCell();
 

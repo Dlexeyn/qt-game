@@ -2,10 +2,6 @@
 #define GLOBALEVENTFACTORY_H
 
 #include "EventFactory.h"
-#include "GlobalEvent.h"
-#include "VictoryEvent.h"
-#include "RestartEvent.h"
-#include "LoseEvent.h"
 #include "graphics/basewindow.h"
 
 class GlobalEventFactory : public EventFactory

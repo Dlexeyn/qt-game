@@ -1,30 +1,27 @@
 #ifndef BOX_H
 #define BOX_H
 
-#include "MapObject.h"
 #include "map/MapComponent.h"
-#include "game/Mediator.h"
 
 class Box : public MapComponent
 {
 public:
     Box(bool isTargetPos, const std::vector<EventSubscriber *> &loggers);
-    void sendCignal(int type);
+    void sendCignal();
 
-    int getFirstAttribute() const;  // return bool isTargetPos
-    int getSecondAttribute() const;
-    void setFirstAttribute(int newAttribute);
-    void setSecondAttribute(int newAttribute);
+    int getAttribute(ObjectAttribute at) const;
+    void setAttribute(ObjectAttribute at, int arg);
 
     bool getIsTargetPos() const;
     void setIsTargetPos(bool newIsTargetPos);
     bool checkState();
 
     int changeStatus();
-    int callAnObject();
+    void callAnObject();
 
 private:
     bool isTargetPos;
+    bool isActive;
 };
 
 #endif // BOX_H

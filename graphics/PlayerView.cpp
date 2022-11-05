@@ -28,6 +28,7 @@ void PlayerView::moving(int &stepX, int &stepY)
     setPos(mapToParent(step*stepX, step*stepY));
     XY->rx() += stepX;
     XY->ry() += stepY;
+    notifySubscribers("Player changes position to ", "object", new LogArgs(ArgsLog::XY, XY->x(), XY->y()));
 }
 
 void PlayerView::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)

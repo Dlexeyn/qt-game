@@ -1,9 +1,12 @@
 #ifndef COMMAND_H
 #define COMMAND_H
 
+#include "qnamespace.h"
 #include <string>
 #include <map>
 #include <vector>
+
+const int NUM_KEYS = 9;
 
 enum class Commands{
     UP,

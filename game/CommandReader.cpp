@@ -1,30 +1,32 @@
 #include "CommandReader.h"
 
-int CommandReader::readCommands()
+void CommandReader::readCommands()
 {
     int count = 0;
     fin.open("Commands.txt");
     if(!fin.is_open())
-        return NUM_KEYS-count;  // Возврат, если файла не существует
+    {
+        sendError(NUM_KEYS-count);  // Возврат, если файла не существует
+        return;
+    }
     else
     {
         std::string buff = "";
         std::vector<std::string> strs;
-        while(buff != "end")
+        while(buff != "end" or fin.eof())
         {
             std::getline(fin, buff);
             if(tokenize(buff, strs))
             {
-                Commands command = ch.commandFromString(ch.tolower(strs[0]));
-                int key = keyFromString(strs[1]);
-                data->insert(std::pair<int, Commands>(key, command));
-                count++;
+                Commands command = ch.commandFromString(ch.tolower(strs[0]));   // Считываем правую часть(до =)
+                int key = keyFromString(strs[1]);                               // Считываем левую часть(после =)
+                if(insertToData(std::make_pair(key, command), std::make_pair(command, key)))
+                    count++;
             }
-            else
-                return NUM_KEYS-count;  // Возврат, если не правильно описана строка
         }
     }
-    return NUM_KEYS-count;  // 0 - все команды описаны, >0 - не все
+    sendError(NUM_KEYS-count);  // 0 - все команды описаны, >0 - не все
+    fin.close();
 }
 
 bool CommandReader::tokenize(const std::string &str, std::vector<std::string> &out)
@@ -53,3 +55,13 @@ int CommandReader::keyFromString(const std::string &value)
     QKeySequence seq = QKeySequence(str);
     return seq[0];
 }
+
+bool CommandReader::insertToData(std::pair<int, Commands> pair1, std::pair<Commands, int> pair2)
+{
+    if (dataForController.find(pair1.first) != dataForController.end() and pair1.first != Qt::Key_unknown)
+        return false;
+    dataForController.insert(pair1);
+    dataForDialogs.insert(pair2);
+    return true;
+}
+

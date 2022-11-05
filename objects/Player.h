@@ -3,7 +3,6 @@
 
 #include "map/MapObject.h"
 #include "map/MapComponent.h"
-#include "game/Mediator.h"
 
 class Player: public MapComponent
 {
@@ -17,21 +16,19 @@ public:
 
     Player(const Player& other);
 
-    void sendCignal(int type);
+    void sendCignal();
 
     int changeStatus();
 
-    int getFirstAttribute() const;
-    int getSecondAttribute() const;
+    int getAttribute(ObjectAttribute at) const;
 
-    void setFirstAttribute(int newAttribute);
-    void setSecondAttribute(int newAttribute);
+    void setAttribute(ObjectAttribute at, int arg);
 
     void setIsAlive(bool newIsAlive);
 
     bool getIsAlive() const;
 
-    int callAnObject();
+    void callAnObject();
 
     bool checkState();
 

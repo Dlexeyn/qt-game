@@ -4,8 +4,8 @@ namespace Config {
 
 AppConfigurator::AppConfigurator() {
 
-    logMap["file"] = true;
-    logMap["console"] = false;
+    logMap["file"] = true;  // default settings
+    logMap["console"] = true;
     logMap["object"] = true;
     logMap["game"] = true;
     logMap["critical"] = true;

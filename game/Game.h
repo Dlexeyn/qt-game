@@ -17,16 +17,15 @@ class Game: public GlobalMediator, public LogObject
 public:
     Game(ReadData* readData, const std::vector< Log::EventSubscriber* >& loggers, const int level);
     ~Game();
-    void notify(GlobalComponent* sender, GLMessage *mes);
+    void notify(GLMessage *mes);
     void initGame(BaseWindow *window, Controller *controller, QGraphicsScene *scene);
     void setReadData(ReadData *newReadData);
     View *getPlayerView() const;
 
 private:
     View *isBox(int x, int y);
-    void movement(int x, int y, QPoint *posPlayer);
+    void movement(int stepX, int stepY, int &x, int &y);
     bool boxMove(View *box, int stepX, int stepY);
-    void setCurPos(int addX = 0, int addY = 0);
     void createEvents();
     void addObjectsOnScene(QGraphicsScene *scene);
 
