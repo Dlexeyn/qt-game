@@ -6,6 +6,9 @@ MenuWidget::MenuWidget(QWidget *parent) :
     ui(new Ui::MenuWidget)
 {
     ui->setupUi(this);
+    this->setWindowTitle("Меню");
+    this->resize(200, 350);
+    this->setFixedSize(200, 350);
 }
 
 MenuWidget::~MenuWidget()

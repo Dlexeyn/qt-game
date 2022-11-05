@@ -28,29 +28,19 @@ FieldView::~FieldView()
 
 void FieldView::moving(int &stepX, int &stepY)
 {
-    object->setFirstAttribute(XY->x() + stepX);
-    object->setSecondAttribute(XY->y() + stepY);
-    if(object->checkState())    // проходимость клетки
-    {
-        XY->rx() += stepX;
-        XY->ry() += stepY;
-        changeView(object->callAnObject(), XYHidDoor->x(), XYHidDoor->y());
-        changeView(object->changeStatus(), XY->x(), XY->y());
-        notifySubscribers("Player changes position to ", "object", new LogArgs(ArgsLog::XY, XY->x(), XY->y()));
-    }
-    else
-    {
-        object->setFirstAttribute(XY->x());
-        object->setSecondAttribute(XY->y());
-        stepX = stepY = 0;
-    }
+      XY->rx() += stepX;
+      XY->ry() += stepY;
+      changeView(XYHidDoor->x(), XYHidDoor->y());
+
 }
 
-void FieldView::changeView(int type, int x, int y)
+void FieldView::changeView(int x, int y)
 {
-    if(type)
+    movePointer(x, y);
+    int t = object->changeStatus();
+    if(t)
     {
-        graphicsCellMap[y][x]->setType(type);
+        graphicsCellMap[y][x]->setType(t);
         graphicsCellMap[y][x]->hide();
         graphicsCellMap[y][x]->show();
     }
@@ -65,4 +55,28 @@ void FieldView::setGameScene(QGraphicsScene *newGameScene, ReadData *data)
             newGameScene->addItem(graphicsCellMap[y][x]);
             graphicsCellMap[y][x]->setPos(data->getStartW() + sizeCell * x, data->getStartH() + sizeCell * y);
         }
+}
+
+bool FieldView::isMoving(int x, int y)
+{
+    movePointer(x, y);
+
+    bool var = object->checkState();
+
+    movePointer(XY->x(), XY->y());
+
+    return var;
+}
+
+void FieldView::impactOnObject(ObjectType type, const int &x, const int &y)
+{
+    movePointer(x, y);
+    object->setAttribute(ObjectAttribute::OBJECT, int(type));
+    object->callAnObject();
+}
+
+void FieldView::movePointer(int x, int y)
+{
+    object->setAttribute(ObjectAttribute::CUR_X, x);
+    object->setAttribute(ObjectAttribute::CUR_Y, y);
 }

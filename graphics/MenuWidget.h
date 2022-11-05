@@ -15,6 +15,13 @@ public:
     explicit MenuWidget(QWidget *parent = nullptr);
     ~MenuWidget();
 
+signals:
+    void continueSignal();
+    void saveGameSignal();
+    void restartGameSignal();
+    void helpSignal();
+    bool exitSignal();
+
 private:
     Ui::MenuWidget *ui;
 };

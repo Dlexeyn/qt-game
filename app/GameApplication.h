@@ -9,6 +9,7 @@
 #include "map/LevelReader.h"
 #include "game/LogPool.h"
 #include "config/AppConfigurator.h"
+#include "game/CommandReader.h"
 
 class GameApplication: public QObject
 {
@@ -21,22 +22,38 @@ signals:
 
 private:
     QApplication *app = nullptr;
+
     Config::AppConfigurator *config = nullptr;
+
+    AbstractReader *keyReader = nullptr;
+
     QTimer gameTimer;
+
     DialogLevel *levelWindow = nullptr;
+
     BaseWindow *baseWindow = nullptr;
+
     Controller *controller = nullptr;
+
     LevelReader *lvlReader = nullptr;
+
     LogPool *logPool = nullptr;
+
     QGraphicsScene *scene = nullptr;
+
     Game *game = nullptr;
 
     void callStateFunction(WindowStatus status);
+
 private slots:
     void setLevel(int level);
+
     void changeConfigs();
+
     void changeLevel();
+
     void continueGame();
+
     void exit();
 };
 

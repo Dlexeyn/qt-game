@@ -42,19 +42,19 @@ void DialogLevel::on_settingsButton_clicked()
 void DialogLevel::on_saveButton_clicked()
 {
     switch (ui->logComboBox->currentIndex()) {
-    case 0:
+    case 0: // both
         config->update("file", true);
-        config->update("console", false);
+        config->update("console", true);
         break;
-    case 1:
+    case 1: // only console
         config->update("file", false);
         config->update("console", true);
         break;
-    case 2:
+    case 2: // only file
         config->update("file", true);
-        config->update("console", true);
+        config->update("console", false);
         break;
-    case 3:
+    case 3: // disable
         config->update("file", false);
         config->update("console", false);
         break;

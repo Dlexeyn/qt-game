@@ -26,6 +26,8 @@ SOURCES += \
     graphics/MenuWidget.cpp \
     graphics/PlayerView.cpp \
     graphics/dialoglevel.cpp \
+    graphics/game_dialogs/HelpDialog.cpp \
+    graphics/game_dialogs/MenuDialog.cpp \
     log/ConsoleLogDecorator.cpp \
     log/FileLogDecorator.cpp \
     log/GlobalLogger.cpp \
@@ -90,6 +92,9 @@ HEADERS += \
     graphics/PlayerView.h \
     graphics/View.h \
     graphics/dialoglevel.h \
+    graphics/game_dialogs/HelpDialog.h \
+    graphics/game_dialogs/MenuDialog.h \
+    graphics/game_dialogs/gameDialog.h \
     log/ConsoleLogDecorator.h \
     log/EventSubscriber.h \
     log/FileLogDecorator.h \
@@ -132,7 +137,9 @@ FORMS += \
     graphics/DialogSize.ui \
     graphics/MenuWidget.ui \
     graphics/basewindow.ui \
-    graphics/dialoglevel.ui
+    graphics/dialoglevel.ui \
+    graphics/game_dialogs/HelpDialog.ui \
+    graphics/game_dialogs/MenuDialog.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

@@ -2,6 +2,6 @@
 
 void LoseEvent::trigger()
 {
-    baseWindow->callExitDialog();
+    baseWindow->callLoseDialog();
     baseWindow->setEnd(true);
 }

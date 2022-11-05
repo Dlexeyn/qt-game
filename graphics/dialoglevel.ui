@@ -412,7 +412,7 @@
              <widget class="QComboBox" name="logComboBox">
               <item>
                <property name="text">
-                <string>файл</string>
+                <string>оба варианта</string>
                </property>
               </item>
               <item>
@@ -422,7 +422,7 @@
               </item>
               <item>
                <property name="text">
-                <string>оба варианта</string>
+                <string>файл</string>
                </property>
               </item>
               <item>

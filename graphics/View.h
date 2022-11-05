@@ -69,6 +69,7 @@ inline QPoint *View::getXY() const
 
 inline void View::setXY(QPoint *newXY)
 {
+    delete XY;
     XY = newXY;
 }
 

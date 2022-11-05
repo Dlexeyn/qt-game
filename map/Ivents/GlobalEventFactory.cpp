@@ -1,4 +1,7 @@
 #include "GlobalEventFactory.h"
+#include "VictoryEvent.h"
+#include "RestartEvent.h"
+#include "LoseEvent.h"
 
 Event *GlobalEventFactory::createEvent()
 {

@@ -3,29 +3,20 @@
 Box::Box(bool isTargetPos, const std::vector<EventSubscriber *> &loggers) : isTargetPos(isTargetPos)
 {
     subscribe(loggers);
+    isActive = true;
 }
 
-void Box::sendCignal(int type)
+void Box::sendCignal()
 {
-    eventMediator->notify(this, "Box");
+    eventMediator->notify("Box");
 }
 
-int Box::getFirstAttribute() const
+int Box::getAttribute(ObjectAttribute at) const
 {
-    return isTargetPos;
+
 }
 
-int Box::getSecondAttribute() const
-{
-    return 1;
-}
-
-void Box::setFirstAttribute(int newAttribute)
-{
-    isTargetPos = bool(newAttribute);
-}
-
-void Box::setSecondAttribute(int newAttribute)
+void Box::setAttribute(ObjectAttribute at, int arg)
 {
 
 }
@@ -50,7 +41,6 @@ int Box::changeStatus()
     return 1;
 }
 
-int Box::callAnObject()
+void Box::callAnObject()
 {
-    return getIsTargetPos();
 }

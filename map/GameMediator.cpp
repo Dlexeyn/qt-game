@@ -7,14 +7,9 @@ GameMediator::GameMediator(MapComponent *field, MapComponent *player, std::vecto
 
 }
 
-void GameMediator::notify(MapComponent *sender, std::string mes)
+void GameMediator::notify(std::string mes)
 {
-    if(mes == "OpenDoorCondition")
-    {
-        if(player->getSecondAttribute() == readData->getConditionHiddenDoors())
-            reactOnCell();
-    }
-    else if(mes == "addPoint")
+    if(mes == "addPoint")
         reactOnPlayer(ADD_Point);
     else if(mes == "removePoint")
         reactOnPlayer(DELETE_POINT);
@@ -26,15 +21,17 @@ void GameMediator::reactOnPlayer(ReactType type)
 {
     switch (type) {
     case ADD_Point:
-        player->setSecondAttribute(player->getSecondAttribute() + 1);
+        player->setAttribute(ObjectAttribute::POINTS, player->getAttribute(ObjectAttribute::POINTS) + 1);
         player->notifySubscribers("Player : find one victory point", "object");
+        if(player->getAttribute(ObjectAttribute::POINTS) == readData->getConditionHiddenDoors())
+            reactOnCell();
         break;
     case DELETE_POINT:
-        player->setSecondAttribute(player->getSecondAttribute() - 1);
+        player->setAttribute(ObjectAttribute::POINTS, player->getAttribute(ObjectAttribute::POINTS) - 1);
         player->notifySubscribers("Player : lost one victory point", "object");
         break;
     case DESTROY_PLAYER:
-        player->setFirstAttribute(0);
+        player->setAttribute(ObjectAttribute::HEALTH, 0);
         player->notifySubscribers("Player : was destroyed", "object");
     default:
         break;
@@ -43,5 +40,5 @@ void GameMediator::reactOnPlayer(ReactType type)
 
 void GameMediator::reactOnCell()
 {
-    field->sendCignal(OPEN_SUBLEVEL);
+    field->sendCignal();
 }

@@ -34,11 +34,13 @@ public:
 
     TypeOfCell getCell_type() const;
 
-    void setEvent(Event* newEvent);
+    void clearEvent();
 
     Event *getEvent() const;
 
     void setCell_type(TypeOfCell newCell_type);
+
+    void setEvent(Event *newEvent);
 
 private:
     Event *event = nullptr;

@@ -3,22 +3,21 @@
 
 #include <Qt>
 #include <map>
-#include "graphics/BaseWindowStatus.h"
-#include "log/LogObject.h"
 #include "GlobalComponent.h"
 #include "Command.h"
-#include "CommandReader.h"
 
-class Controller: public GlobalComponent, public LogObject
+class Controller: public GlobalComponent
 {
 public:
-    Controller(const std::vector<EventSubscriber*> &loggers){
-        subscribe(loggers);
-        reader = new CommandReader(&KeyCommands);
-        int flag = reader->readCommands();
-        if(flag > 0)
-            notifySubscribers("The File Commands.txt does not exist or incorrectly describeds ",
-                              "warning", new LogArgs(ArgsLog::COUNT, flag));
+    Controller(const std::map <int, Commands> KeyCommands) :
+        KeyCommands(std::map(KeyCommands))
+    {
+//        subscribe(loggers);
+//        reader = new CommandReader(&KeyCommands);
+//        int flag = reader->readCommands();
+//        if(flag > 0)
+//            notifySubscribers("The File Commands.txt does not exist or incorrectly describeds ",
+//                              "warning", new LogArgs(ArgsLog::COUNT, flag));
     }
 
     enum commands{
@@ -30,17 +29,14 @@ public:
 
     void getMessage(GLMessage *mes);
 
-    int &getStepX();
 
-    int &getStepY();
+    const std::map<int, Commands> &getKeyCommands() const;
 
 private:
-    int stepX, stepY;
     void sendCommand(Commands command);
 
     bool getMoveArgs(const Commands command, std::vector<int> &args, std::vector<ArgsTypes> &types);
     void getOtherArgs(const Commands command, std::vector<int> &args, std::vector<ArgsTypes> &types);
-    AbstractReader *reader = nullptr;
     std::map <int, Commands> KeyCommands;
 };
 

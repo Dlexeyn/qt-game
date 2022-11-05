@@ -8,7 +8,7 @@ class GlobalComponent;
 class GlobalMediator
 {
 public:
-    virtual void notify(GlobalComponent* sender, GLMessage *mes) = 0;
+    virtual void notify(GLMessage *mes) = 0;
     virtual ~GlobalMediator() = default;
 };
 

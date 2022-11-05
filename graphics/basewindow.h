@@ -14,7 +14,8 @@
 #include "game/GlobalComponent.h"
 #include "EventWindow.h"
 #include "BaseWindowStatus.h"
-#include "MenuWidget.h"
+#include "game_dialogs/MenuDialog.h"
+#include "game_dialogs/HelpDialog.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class BaseWindow; }
@@ -27,20 +28,6 @@ class BaseWindow : public QMainWindow, public GlobalComponent, public EventWindo
 public:
     BaseWindow(Config::Configurator *config, QWidget *parent = nullptr);
     ~BaseWindow();
-
-    void callVictoryDialog();
-
-    void callRestartDialog();
-
-    void callExitDialog();
-
-    void callPauseDialog();
-
-    void callSaveDialog();
-
-    void callNewGameDialog();
-
-    void callMenuDialog();
 
     void init(ReadData *readData, QGraphicsScene *scene, View *player);
 
@@ -58,6 +45,25 @@ public:
 
     void setStatus(WindowStatus newStatus);
 
+    void createDialogs(const std::map<Commands, int> KeyCommands);
+
+public slots:
+    void callLoseDialog();      // event dialog
+
+    void callVictoryDialog();   // event dialog
+
+    void callRestartDialog();   // status dialog
+
+    bool callExitDialog();      // status dialog
+
+    void callPauseDialog();     // status dialog
+
+    void callSaveDialog();      // status dialog
+
+    void callNewGameDialog();   // status dialog
+
+    void callMenuDialog();      // status dialog
+
 signals:
     void endApp();
     void endStatus();
@@ -68,8 +74,10 @@ private:
     View *player = nullptr;
     Controller *controller = nullptr;
     Config::Configurator *config = nullptr;
+    MenuDialog *menu = nullptr;
+    HelpDialog *help = nullptr;
+
     WindowStatus status;
-    MenuWidget menu;
 
     const unsigned sizeCellPx = 50;
     bool end = false;
