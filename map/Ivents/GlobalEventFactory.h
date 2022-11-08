@@ -2,7 +2,7 @@
 #define GLOBALEVENTFACTORY_H
 
 #include "EventFactory.h"
-#include "graphics/basewindow.h"
+#include "graphics/EventWindow.h"
 
 class GlobalEventFactory : public EventFactory
 {
@@ -13,14 +13,14 @@ public:
         Lose
     };
 
-    GlobalEventFactory(GlobalEventType type, BaseWindow *window) :
+    GlobalEventFactory(GlobalEventType type, EventWindow *window) :
         currentType(type), window(window){}
     Event *createEvent();
     void setCurrentType(GlobalEventType newCurrentType);
 
 private:
     GlobalEventType currentType;
-    BaseWindow *window;
+    EventWindow *window;
 };
 
 #endif // GLOBALEVENTFACTORY_H

@@ -22,21 +22,28 @@ BaseWindow::~BaseWindow()
     delete help;
 }
 
-void BaseWindow::callLoseDialog()
+void BaseWindow::callLoseEventDialog()
 {
     QMessageBox::information(this, "Поражение", "Вы проиграли!");
     notifySubscribers("the \"Lose\" event triggered", "game");
 }
 
-void BaseWindow::callVictoryDialog()
+void BaseWindow::callVictoryEventDialog()
 {
     QMessageBox::information(this, "Победа", "Уровень пройден!");
     notifySubscribers("the \"Victory\" event triggered", "game");
 }
 
-void BaseWindow::callRestartDialog()
+bool BaseWindow::callRestartEventDialog(bool withQuestion)
 {
-
+    notifySubscribers("the \"Victory\" event triggered", "game");
+    QMessageBox::StandardButton reply = QMessageBox::Yes;
+    if(withQuestion)
+    {
+        reply = QMessageBox::question(this, "Перезапуск", "Вы действительно хотите начать сначала?",
+                                        QMessageBox::Yes|QMessageBox::No);
+    }
+    return answerTheBox(WindowStatus::RESTART_LEVEL, reply);
 }
 
 bool BaseWindow::callExitDialog()
@@ -45,23 +52,14 @@ bool BaseWindow::callExitDialog()
     QMessageBox::StandardButton reply;
       reply = QMessageBox::question(this, "Выход", "Вы действительно хотите завершить уровень?",
                                     QMessageBox::Yes|QMessageBox::No);
-    if (reply == QMessageBox::Yes)
-    {
-        end = true;
-        emit endStatus();
-        return true;
-    }
-    emit endStatus();
-    return false;
-
-
+    return answerTheBox(WindowStatus::END_LEVEL, reply);
 }
 
 void BaseWindow::callPauseDialog()
 {
     notifySubscribers("the pause", "game");
     help->exec();
-    emit endStatus();
+    emit endStatus(WindowStatus::GAME);
 }
 
 void BaseWindow::callSaveDialog()
@@ -78,7 +76,23 @@ void BaseWindow::callMenuDialog()
 {
     notifySubscribers("the menu", "game");
     menu->exec();
-    emit endStatus();
+    if(status == WindowStatus::MENU)
+        emit endStatus(WindowStatus::GAME);
+    else
+        emit endStatus();
+}
+
+bool BaseWindow::answerTheBox(WindowStatus status, QMessageBox::StandardButton &reply)
+{
+    if (reply == QMessageBox::Yes)
+    {
+        this->status = status;
+        emit endStatus();
+        return true;
+    }
+    else
+        emit endStatus(WindowStatus::GAME);
+    return false;
 }
 
 void BaseWindow::init(ReadData *readData, QGraphicsScene *scene, View *player)
@@ -99,24 +113,9 @@ void BaseWindow::init(ReadData *readData, QGraphicsScene *scene, View *player)
     setFocus();
 }
 
-void BaseWindow::setController(Controller *newController)
-{
-    controller = newController;
-}
-
 void BaseWindow::getMessage(GLMessage* mes)
 {
     status = WindowStatus(mes->getArg(ArgsTypes::STATUS));
-}
-
-void BaseWindow::setEnd(bool newEnd)
-{
-    end = newEnd;
-}
-
-bool BaseWindow::getEnd() const
-{
-    return end;
 }
 
 void BaseWindow::closeEvent(QCloseEvent *event)
@@ -135,16 +134,19 @@ void BaseWindow::setStatus(WindowStatus newStatus)
     status = newStatus;
 }
 
-void BaseWindow::createDialogs(const std::map <Commands, int> KeyCommands)
+void BaseWindow::createDialogs(const std::map <int, Commands> KeyCommands)
 {
-    menu = new MenuDialog(KeyCommands);
-    help = new HelpDialog(KeyCommands);
+    std::map<Commands, int> tempKeyCommads;
+    for (std::map<int, Commands>::const_iterator it = KeyCommands.begin(); it != KeyCommands.end(); ++it)
+        tempKeyCommads.insert(std::pair<Commands, int>(it->second, it->first));
 
-    connect(menu, SIGNAL(saveGameSignal()), this, SLOT()); // ?
-    connect(menu, SIGNAL(restartGameSignal()), this, SLOT(callRestartDialog()));
+    menu = new MenuDialog(tempKeyCommads);
+    help = new HelpDialog(tempKeyCommads);
+
+    //connect(menu, SIGNAL(saveGameSignal()), this, SLOT()); // ?
+    connect(menu, SIGNAL(restartGameSignal()), this, SLOT(callRestartEventDialog())); // +
     connect(menu, SIGNAL(helpSignal()), this, SLOT(callPauseDialog())); // +
     connect(menu, SIGNAL(exitSignal()), this, SLOT(callExitDialog()));//+
-    //
 }
 
 void BaseWindow::keyPressEvent(QKeyEvent *event)

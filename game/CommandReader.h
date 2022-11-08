@@ -19,7 +19,7 @@ private:
     std::ifstream fin;
     bool tokenize(std::string const &str, std::vector<std::string> &out);
     int keyFromString(const std::string &value);
-    bool insertToData(std::pair<int, Commands> pair1, std::pair<Commands, int> pair2);
+    bool insertToData(std::pair<int, Commands> pair);
 };
 
 #endif // COMMANDREADER_H

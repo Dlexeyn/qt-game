@@ -20,7 +20,7 @@ void CommandReader::readCommands()
             {
                 Commands command = ch.commandFromString(ch.tolower(strs[0]));   // Считываем правую часть(до =)
                 int key = keyFromString(strs[1]);                               // Считываем левую часть(после =)
-                if(insertToData(std::make_pair(key, command), std::make_pair(command, key)))
+                if(insertToData(std::make_pair(key, command)))
                     count++;
             }
         }
@@ -56,12 +56,13 @@ int CommandReader::keyFromString(const std::string &value)
     return seq[0];
 }
 
-bool CommandReader::insertToData(std::pair<int, Commands> pair1, std::pair<Commands, int> pair2)
+bool CommandReader::insertToData(std::pair<int, Commands> pair)
 {
-    if (dataForController.find(pair1.first) != dataForController.end() and pair1.first != Qt::Key_unknown)
+    if (data.find(pair.first) != data.end() or
+            pair.first == Qt::Key_unknown or
+            pair.second == Commands::NONE)
         return false;
-    dataForController.insert(pair1);
-    dataForDialogs.insert(pair2);
+    data.insert(pair);
     return true;
 }
 

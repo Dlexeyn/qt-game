@@ -53,7 +53,8 @@ void MenuDialog::on_saveButton_clicked()
 
 void MenuDialog::on_restartButton_clicked()
 {
-    emit restartGameSignal();
+   if(emit restartGameSignal())
+       this->hide();
 }
 
 

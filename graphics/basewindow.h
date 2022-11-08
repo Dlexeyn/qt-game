@@ -11,7 +11,6 @@
 #include "config/Configurator.h"
 #include "game/Controller.h"
 #include "map/ReadData.h"
-#include "game/GlobalComponent.h"
 #include "EventWindow.h"
 #include "BaseWindowStatus.h"
 #include "game_dialogs/MenuDialog.h"
@@ -21,7 +20,7 @@ QT_BEGIN_NAMESPACE
 namespace Ui { class BaseWindow; }
 QT_END_NAMESPACE
 
-class BaseWindow : public QMainWindow, public GlobalComponent, public EventWindow, public LogObject
+class BaseWindow : public QMainWindow, public EventWindow, public LogObject
 {
     Q_OBJECT
 
@@ -31,13 +30,7 @@ public:
 
     void init(ReadData *readData, QGraphicsScene *scene, View *player);
 
-    void setController(Controller *newController);  // ref
-
     void getMessage(GLMessage *mes);
-
-    void setEnd(bool newEnd);
-
-    bool getEnd() const;
 
     void closeEvent( QCloseEvent* event );
 
@@ -45,14 +38,14 @@ public:
 
     void setStatus(WindowStatus newStatus);
 
-    void createDialogs(const std::map<Commands, int> KeyCommands);
+    void createDialogs(const std::map <int, Commands> KeyCommands);
 
 public slots:
-    void callLoseDialog();      // event dialog
+    void callLoseEventDialog();      // event dialog
 
-    void callVictoryDialog();   // event dialog
+    void callVictoryEventDialog();   // event dialog
 
-    void callRestartDialog();   // status dialog
+    bool callRestartEventDialog(bool withQuestion = true);   // event or status dialog
 
     bool callExitDialog();      // status dialog
 
@@ -66,7 +59,7 @@ public slots:
 
 signals:
     void endApp();
-    void endStatus();
+    void endStatus(WindowStatus curStatus = WindowStatus::NONE);
 
 private:
     Ui::BaseWindow *ui;
@@ -79,8 +72,9 @@ private:
 
     WindowStatus status;
 
+    bool answerTheBox(WindowStatus status, QMessageBox::StandardButton &reply);
+
     const unsigned sizeCellPx = 50;
-    bool end = false;
     int key;
     virtual void keyPressEvent(QKeyEvent *event);
 public slots:

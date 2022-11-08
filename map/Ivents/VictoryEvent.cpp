@@ -2,6 +2,7 @@
 
 void VictoryEvent::trigger()
 {
-    baseWindow->callVictoryDialog();
-    baseWindow->setEnd(true);
+    baseWindow->callVictoryEventDialog();
+    baseWindow->setStatus(WindowStatus::END_LEVEL);
+    //baseWindow->setEnd(true);
 }

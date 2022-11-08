@@ -62,7 +62,7 @@ void Game::notify(GLMessage *mes)
     }
 }
 
-void Game::initGame(BaseWindow *window, Controller *controller, QGraphicsScene *scene)
+void Game::initGame(EventWindow *window, GlobalComponent *controller, QGraphicsScene *scene, Config::AppConfigurator *config)
 {
     baseWindow = window;
     this->controller = controller;
@@ -71,7 +71,10 @@ void Game::initGame(BaseWindow *window, Controller *controller, QGraphicsScene *
     globalEventFactory = new GlobalEventFactory(GlobalEventFactory::Victory, baseWindow);
     victoryEvent = globalEventFactory->createEvent();
 
-    globalEventFactory->setCurrentType(GlobalEventFactory::Lose);
+    if(config->getGameOption("lose_restart"))
+        globalEventFactory->setCurrentType(GlobalEventFactory::Restart);
+    else
+        globalEventFactory->setCurrentType(GlobalEventFactory::Lose);
     loseEvent = globalEventFactory->createEvent();
 
     notifySubscribers("The game has started", "game");

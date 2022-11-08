@@ -13,6 +13,7 @@ SOURCES += \
     config/AppConfigurator.cpp \
     config/Configurator.cpp \
     data/Point.cpp \
+    game/AbstractReader.cpp \
     game/CommandReader.cpp \
     game/Controller.cpp \
     game/GLMessage.cpp \
@@ -21,9 +22,7 @@ SOURCES += \
     game/Reader.cpp \
     graphics/BoxView.cpp \
     graphics/CellPainter.cpp \
-    graphics/DialogSize.cpp \
     graphics/FieldView.cpp \
-    graphics/MenuWidget.cpp \
     graphics/PlayerView.cpp \
     graphics/dialoglevel.cpp \
     graphics/game_dialogs/HelpDialog.cpp \
@@ -81,11 +80,9 @@ HEADERS += \
     graphics/BaseWindowStatus.h \
     graphics/BoxView.h \
     graphics/CellPainter.h \
-    graphics/DialogSize.h \
     graphics/EventWindow.h \
     graphics/FieldView.h \
     graphics/MapView.h \
-    graphics/MenuWidget.h \
     graphics/basewindow.h \
     game/Controller.h \
     game/Game.h \
@@ -134,8 +131,6 @@ HEADERS += \
     objects/Player.h
 
 FORMS += \
-    graphics/DialogSize.ui \
-    graphics/MenuWidget.ui \
     graphics/basewindow.ui \
     graphics/dialoglevel.ui \
     graphics/game_dialogs/HelpDialog.ui \

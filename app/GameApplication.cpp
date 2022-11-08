@@ -12,10 +12,10 @@ GameApplication::GameApplication(QApplication *app, QObject *parent)
     keyReader->subscribe(logPool->getLoggers());
     keyReader->readCommands();
 
-    controller = new Controller(keyReader->getDataForController()); // Класс, отвечающий за команды от пользователя
+    controller = new Controller(keyReader->getData()); // Класс, отвечающий за команды от пользователя
     levelWindow = new DialogLevel(config);  // Окно меню
     baseWindow = new BaseWindow(config);    // Окно уровня
-    baseWindow->createDialogs(keyReader->getDataForDialogs());
+    baseWindow->createDialogs(keyReader->getData());
     baseWindow->subscribe(logPool->getLoggers());
 
     connect(levelWindow, SIGNAL(changeLevel(int)), this, SLOT(setLevel(int)));
@@ -23,7 +23,7 @@ GameApplication::GameApplication(QApplication *app, QObject *parent)
     connect(&gameTimer, SIGNAL(timeout()), this, SLOT(changeLevel()));
     connect(levelWindow, SIGNAL(endApp()), this, SLOT(exit()));
     connect(baseWindow, SIGNAL(endApp()), this, SLOT(exit()));
-    connect(baseWindow, SIGNAL(endStatus()), this, SLOT(continueGame()));
+    connect(baseWindow, SIGNAL(endStatus(WindowStatus)), this, SLOT(continueGame(WindowStatus)));
 
     baseWindow->notifySubscribers("Starting the application", "global");
     delete keyReader;
@@ -43,7 +43,7 @@ void GameApplication::start()
     levelWindow->show();
 }
 
-void GameApplication::callStateFunction(WindowStatus status)
+void GameApplication::callStateDialogs(WindowStatus status)
 {
     if(status == WindowStatus::GAME)
         return;
@@ -53,7 +53,7 @@ void GameApplication::callStateFunction(WindowStatus status)
         baseWindow->callPauseDialog();
         break;
     case WindowStatus::MENU:
-        baseWindow->callMenuDialog();           // menu class
+        baseWindow->callMenuDialog();
         break;
 //    case WindowStatus::NEW_GAME:
 //        baseWindow->callNewGameDialog();        // restart level
@@ -61,8 +61,32 @@ void GameApplication::callStateFunction(WindowStatus status)
 //    case WindowStatus::SAVE:
 //        baseWindow->callSaveDialog();           // save level into txt
 //        break;
-    case WindowStatus::EXIT:
+    case WindowStatus::isEXIT:
         baseWindow->callExitDialog();
+        break;
+    case WindowStatus::isRestart:
+        baseWindow->callRestartEventDialog();
+    default:
+        break;
+    }
+}
+
+void GameApplication::callStateFunction(WindowStatus status)
+{
+    switch (status) {
+    case WindowStatus::END_LEVEL:
+        gameTimer.stop();
+        baseWindow->hide();
+        delete game;
+        delete scene;
+        levelWindow->show();
+        break;
+    case WindowStatus::RESTART_LEVEL:
+        gameTimer.stop();
+        baseWindow->hide();
+        delete game;
+        delete scene;
+        setLevel(this->level);
         break;
     default:
         break;
@@ -71,15 +95,16 @@ void GameApplication::callStateFunction(WindowStatus status)
 
 void GameApplication::setLevel(int level)
 {
+    this->level = level;
     disconnect(levelWindow, &QDialog::rejected, levelWindow, &DialogLevel::on_exitButton_clicked);
     levelWindow->hide();
     changeConfigs();
 
     scene = new QGraphicsScene();
-    lvlReader = new LevelReader(level);
+    lvlReader = new LevelReader(this->level);
 
     game = new Game(lvlReader->getReadData(), logPool->getLoggers(), level);
-    game->initGame(baseWindow, controller, scene);
+    game->initGame(baseWindow, controller, scene, config);
 
     baseWindow->init(lvlReader->getReadData(), scene, game->getPlayerView());
     baseWindow->setMediator(game);
@@ -99,22 +124,14 @@ void GameApplication::changeConfigs()
 void GameApplication::changeLevel()
 {
     baseWindow->slotPlayerTimer();
+    callStateDialogs(baseWindow->getStatus());
     callStateFunction(baseWindow->getStatus());
-
-    if(baseWindow->getEnd())
-    {
-        baseWindow->setEnd(false);
-        gameTimer.stop();
-        baseWindow->hide();
-        delete game;
-        delete scene;
-        levelWindow->show();
-    }
 }
 
-void GameApplication::continueGame()
+void GameApplication::continueGame(WindowStatus curStatus)
 {
-    baseWindow->setStatus(WindowStatus::GAME);
+    if(int(curStatus))
+        baseWindow->setStatus(WindowStatus::GAME);
     baseWindow->notifySubscribers("Status was ended", "global");
     baseWindow->setFocus();
     gameTimer.start(150);
