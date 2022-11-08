@@ -20,17 +20,17 @@ public:
 //                              "warning", new LogArgs(ArgsLog::COUNT, flag));
     }
 
-    enum commands{
-        UP = Qt::Key_W,
-        DOWN = Qt::Key_S,
-        LEFT = Qt::Key_A,
-        RIGHT = Qt::Key_D
-    };
+//    enum commands{
+//        UP = Qt::Key_W,
+//        DOWN = Qt::Key_S,
+//        LEFT = Qt::Key_A,
+//        RIGHT = Qt::Key_D
+//    };
 
     void getMessage(GLMessage *mes);
 
 
-    const std::map<int, Commands> &getKeyCommands() const;
+    //const std::map<int, Commands> &getKeyCommands() const;
 
 private:
     void sendCommand(Commands command);

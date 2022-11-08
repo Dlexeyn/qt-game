@@ -5,12 +5,17 @@
 #include "ConfigTypes.h"
 
 namespace Config {
+enum class Settings{
+    LOGS,
+    GAME
+};
+
 class Configurator
 {
 public:
     Configurator();
     virtual ~Configurator() = default;
-    virtual void update(std::string type, bool value) = 0;
+    virtual void update(Settings part, std::string type, bool value) = 0;
 };
 }
 

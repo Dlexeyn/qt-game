@@ -1,7 +1,6 @@
 #ifndef COMMAND_H
 #define COMMAND_H
 
-#include "qnamespace.h"
 #include <string>
 #include <map>
 #include <vector>
@@ -9,6 +8,7 @@
 const int NUM_KEYS = 9;
 
 enum class Commands{
+    NONE,
     UP,
     DOWN,
     LEFT,
@@ -41,7 +41,10 @@ private:
 
 inline CommandsHelper::T CommandsHelper::commandFromString(const std::string value)
 {
-    return enumStringsMap[value];
+    std::map <std::string, T>::iterator it = enumStringsMap.find(value);
+    if(it != enumStringsMap.end())
+        return enumStringsMap.at(value);
+    return T::NONE;
 }
 
 inline char CommandsHelper::easytolower(char sym){

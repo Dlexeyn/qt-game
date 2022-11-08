@@ -21,6 +21,8 @@ public:
 signals:
 
 private:
+    int level = 0;
+
     QApplication *app = nullptr;
 
     Config::AppConfigurator *config = nullptr;
@@ -43,6 +45,7 @@ private:
 
     Game *game = nullptr;
 
+    void callStateDialogs(WindowStatus status);
     void callStateFunction(WindowStatus status);
 
 private slots:
@@ -52,7 +55,7 @@ private slots:
 
     void changeLevel();
 
-    void continueGame();
+    void continueGame(WindowStatus curStatus = WindowStatus::NONE);
 
     void exit();
 };

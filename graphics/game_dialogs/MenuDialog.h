@@ -18,7 +18,7 @@ public:
 signals:
     void continueSignal();
     void saveGameSignal();
-    void restartGameSignal();
+    bool restartGameSignal();
     void helpSignal();
     bool exitSignal();
 private slots:

@@ -4,10 +4,9 @@
 #include <vector>
 #include "GlobalMediator.h"
 #include "GlobalComponent.h"
-#include "Controller.h"
+#include "config/AppConfigurator.h"
 #include "map/ReadData.h"
 #include "map/GameMediator.h"
-#include "graphics/basewindow.h"
 #include "map/Ivents/GlobalEventFactory.h"
 #include "log/LogObject.h"
 #include "graphics/MapView.h"
@@ -18,7 +17,7 @@ public:
     Game(ReadData* readData, const std::vector< Log::EventSubscriber* >& loggers, const int level);
     ~Game();
     void notify(GLMessage *mes);
-    void initGame(BaseWindow *window, Controller *controller, QGraphicsScene *scene);
+    void initGame(EventWindow *window, GlobalComponent *controller, QGraphicsScene *scene, Config::AppConfigurator *config);
     void setReadData(ReadData *newReadData);
     View *getPlayerView() const;
 
@@ -31,8 +30,8 @@ private:
 
     int numBox;
 
-    BaseWindow *baseWindow = nullptr;
-    Controller *controller = nullptr;
+    EventWindow *baseWindow = nullptr;
+    GlobalComponent *controller = nullptr;
     ReadData *readData = nullptr;
 
     GlobalEventFactory *globalEventFactory = nullptr;

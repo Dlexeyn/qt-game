@@ -6,7 +6,7 @@
 class RestartEvent : public GlobalEvent
 {
 public:
-    //RestartEvent();
+    using GlobalEvent::GlobalEvent;
     void trigger();
 };
 

@@ -16,7 +16,8 @@ void Controller::sendCommand(Commands command)
     for(size_t index = 0; index < args.size(); index++)
         newMes.addArg(types[index], args[index]);
 
-    game->notify(&newMes);
+    if(command != Commands::SAVE)   // temp
+        game->notify(&newMes);
 }
 
 bool Controller::getMoveArgs(const Commands command, std::vector<int> &args, std::vector<ArgsTypes> &types)
@@ -52,13 +53,13 @@ void Controller::getOtherArgs(const Commands command, std::vector<int> &args, st
         args[0] = int(WindowStatus::PAUSE);
         break;
     case Commands::SAVE:
-        args[0] = int(WindowStatus::SAVE);
+        args[0] = int(WindowStatus::isSAVE);
         break;
     case Commands::NEW_GAME:
-        args[0] = int(WindowStatus::NEW_GAME);
+        args[0] = int(WindowStatus::isRestart);
         break;
     case Commands::EXIT_GAME:
-        args[0] = int(WindowStatus::EXIT);
+        args[0] = int(WindowStatus::isEXIT);
         break;
     case Commands::MENU:
         args[0] = int(WindowStatus::MENU);
@@ -66,11 +67,6 @@ void Controller::getOtherArgs(const Commands command, std::vector<int> &args, st
     default:
         break;
     }
-}
-
-const std::map<int, Commands> &Controller::getKeyCommands() const
-{
-    return KeyCommands;
 }
 
 void Controller::getMessage(GLMessage* mes)

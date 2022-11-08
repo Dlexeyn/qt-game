@@ -2,5 +2,5 @@
 
 void ExitEvent::trigger()
 {
-    baseWindow->callExitDialog();
+    baseWindow->callLoseEventDialog();
 }

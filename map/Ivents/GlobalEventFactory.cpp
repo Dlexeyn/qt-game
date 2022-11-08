@@ -11,7 +11,9 @@ Event *GlobalEventFactory::createEvent()
         break;
     case Lose:
         return new LoseEvent(window);
+        break;
     case Restart:
+        return new RestartEvent(window);
         break;
     }
 }
