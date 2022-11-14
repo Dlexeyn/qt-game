@@ -5,29 +5,25 @@
 #include "GlobalMediator.h"
 #include "GlobalComponent.h"
 #include "config/AppConfigurator.h"
+#include "graphics/FieldView.h"
+#include "map/Field.h"
 #include "map/ReadData.h"
-#include "map/GameMediator.h"
 #include "map/Ivents/GlobalEventFactory.h"
 #include "log/LogObject.h"
-#include "graphics/MapView.h"
 
 class Game: public GlobalMediator, public LogObject
 {
 public:
-    Game(ReadData* readData, const std::vector< Log::EventSubscriber* >& loggers, const int level);
+    Game(ReadData* readData, const std::vector< Log::EventSubscriber* >& loggers,
+         const int level, QGraphicsScene *scene);
     ~Game();
     void notify(GLMessage *mes);
-    void initGame(EventWindow *window, GlobalComponent *controller, QGraphicsScene *scene, Config::AppConfigurator *config);
+    void initGame(EventWindow *window, GlobalComponent *controller, Config::AppConfigurator *config);
     void setReadData(ReadData *newReadData);
-    View *getPlayerView() const;
 
 private:
-    View *isBox(int x, int y);
-    void movement(int stepX, int stepY, int &x, int &y);
-    bool boxMove(View *box, int stepX, int stepY);
     void createEvents();
-    void addObjectsOnScene(QGraphicsScene *scene);
-
+    void checkGameStatus();
     int numBox;
 
     EventWindow *baseWindow = nullptr;
@@ -39,15 +35,10 @@ private:
     Event *victoryEvent = nullptr;
     Event *loseEvent = nullptr;
 
-    MapComponent *field = nullptr;
-    MapComponent *player = nullptr;
-    std::vector<MapComponent*> listBox;
+    Field *field = nullptr;
+    FieldView *fView = nullptr;
+    friend class GameApplication;
 
-    MapView *fieldView = nullptr;
-    View *playerView = nullptr;
-    std::vector<View*> listBoxView;
-
-    GameMediator *objectMediator = nullptr;
 };
 
 #endif // GAME_H

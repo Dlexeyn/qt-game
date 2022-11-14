@@ -1,8 +1,9 @@
 #ifndef CELL_H
 #define CELL_H
 
-#include "map/MapComponent.h"
 #include "map/Ivents/Event.h"
+#include <QObject>
+#include "qobjectdefs.h"
 
 namespace CellSpace {
 enum TypeOfCell{
@@ -20,9 +21,9 @@ enum TypeOfCell{
     EMPTY = 12
 };
 
-class Cell
+class Cell: public QObject
 {
-
+    Q_OBJECT
 public:
     Cell(TypeOfCell type, bool isPass): cell_type(type),
         isPassable(isPass) {}
@@ -41,6 +42,9 @@ public:
     void setCell_type(TypeOfCell newCell_type);
 
     void setEvent(Event *newEvent);
+
+signals:
+    void typeChanged();
 
 private:
     Event *event = nullptr;

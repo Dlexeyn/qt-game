@@ -41,10 +41,10 @@ SOURCES += \
     log/StateLogger.cpp \
     main.cpp \
     graphics/basewindow.cpp \
-    map/Box.cpp \
+    map/Ivents/DestroyPlayerEvent.cpp \
+    map/objects/Box.cpp \
     map/Cell.cpp \
     map/Field.cpp \
-    map/GameMediator.cpp \
     map/Ivents/CellEvent.cpp \
     map/Ivents/CellEventFactory.cpp \
     map/Ivents/ColorBoxEvent.cpp \
@@ -59,7 +59,7 @@ SOURCES += \
     map/Ivents/VictoryEvent.cpp \
     map/LevelReader.cpp \
     map/ReadData.cpp \
-    objects/Player.cpp
+    map/objects/Player.cpp
 
 HEADERS += \
     app/GameApplication.h \
@@ -82,7 +82,7 @@ HEADERS += \
     graphics/CellPainter.h \
     graphics/EventWindow.h \
     graphics/FieldView.h \
-    graphics/MapView.h \
+    graphics/StaticView.h \
     graphics/basewindow.h \
     game/Controller.h \
     game/Game.h \
@@ -107,10 +107,10 @@ HEADERS += \
     log/Message.h \
     log/ObjectLogger.h \
     log/StateLogger.h \
-    map/Box.h \
+    map/Ivents/DestroyPlayerEvent.h \
+    map/objects/Box.h \
     map/Cell.h \
     map/Field.h \
-    map/GameMediator.h \
     map/Ivents/CellEvent.h \
     map/Ivents/CellEventFactory.h \
     map/Ivents/ColorBoxEvent.h \
@@ -125,10 +125,9 @@ HEADERS += \
     map/Ivents/ReturnColorEvent.h \
     map/Ivents/VictoryEvent.h \
     map/LevelReader.h \
-    map/MapComponent.h \
-    map/MapObject.h \
     map/ReadData.h \
-    objects/Player.h
+    map/objects/Object.h \
+    map/objects/Player.h
 
 FORMS += \
     graphics/basewindow.ui \

@@ -3,7 +3,6 @@
 
 #include "EventSubscriber.h"
 #include <vector>
-#include <QPoint>
 
 using namespace Log;
 class LogObject
@@ -13,7 +12,6 @@ protected:
 public:
     void subscribe(const std::vector<EventSubscriber *> &arr);
     void notifySubscribers(std::string str, std::string type, LogArgs *args = nullptr);
-
 };
 
 

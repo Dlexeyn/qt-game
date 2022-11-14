@@ -3,22 +3,24 @@
 
 #include <QGraphicsItem>
 #include <vector>
-#include "MapView.h"
+#include "graphics/BoxView.h"
 #include "graphics/CellPainter.h"
+#include "graphics/PlayerView.h"
+#include "map/Field.h"
 #include "map/ReadData.h"
 
-class FieldView : public MapView
+class FieldView: public QObject
 {
+    Q_OBJECT
 public:
-    FieldView(MapObject* object, const std::vector<EventSubscriber *> &loggers, ReadData* readData);
+    FieldView(Field *field, ReadData *rd, QGraphicsScene *scene);
     ~FieldView();
-    void moving(int &stepX, int &stepY);
-    void changeView(int x, int y);
-    void setGameScene(QGraphicsScene *newGameScene, ReadData *data);
-    bool isMoving(int x, int y);
-    void impactOnObject(ObjectType type, const int &x, const int &y);
+    PlayerView *getPView() const;
+
 private:
-    void movePointer(int x, int y);
+    Field *field = nullptr;
+    PlayerView *pView = nullptr;
+    std::vector<BoxView*> bViewList;
     std::vector<std::vector<CellPainter*>> graphicsCellMap;
     std::vector<std::vector<CellSpace::TypeOfCell>> typeMap;
     int sizeCell;

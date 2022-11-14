@@ -5,27 +5,18 @@
 #include <QPainter>
 #include <QPoint>
 #include "View.h"
-#include "map/Box.h"
-#include "map/GameMediator.h"
-#include "map/ReadData.h"
 
-class BoxView : public QGraphicsItem, public View
+class BoxView : public View, public QGraphicsItem
 {
 public:
-    BoxView(MapObject *object, ReadData *readData, const std::vector<EventSubscriber *> &loggers, int index);
-
-    void changeView();
-
-    void setGameScene(QGraphicsScene *newGameScene, ReadData *data);
-
-    void moving(int &stepX, int &stepY);
+    BoxView(int sizeCell, Object *object);
 
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr);
 
     QRectF boundingRect() const;
 
-private:
-    int step;
+public slots:
+    void setPosSlot(int x, int y);
 };
 
 #endif // BOXVIEW_H

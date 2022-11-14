@@ -7,6 +7,7 @@
 class ReturnColorEvent : public CellEvent
 {
 public:
+    ReturnColorEvent(const std::vector<EventSubscriber *> &loggers, Cell *newCell, Player *player);
     using CellEvent::CellEvent;
     void trigger();
 };

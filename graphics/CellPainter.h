@@ -1,6 +1,7 @@
 #ifndef CELLPAINTER_H
 #define CELLPAINTER_H
 
+#include "graphics/StaticView.h"
 #include <QGraphicsItem>
 #include <QMap>
 #include <QPainter>
@@ -8,17 +9,21 @@
 
 using namespace CellSpace;
 
-class CellPainter: public QGraphicsItem
+class CellPainter: public QGraphicsItem, public StaticView
 {
 public:
 
-    CellPainter(int size, TypeOfCell type) : size(size), type(type){}
+    CellPainter(int size, Cell *cell);
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr);
     QRectF boundingRect() const;
     void setType(int newType);
 
+public slots:
+    void changeView();
+
 private:
     int size;   // in px
+    Cell *cell = nullptr;
     TypeOfCell type;
     QMap<TypeOfCell, Qt::GlobalColor> TypeColor = {{DIRT, Qt::gray},
                                                    {GRASS, Qt::green},
