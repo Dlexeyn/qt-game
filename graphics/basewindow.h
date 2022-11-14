@@ -7,14 +7,14 @@
 #include <QKeyEvent>
 #include <QApplication>
 #include <QMessageBox>
-#include "View.h"
 #include "config/Configurator.h"
-#include "game/Controller.h"
+#include "log/LogObject.h"
 #include "map/ReadData.h"
 #include "EventWindow.h"
 #include "BaseWindowStatus.h"
 #include "game_dialogs/MenuDialog.h"
 #include "game_dialogs/HelpDialog.h"
+#include "map/objects/Player.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class BaseWindow; }
@@ -28,7 +28,7 @@ public:
     BaseWindow(Config::Configurator *config, QWidget *parent = nullptr);
     ~BaseWindow();
 
-    void init(ReadData *readData, QGraphicsScene *scene, View *player);
+    void init(ReadData *readData, QGraphicsScene *scene, const Player *player);
 
     void getMessage(GLMessage *mes);
 
@@ -64,8 +64,8 @@ signals:
 private:
     Ui::BaseWindow *ui;
 
-    View *player = nullptr;
-    Controller *controller = nullptr;
+    const Player *player = nullptr;
+    //Controller *controller = nullptr;
     Config::Configurator *config = nullptr;
     MenuDialog *menu = nullptr;
     HelpDialog *help = nullptr;

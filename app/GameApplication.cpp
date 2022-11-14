@@ -103,10 +103,10 @@ void GameApplication::setLevel(int level)
     scene = new QGraphicsScene();
     lvlReader = new LevelReader(this->level);
 
-    game = new Game(lvlReader->getReadData(), logPool->getLoggers(), level);
-    game->initGame(baseWindow, controller, scene, config);
+    game = new Game(lvlReader->getReadData(), logPool->getLoggers(), level, scene);
+    game->initGame(baseWindow, controller, config);
 
-    baseWindow->init(lvlReader->getReadData(), scene, game->getPlayerView());
+    baseWindow->init(lvlReader->getReadData(), scene, game->field->getPlayer());
     baseWindow->setMediator(game);
     controller->setMediator(game);
 

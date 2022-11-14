@@ -4,6 +4,7 @@
 #include "Event.h"
 #include "map/Cell.h"
 #include "log/LogObject.h"
+#include "map/objects/Player.h"
 
 using namespace CellSpace;
 
@@ -16,6 +17,7 @@ public:
 
 protected:
     Cell *cell = nullptr;
+    Player *player = nullptr;
 };
 
 

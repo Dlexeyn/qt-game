@@ -3,36 +3,35 @@
 
 
 #include "EventFactory.h"
-#include "CellEvent.h"
-#include "ReturnColorEvent.h"
-#include "ColorBoxEvent.h"
-#include "HiddenDoorEvent.h"
+#include "map/objects/Player.h"
+#include "map/Cell.h"
+#include <vector>
 
+enum CellEventType
+{
+    RETURN_COLOR,
+    COLOR_BOX,
+    HIDDEN_DOOR,
+    DESTROY_PLAYER,
+    NONE
+};
 
 class CellEventFactory : public EventFactory
 {
 public:
-
-    enum CellEventType
-    {
-        RETURN_COLOR,
-        COLOR_BOX,
-        HIDDEN_DOOR,
-        DESTROY_PLAYER
-    };
-
-    CellEventFactory(CellEventType type, const std::vector<EventSubscriber*> &loggers): currentType(type),
-    loggers(loggers){}
+    CellEventFactory(CellEventType type, const std::vector<EventSubscriber*> &loggers, Player *p)
+        : currentType(type), loggers(loggers), player(p){}
     CellEventFactory(const CellEventFactory& otherFactory);
     CellEventFactory(CellEventFactory&& otherFactory);
     ~CellEventFactory() {}
     Event* createEvent();
-    void setCurrentType(CellEventType newCurrentType, Cell *object);
+    void setCurrentType(CellEventType newCurrentType, CellSpace::Cell *object);
 
 private:
     CellEventType currentType;
     std::vector<EventSubscriber*> loggers;
-    Cell *object = nullptr;
+    CellSpace::Cell *object = nullptr;
+    Player *player = nullptr;
 };
 
 #endif // CELLEVENTFACTORY_H

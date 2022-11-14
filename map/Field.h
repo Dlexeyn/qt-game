@@ -4,18 +4,13 @@
 #include <vector>
 
 #include "Cell.h"
-#include "map/MapComponent.h"
-#include "game/Mediator.h"
 #include "Ivents/CellEventFactory.h"
 #include "map/ReadData.h"
 #include "log/LogObject.h"
-
-enum class Object{
-    PLAYER = 1,
-    BOX = 2
-};
-
-class Field: public MapComponent
+#include "map/objects/Player.h"
+#include "map/objects/Box.h"
+using namespace CellSpace;
+class Field: public LogObject
 {
 public:
     Field(ReadData *readData, const std::vector<EventSubscriber *> &loggers);
@@ -30,29 +25,30 @@ public:
 
     ~Field();
 
-    int changeStatus();
-
-    void sendCignal();
+    void movement(int stepX, int stepY);
 
     void setMap(std::vector<std::vector<CellSpace::TypeOfCell>> &arr);
 
-    int getAttribute(ObjectAttribute at) const;
-
-    void setAttribute(ObjectAttribute at, int arg);
-
-    void callAnObject();
-
-    bool checkState();
+    Player *getPlayer() const;
 
 private:
+
     std::vector<std::vector<CellSpace::Cell*>> map_field;
     CellEventFactory *eventFactory = nullptr;
-    int map_height, map_width; // size in cells
-    QPoint curPoint;
-    QPoint curPlayer;
-    QPoint hidDoor;
-    Object cur;
+    int map_height, map_width;          // size in cells
+    int step;                           // in px
 
-    bool isHidDoorOpen = false;
+    Player *player = nullptr;
+    std::vector<Box*> BoxList;
+
+    Box *isBox(int x, int y);
+    bool boxMovement(Box *box, int &stepX, int &stepY);
+    bool checkCell(int x, int y);
+    void changeEvent(Cell *cell, CellEventType type);
+    void changePlayer(Cell *cell);
+
+    int condition;
+    QPoint *hidDoor = nullptr;
+    friend class FieldView;
 };
 #endif // FIELD_H

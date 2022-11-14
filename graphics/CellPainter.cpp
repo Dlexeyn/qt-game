@@ -1,5 +1,10 @@
 #include "CellPainter.h"
 
+CellPainter::CellPainter(int size, Cell *cell)
+    : size(size), cell(cell), type(cell->getCell_type()){
+    connect(cell, SIGNAL(typeChanged()), this, SLOT(changeView()));
+}
+
 void CellPainter::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     QPolygon polygon;
@@ -18,4 +23,11 @@ QRectF CellPainter::boundingRect() const
 void CellPainter::setType(int newType)
 {
     type = TypeOfCell(newType);
+}
+
+void CellPainter::changeView()
+{
+    this->hide();
+    setType(cell->getCell_type());
+    this->show();
 }

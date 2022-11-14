@@ -36,7 +36,6 @@ void BaseWindow::callVictoryEventDialog()
 
 bool BaseWindow::callRestartEventDialog(bool withQuestion)
 {
-    notifySubscribers("the \"Victory\" event triggered", "game");
     QMessageBox::StandardButton reply = QMessageBox::Yes;
     if(withQuestion)
     {
@@ -95,7 +94,7 @@ bool BaseWindow::answerTheBox(WindowStatus status, QMessageBox::StandardButton &
     return false;
 }
 
-void BaseWindow::init(ReadData *readData, QGraphicsScene *scene, View *player)
+void BaseWindow::init(ReadData *readData, QGraphicsScene *scene, const Player *player)
 {
     this->setWindowTitle("Sokoban");
     this->resize(readData->getWidth()*sizeCellPx + 100, readData->getHeight()*sizeCellPx + 100);
@@ -164,8 +163,8 @@ void BaseWindow::slotPlayerTimer()
         key = 0;
     }
 
-    ui->HealthLabel->setText(QString::number(player->getObject()->getAttribute(ObjectAttribute::HEALTH)));
-    ui->PointsLabel->setText(QString::number(player->getObject()->getAttribute(ObjectAttribute::POINTS)));
+    ui->HealthLabel->setText(QString::number(player->getCurHealth()));
+    ui->PointsLabel->setText(QString::number(player->getVictoryPoints()));
     this->update();
 }
 

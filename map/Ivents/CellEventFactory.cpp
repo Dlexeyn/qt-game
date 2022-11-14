@@ -1,4 +1,8 @@
 #include "CellEventFactory.h"
+#include "ReturnColorEvent.h"
+#include "ColorBoxEvent.h"
+#include "HiddenDoorEvent.h"
+#include "DestroyPlayerEvent.h"
 
 CellEventFactory::CellEventFactory(const CellEventFactory& otherFactory)
 {
@@ -18,12 +22,14 @@ Event *CellEventFactory::createEvent()
 {
     switch (currentType) {
     case COLOR_BOX:
-        return new ColorBoxEvent(loggers, object);
+        return new ColorBoxEvent(loggers, object, player);
         break;
     case RETURN_COLOR:
-        return new ReturnColorEvent(loggers, object);
+        return new ReturnColorEvent(loggers, object, player);
     case HIDDEN_DOOR:
         return new DeleteObjectEvent(loggers, object);
+    case DESTROY_PLAYER:
+        return new DestroyPlayerEvent(loggers, object, player);
     default:
         return nullptr;
         break;

@@ -1,4 +1,5 @@
 #include "Reader.h"
+#include "qnamespace.h"
 
 const std::map<int, Commands> &Reader::getData() const
 {

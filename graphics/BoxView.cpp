@@ -1,36 +1,13 @@
 #include "BoxView.h"
 
-BoxView::BoxView(MapObject *object, ReadData *readData,
-                 const std::vector<EventSubscriber *> &loggers, int index)
-    : View(object, loggers)
+
+BoxView::BoxView(int sizeCell, Object *object)
+    : View(sizeCell, object)
 {
-    this->width = readData->getSizeCell()/1.4f;
-    this->height = readData->getSizeCell()/1.4f;
-    this->step = readData->getSizeCell();
-    this->XY = new QPoint();
-    this->XY->setX(readData->getBoxXY()[index]->x());
-    this->XY->setY(readData->getBoxXY()[index]->y());
-    this->XY = readData->getBoxXY()[index];
-}
-
-void BoxView::changeView()
-{
-
-}
-
-void BoxView::setGameScene(QGraphicsScene *newGameScene, ReadData *data)
-{
-     newGameScene->addItem(this);
-     this->setPos(data->getStartW() + data->getSizeCell() * XY->x(),
-                  data->getStartH() + data->getSizeCell() * XY->y());
-}
-
-void BoxView::moving(int &stepX, int &stepY)
-{
-    setPos(mapToParent(step*stepX, step*stepY));
-    XY->rx() += stepX;
-    XY->ry() += stepY;
-
+    width = step / 1.4f;
+    height = step / 1.4f;
+    connect(object, SIGNAL(changePosSignal(int,int)),
+            this, SLOT(setPosSlot(int,int)));
 }
 
 void BoxView::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
@@ -46,5 +23,10 @@ void BoxView::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, Q
 QRectF BoxView::boundingRect() const
 {
     return QRectF(-width/2, height/2, width, height);
+}
+
+void BoxView::setPosSlot(int x, int y)
+{
+    this->QGraphicsItem::setPos(mapToParent(step*x, step*y));
 }
 
