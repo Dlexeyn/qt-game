@@ -14,6 +14,7 @@ Player::Player(const Player &other)
     curHealth = other.curHealth;
     victoryPoints = other.victoryPoints;
     isAlive = other.isAlive;
+    pos = other.pos;
 }
 
 const int &Player::getVictoryPoints() const

@@ -1,5 +1,10 @@
 #include "LogObject.h"
 
+const std::vector<EventSubscriber *> &LogObject::getLoggers() const
+{
+    return loggers;
+}
+
 void LogObject::subscribe(const std::vector<EventSubscriber*> &arr)
 {
     loggers = arr;

@@ -27,6 +27,8 @@ public:
     Event* createEvent();
     void setCurrentType(CellEventType newCurrentType, CellSpace::Cell *object);
 
+    void setPlayer(Player *newPlayer);
+
 private:
     CellEventType currentType;
     std::vector<EventSubscriber*> loggers;

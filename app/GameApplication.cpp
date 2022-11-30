@@ -101,19 +101,22 @@ void GameApplication::setLevel(int level)
     changeConfigs();
 
     scene = new QGraphicsScene();
-    lvlReader = new LevelReader(this->level);
 
-    game = new Game(lvlReader->getReadData(), logPool->getLoggers(), level, scene);
+    game = new Game(logPool->getLoggers(), level, scene);
+    if(!game->field->getIsGenerated())
+    {
+        levelWindow->show();
+        return;
+    }
     game->initGame(baseWindow, controller, config);
-
-    baseWindow->init(lvlReader->getReadData(), scene, game->field->getPlayer());
+    int hPx = game->field->getMap_height() * game->fView->getSizeCell();
+    int wPx = game->field->getMap_width() * game->fView->getSizeCell();
+    baseWindow->init(hPx, wPx, scene, game->field->getPlayer());
     baseWindow->setMediator(game);
     controller->setMediator(game);
 
     baseWindow->show();
     gameTimer.start(150);
-
-    delete lvlReader;
 }
 
 void GameApplication::changeConfigs()

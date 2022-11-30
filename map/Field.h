@@ -5,15 +5,22 @@
 
 #include "Cell.h"
 #include "Ivents/CellEventFactory.h"
-#include "map/ReadData.h"
 #include "log/LogObject.h"
 #include "map/objects/Player.h"
 #include "map/objects/Box.h"
 using namespace CellSpace;
+
+namespace map {
+
+enum class level{
+    FIRST = 1,
+    SECOND = 2
+};
+
 class Field: public LogObject
 {
 public:
-    Field(ReadData *readData, const std::vector<EventSubscriber *> &loggers);
+    Field() {}
 
     Field(const Field& otherfield);
 
@@ -25,17 +32,50 @@ public:
 
     ~Field();
 
+    void subscribeInto(const std::vector<EventSubscriber*> &arr);
+
     void movement(int stepX, int stepY);
 
-    void setMap(std::vector<std::vector<CellSpace::TypeOfCell>> &arr);
-
     Player *getPlayer() const;
+
+    void setPlayer(Player *newPlayer);
+
+    int getMap_height() const;
+    void setMap_height(int newMap_height);
+
+    int getMap_width() const;
+    void setMap_width(int newMap_width);
+
+
+    void setMap_field(const std::vector<std::vector<CellSpace::Cell *> > &newMap_field);
+    void setCellInField(int x, int y, Cell *cell);
+    const std::vector<std::vector<CellSpace::Cell *> > &getMap_field() const;
+
+    CellEventFactory *getEventFactory() const;
+
+    void setHidDoor(QPoint *newHidDoor);
+
+    void setBoxList(const std::vector<Box *> &newBoxList);
+    void addBox(int index, Box *newBox);
+
+    const std::vector<Box *> &getBoxList() const;
+
+    void setEventFactory(CellEventFactory *newEventFactory);
+
+    int getVictory() const;
+    void setVictory(int newVictory);
+
+    void setCondition(int newCondition);
+
+    bool getIsGenerated() const;
+    void setIsGenerated(bool newIsGenerated);
 
 private:
 
     std::vector<std::vector<CellSpace::Cell*>> map_field;
     CellEventFactory *eventFactory = nullptr;
     int map_height, map_width;          // size in cells
+
     int step;                           // in px
 
     Player *player = nullptr;
@@ -48,7 +88,13 @@ private:
     void changePlayer(Cell *cell);
 
     int condition;
+    int victory;
+
     QPoint *hidDoor = nullptr;
-    friend class FieldView;
+    bool isGenerated = false;
+
 };
+
+}
+
 #endif // FIELD_H

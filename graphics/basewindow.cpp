@@ -93,20 +93,18 @@ bool BaseWindow::answerTheBox(WindowStatus status, QMessageBox::StandardButton &
         emit endStatus(WindowStatus::GAME);
     return false;
 }
-
-void BaseWindow::init(ReadData *readData, QGraphicsScene *scene, const Player *player)
+//readData->getWidth()*sizeCellPx + 100
+void BaseWindow::init(int h, int w, QGraphicsScene *scene, const Player *player)
 {
     this->setWindowTitle("Sokoban");
-    this->resize(readData->getWidth()*sizeCellPx + 100, readData->getHeight()*sizeCellPx + 100);
-    this->setFixedSize(readData->getWidth()*sizeCellPx + 100, readData->getHeight()*sizeCellPx + 100);
+    this->resize(w + 100, h + 100);
+    this->setFixedSize(w + 100, h + 100);
     this->player = player;
-    int width = readData->getWidth() * readData->getSizeCell();
-    int height = readData->getHeight() * readData->getSizeCell();
-    scene->setSceneRect(-width/2, -height/2, width, height);
-    scene->addLine(-width/2,-height/2, width/2,-height/2, QPen(Qt::black));
-    scene->addLine(-width/2, height/2, width/2, height/2, QPen(Qt::black));
-    scene->addLine(-width/2,-height/2,-width/2, height/2, QPen(Qt::black));
-    scene->addLine(width/2,-height/2, width/2, height/2, QPen(Qt::black));
+    scene->setSceneRect(-w/2, -h/2, w, h);
+    scene->addLine(-w/2,-h/2, w/2,-h/2, QPen(Qt::black));
+    scene->addLine(-w/2, h/2, w/2, h/2, QPen(Qt::black));
+    scene->addLine(-w/2,-h/2,-w/2, h/2, QPen(Qt::black));
+    scene->addLine(w/2,-h/2, w/2, h/2, QPen(Qt::black));
     ui->graphicsView->setScene(scene);
     status = WindowStatus::GAME;
     setFocus();

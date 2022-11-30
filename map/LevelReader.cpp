@@ -3,7 +3,7 @@
 LevelReader::LevelReader(int level)
 {
     readData = new ReadData();
-    QString nameFile = "lvl" + QString::number(level) + ".txt";
+    QString nameFile = "lvl" + QString::number(level) + ".gg";
     levelFile = new QFile(nameFile);
     readFile();
 }
