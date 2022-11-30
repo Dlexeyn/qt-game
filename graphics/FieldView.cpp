@@ -1,41 +1,46 @@
 #include "FieldView.h"
 #include <QGraphicsScene>
 
-FieldView::FieldView(Field *field, ReadData *rd, QGraphicsScene *scene)
-    : field(field), sizeCell(rd->getSizeCell())
+FieldView::FieldView(Field *field, QGraphicsScene *scene)
+    : field(field)
 {
     // init CellMap ===================================================================
+    int h = field->getMap_height(), w = field->getMap_width();
+
+    start_h = (-(sizeCell/2) * (h-1));
+    start_w = (-(sizeCell/2) * (w-1));
+
     graphicsCellMap = std::vector<std::vector<CellPainter*>>
-        (field->map_height, std::vector<CellPainter*>(field->map_width, nullptr));
-    for(int y = 0; y < field->map_height; y++)
-        for(int x = 0; x < field->map_width; x++)
+        (h, std::vector<CellPainter*>(w, nullptr));
+    for(int y = 0; y < h; y++)
+        for(int x = 0; x < w; x++)
         {
-            graphicsCellMap[y][x] = new CellPainter(sizeCell, field->map_field[y][x]);
+            graphicsCellMap[y][x] = new CellPainter(sizeCell, field->getMap_field()[y][x]);
             scene->addItem(graphicsCellMap[y][x]);
-            graphicsCellMap[y][x]->setPos(rd->getStartW() + sizeCell * x,
-                                          rd->getStartH() + sizeCell * y);
+            graphicsCellMap[y][x]->setPos(start_w + sizeCell * x,
+                                          start_h + sizeCell * y);
         }
     // ================================================================================
 
     // init PlayerView ================================================================
-    pView = new PlayerView(rd->getSizeCell(), field->player);
+    pView = new PlayerView(sizeCell, field->getPlayer());
     scene->addItem(pView);
-    pView->setPos(rd->getStartW() + sizeCell * rd->getPlayerXY()->x(),
-                  rd->getStartH() + sizeCell * rd->getPlayerXY()->y());
+    pView->setPos(start_w + sizeCell * field->getPlayer()->getPos(true),
+                  start_h + sizeCell * field->getPlayer()->getPos(false));
 
     // ================================================================================
 
     // init BoxViews ==================================================================
-    bViewList = std::vector<BoxView*>(rd->getNumBox(), nullptr);
-    for(int index = 0; index < rd->getNumBox(); index++)
+    bViewList = std::vector<BoxView*>(field->getBoxList().size(), nullptr);
+    for(size_t index = 0; index < field->getBoxList().size(); index++)
     {
-        bViewList[index] = new BoxView(rd->getSizeCell(), field->BoxList[index]);
+        Box *cur =  field->getBoxList()[index];
+        bViewList[index] = new BoxView(sizeCell, cur);
         scene->addItem(bViewList[index]);
-        bViewList[index]->setPos(rd->getStartW() + sizeCell * rd->getBoxXY()[index]->x(),
-                                 rd->getStartH() + sizeCell * rd->getBoxXY()[index]->y());
+        bViewList[index]->setPos(start_w + sizeCell * cur->getPos(true),
+                                 start_h + sizeCell * cur->getPos(false));
     }
     // ================================================================================
-
 
 }
 
@@ -48,6 +53,11 @@ FieldView::~FieldView()
 PlayerView *FieldView::getPView() const
 {
     return pView;
+}
+
+int FieldView::getSizeCell() const
+{
+    return sizeCell;
 }
 
 

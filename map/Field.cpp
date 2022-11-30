@@ -5,42 +5,7 @@
 #include <iterator>
 #include "Ivents/CellEventFactory.h"
 
-
-Field::Field(ReadData *readData, const std::vector<EventSubscriber *> &loggers)
-    : map_height(readData->getHeight()),
-      map_width(readData->getWidth()),
-      condition(readData->getConditionHiddenDoors())
-{
-    // init player ==============================================================
-    player = new Player();
-    player->subscribe(loggers);
-    notifySubscribers("Player : the player was created ", "object");
-    player->setPos(readData->getPlayerXY()->x(), readData->getPlayerXY()->y());
-    //===========================================================================
-
-    // intit Boxes ==============================================================
-    BoxList = std::vector<Box*>(readData->getNumBox(), nullptr);
-    for(int index = 0; index < readData->getNumBox(); index++)
-    {
-        BoxList[index] = new Box(false);
-        BoxList[index]->subscribe(loggers);
-        BoxList[index]->setPos(readData->getBoxXY().at(index)->x(),
-                              readData->getBoxXY().at(index)->y());
-    }
-    notifySubscribers("Boxes : Boxes were created ", "object");
-    //===========================================================================
-
-    // map ======================================================================
-    eventFactory = new CellEventFactory(COLOR_BOX, loggers, player);
-    setMap(readData->getType_map());
-    //===========================================================================
-
-    // logs =====================================================================
-    subscribe(loggers);
-    notifySubscribers("Field : the field was created with size ", "object",
-                      new LogArgs(ArgsLog::SIZE_WH, map_width, map_height));
-    //===========================================================================
-}
+namespace map {
 
 Field::~Field()
 {
@@ -49,9 +14,25 @@ Field::~Field()
     delete eventFactory;
 }
 
+void Field::subscribeInto(const std::vector<EventSubscriber *> &arr)
+{
+    subscribe(arr);
+    player->subscribe(arr);
+    for(auto box : BoxList)
+        box->subscribe(arr);
+
+    notifySubscribers("Field : the field was created with size ", "object",
+                      new LogArgs(ArgsLog::SIZE_WH, map_width, map_height));
+
+    notifySubscribers("Boxes : Boxes were created ", "object");
+
+    notifySubscribers("Player : the player was created ", "object");
+}
+
 void Field::movement(int stepX, int stepY)
 {
     int x = player->getPos(true), y = player->getPos(false);
+
     // проверка на проходимость клетки --------------------------------------
     if(!checkCell(x + stepX, y + stepY))
         return;
@@ -67,21 +48,38 @@ void Field::movement(int stepX, int stepY)
     // Движение игрока ------------------------------------------------------
     player->setPos(x + stepX, y + stepY);
     emit player->changePosSignal(stepX, stepY);
+    notifySubscribers("Player changed position to ", "object",
+                       new LogArgs(ArgsLog::XY, player->getPos(true), player->getPos(false)));
     changePlayer(map_field[y + stepY][x + stepX]);
     //-----------------------------------------------------------------------
 
     if(player->getVictoryPoints() == condition and hidDoor)
+    {
         map_field[hidDoor->y()][hidDoor->x()]->getEvent()->trigger();
+        delete hidDoor;
+        hidDoor = nullptr;
+    }
 }
 
 
 
-//Field::Field(const Field &field) : map_height(field.map_height), map_width(field.map_width) {
-//    std::copy(field.map_field.begin(), field.map_field.end(), std::back_inserter(map_field));
-//    field.setPlayer(new Player(*player));
-//    hidDoor = field.hidDoor;
-//    eventFactory = new CellEventFactory(*field.eventFactory);
-//}
+Field::Field(const Field &field) : map_height(field.map_height), map_width(field.map_width) {
+    std::copy(field.map_field.begin(), field.map_field.end(), std::back_inserter(map_field));
+
+    BoxList = std::vector<Box*>(field.getBoxList().size(), nullptr);
+    for(size_t index = 0; index < field.getBoxList().size(); index++)
+        BoxList[index] = field.getBoxList().at(index);
+
+    player = field.player;
+
+    hidDoor = field.hidDoor;
+
+    eventFactory = new CellEventFactory(*field.getEventFactory());
+
+    condition = field.condition;
+    victory = field.victory;
+    isGenerated = field.isGenerated;
+}
 
 //Field::Field(Field &&field) : map_height(field.map_height), map_width(field.map_width) {
 //    map_field = std::vector<std::vector<Cell*>> (map_height, std::vector<Cell*>(map_width, nullptr));
@@ -94,37 +92,54 @@ void Field::movement(int stepX, int stepY)
 //    std::swap(eventFactory, field.eventFactory);
 //}
 
-
-void Field::setMap(std::vector<std::vector<CellSpace::TypeOfCell> > &arr)
-{
-    map_field = std::vector<std::vector<Cell*>> (map_height, std::vector<Cell*>(map_width, nullptr));
-    for(int y = 0; y < map_height; y++)
-        for(int x = 0; x < map_width; x++)
-        {
-            map_field[y][x] = new CellSpace::Cell(arr[y][x],
-                              (arr[y][x] == CellSpace::WALL or arr[y][x] == CellSpace::TEMP_WALL) ? false : true);
-            switch (arr[y][x]) {
-            case CellSpace::TARGET_BOX:
-                eventFactory->setCurrentType(COLOR_BOX, map_field[y][x]);
-                break;
-            case CellSpace::TEMP_WALL:
-                hidDoor = new QPoint(x, y);
-                eventFactory->setCurrentType(HIDDEN_DOOR, map_field[y][x]);
-                break;
-            case CellSpace::END_CELL:
-                eventFactory->setCurrentType(DESTROY_PLAYER, map_field[y][x]);
-                break;
-            default:
-                break;
-            }
-            if(arr[y][x] != WALL and arr[y][x] != GRASS)
-                map_field[y][x]->setEvent(eventFactory->createEvent());
-        }
-}
-
 Player *Field::getPlayer() const
 {
     return player;
+}
+
+void Field::setPlayer(Player *newPlayer)
+{
+    player = newPlayer;
+}
+
+int Field::getMap_height() const
+{
+    return map_height;
+}
+
+void Field::setMap_height(int newMap_height)
+{
+    map_height = newMap_height;
+}
+
+int Field::getMap_width() const
+{
+    return map_width;
+}
+
+void Field::setMap_width(int newMap_width)
+{
+    map_width = newMap_width;
+}
+
+void Field::setMap_field(const std::vector<std::vector<CellSpace::Cell *> > &newMap_field)
+{
+    map_field = newMap_field;
+}
+
+void Field::setCellInField(int x, int y, Cell *cell)
+{
+    map_field[y][x] = cell;
+}
+
+const std::vector<std::vector<CellSpace::Cell *> > &Field::getMap_field() const
+{
+    return map_field;
+}
+
+CellEventFactory *Field::getEventFactory() const
+{
+    return eventFactory;
 }
 
 Box *Field::isBox(int x, int y)
@@ -194,5 +209,55 @@ void Field::changePlayer(Cell *cell)
         cell->getEvent()->trigger();
 }
 
+bool Field::getIsGenerated() const
+{
+    return isGenerated;
+}
+
+void Field::setIsGenerated(bool newIsGenerated)
+{
+    isGenerated = newIsGenerated;
+}
+
+void Field::setCondition(int newCondition)
+{
+    condition = newCondition;
+}
+
+int Field::getVictory() const
+{
+    return victory;
+}
+
+void Field::setVictory(int newVictory)
+{
+    victory = newVictory;
+}
+
+void Field::setHidDoor(QPoint *newHidDoor)
+{
+    hidDoor = newHidDoor;
+}
+
+void Field::setBoxList(const std::vector<Box *> &newBoxList)
+{
+    BoxList = newBoxList;
+}
+
+void Field::addBox(int index, Box *newBox)
+{
+    BoxList[index] = newBox;
+}
+
+const std::vector<Box *> &Field::getBoxList() const
+{
+    return BoxList;
+}
 
 
+void Field::setEventFactory(CellEventFactory *newEventFactory)
+{
+    eventFactory = newEventFactory;
+}
+
+}

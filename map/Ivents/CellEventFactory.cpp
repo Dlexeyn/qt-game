@@ -8,6 +8,7 @@ CellEventFactory::CellEventFactory(const CellEventFactory& otherFactory)
 {
     currentType = otherFactory.currentType;
     loggers = otherFactory.loggers;
+    player = otherFactory.player;
     object = otherFactory.object;
 }
 
@@ -40,4 +41,9 @@ void CellEventFactory::setCurrentType(CellEventType newCurrentType, Cell *newObj
 {
     currentType = newCurrentType;
     object = newObject;
+}
+
+void CellEventFactory::setPlayer(Player *newPlayer)
+{
+    player = newPlayer;
 }

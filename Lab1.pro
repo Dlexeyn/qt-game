@@ -41,7 +41,15 @@ SOURCES += \
     log/StateLogger.cpp \
     main.cpp \
     graphics/basewindow.cpp \
+    map/BoxesRule.cpp \
+    map/ConditionsRule.cpp \
     map/Ivents/DestroyPlayerEvent.cpp \
+    map/PlayerRule.cpp \
+    map/StructMapReader.cpp \
+    map/SubLevelDoorRule.cpp \
+    map/TargetRule.cpp \
+    map/TrapRule.cpp \
+    map/WallRule.cpp \
     map/objects/Box.cpp \
     map/Cell.cpp \
     map/Field.cpp \
@@ -107,7 +115,16 @@ HEADERS += \
     log/Message.h \
     log/ObjectLogger.h \
     log/StateLogger.h \
+    map/BoxesRule.h \
+    map/ConditionsRule.h \
     map/Ivents/DestroyPlayerEvent.h \
+    map/MapGenerator.h \
+    map/PlayerRule.h \
+    map/StructMapReader.h \
+    map/SubLevelDoorRule.h \
+    map/TargetRule.h \
+    map/TrapRule.h \
+    map/WallRule.h \
     map/objects/Box.h \
     map/Cell.h \
     map/Field.h \

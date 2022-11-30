@@ -7,15 +7,17 @@
 #include "graphics/CellPainter.h"
 #include "graphics/PlayerView.h"
 #include "map/Field.h"
-#include "map/ReadData.h"
 
+using namespace map;
 class FieldView: public QObject
 {
     Q_OBJECT
 public:
-    FieldView(Field *field, ReadData *rd, QGraphicsScene *scene);
+    FieldView(Field *field, QGraphicsScene *scene);
     ~FieldView();
     PlayerView *getPView() const;
+
+    int getSizeCell() const;
 
 private:
     Field *field = nullptr;
@@ -23,7 +25,8 @@ private:
     std::vector<BoxView*> bViewList;
     std::vector<std::vector<CellPainter*>> graphicsCellMap;
     std::vector<std::vector<CellSpace::TypeOfCell>> typeMap;
-    int sizeCell;
+    const int sizeCell = 50;
+    int start_h, start_w;               // in px
 };
 
 #endif // FIELDVIEW_H

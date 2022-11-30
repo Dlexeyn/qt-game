@@ -12,6 +12,7 @@ protected:
 public:
     void subscribe(const std::vector<EventSubscriber *> &arr);
     void notifySubscribers(std::string str, std::string type, LogArgs *args = nullptr);
+    const std::vector<EventSubscriber *> &getLoggers() const;
 };
 
 

@@ -16,6 +16,7 @@ Event *GlobalEventFactory::createEvent()
         return new RestartEvent(window);
         break;
     }
+    return nullptr;
 }
 
 void GlobalEventFactory::setCurrentType(GlobalEventType newCurrentType)

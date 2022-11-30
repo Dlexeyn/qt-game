@@ -49,6 +49,8 @@ void HelpDialog::setLabel(Commands command, int key)
     case Commands::MENU:
         ui->keyLabelMenu->setText(QKeySequence(key).toString());
         break;
+    default:
+        break;
     }
 }
 

@@ -28,7 +28,7 @@ public:
     BaseWindow(Config::Configurator *config, QWidget *parent = nullptr);
     ~BaseWindow();
 
-    void init(ReadData *readData, QGraphicsScene *scene, const Player *player);
+    void init(int h, int w, QGraphicsScene *scene, const Player *player);
 
     void getMessage(GLMessage *mes);
 

@@ -37,8 +37,6 @@ private:
 
     Controller *controller = nullptr;
 
-    LevelReader *lvlReader = nullptr;
-
     LogPool *logPool = nullptr;
 
     QGraphicsScene *scene = nullptr;

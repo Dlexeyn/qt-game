@@ -8,6 +8,7 @@ class Box : public Object, public LogObject
 {
 public:
     Box(bool isTargetPos);
+    Box(const Box& other);
 
 private:
     bool isTargetPos;
