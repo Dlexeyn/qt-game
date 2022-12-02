@@ -1,6 +1,7 @@
 #ifndef WALLRULE_H
 #define WALLRULE_H
 #include "Field.h"
+#include "map/GeneratorError.h"
 #include "map/StructMapReader.h"
 
 template <map::level lvl>
@@ -8,11 +9,12 @@ class WallRule
 {
 public:
     WallRule() {}
-    std::string fill(map::Field &field)
+    void fill(map::Field &field)
     {
         StructMapReader reader((int(lvl)));
         if(reader.read())
-            return "the file " + reader.getFilename() + " deleted or corrupted";
+            throw errors::GeneratorError(errors::Gen_Errors::FILE_ERR,
+                                         reader.getFilename());
         int h = reader.getH(), w = reader.getW();
 
         field.setMap_width(w);
@@ -29,7 +31,6 @@ public:
                                                               (map[y][x] == CellSpace::WALL) ? false : true);
                 field.setCellInField(x, y, newCell);
             }
-        return "Ok";
     }
 };
 

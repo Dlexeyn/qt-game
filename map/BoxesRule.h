@@ -3,13 +3,14 @@
 #include <qpoint.h>
 #include <iostream>
 #include "Field.h"
+#include "map/GeneratorError.h"
 
 template <int num, int ...Args>
 class BoxesRule
 {
 public:
     BoxesRule() {}
-    std::string fill(map::Field &field)
+    void fill(map::Field &field)
     {
         if(sizeof...(Args) == num * 2)
         {
@@ -17,23 +18,17 @@ public:
             addBox<Args...>(field);
         }
         else
-            return "incorrect num of boxes";
-        if(err)
-            return "going out of bounds in Box XY";
-        return "Ok";
+            throw errors::GeneratorError(errors::Gen_Errors::NUM_ERR);
     }
 private:
     int index = 0;
-    int err = 0;
     template <int x, int y, int ...args>
     void addBox(map::Field &field)
     {
         if(x >= field.getMap_width() or y >= field.getMap_height()
-                or x < 0 or y < 0 or err == -1)
-        {
-            err = -1;
-            return;
-        }
+                or x < 0 or y < 0)
+            throw errors::GeneratorError(errors::Gen_Errors::OUT_OF_BOUNDS_BOXES);
+
         Box *newBox = new Box(false);
         newBox->setPos(x, y);
         field.addBox(index++, newBox);

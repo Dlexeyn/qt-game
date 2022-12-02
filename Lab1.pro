@@ -43,6 +43,7 @@ SOURCES += \
     graphics/basewindow.cpp \
     map/BoxesRule.cpp \
     map/ConditionsRule.cpp \
+    map/GeneratorError.cpp \
     map/Ivents/DestroyPlayerEvent.cpp \
     map/PlayerRule.cpp \
     map/StructMapReader.cpp \
@@ -117,6 +118,7 @@ HEADERS += \
     log/StateLogger.h \
     map/BoxesRule.h \
     map/ConditionsRule.h \
+    map/GeneratorError.h \
     map/Ivents/DestroyPlayerEvent.h \
     map/MapGenerator.h \
     map/PlayerRule.h \
@@ -156,3 +158,6 @@ FORMS += \
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+RESOURCES += \
+    graphics/ux/icons-menu.qrc

@@ -7,9 +7,11 @@ DialogLevel::DialogLevel(Config::Configurator *config, QWidget *parent) :
     config(config)
 {
     ui->setupUi(this);
+    this->resize(480, 500);
+    this->setFixedSize(480, 500);
     this->setWindowTitle("Выбор уровня");
-    QPixmap pix("/home/aleksey/Projects/OOP/Lab1/Lab1/resurces/logo.jpg");
-    ui->LogoLabel->setPixmap(pix);
+//    QPixmap pix("/home/aleksey/Projects/OOP/Lab1/Lab1/resurces/logo.jpg");
+//    ui->LogoLabel->setPixmap(pix);
 }
 
 DialogLevel::~DialogLevel()
