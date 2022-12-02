@@ -91,7 +91,7 @@ private:
     int victory;
 
     QPoint *hidDoor = nullptr;
-    bool isGenerated = false;
+    bool isGenerated = true;
 
 };
 

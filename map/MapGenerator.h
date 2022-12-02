@@ -3,6 +3,7 @@
 
 #include "Field.h"
 #include "log/LogObject.h"
+#include "GeneratorError.h"
 #include <string>
 
 template <typename ...Rules>
@@ -15,30 +16,23 @@ public:
         subscribe(loggers);
         newField.setEventFactory(new CellEventFactory
                                 (CellEventType::COLOR_BOX, loggers, nullptr));
-        (modifyMap<Rules...>());
-        if(err != "Ok")
-            notifySubscribers("MapGenerator: " + err, "warning");
-        else
-        {
-           notifySubscribers("MapGenerator: " + err, "global");
-           newField.setIsGenerated(true);
+        try {
+            (modifyMap<Rules...>());
+        } catch (errors::GeneratorError &er) {
+            notifySubscribers("MapGenerator: " + std::string(er.what()), "global");
+            newField.setIsGenerated(false);
         }
-
         return newField;
-
     }
 
 private:
     map::Field newField;
-    std::string err = "Ok";
 
     template <typename Rule, typename ... NextRules>
     void modifyMap()
     {
         Rule curRule;
-        err = curRule.fill(newField);
-        if(err != "Ok")
-            return;
+        curRule.fill(newField);
         if constexpr (sizeof...(NextRules) > 0) {
             modifyMap<NextRules...>();
         }
