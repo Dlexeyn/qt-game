@@ -5,7 +5,7 @@
 #include <map>
 #include <vector>
 
-const int NUM_KEYS = 9;
+const int NUM_KEYS = 10;
 
 enum class Commands{
     NONE,
@@ -17,7 +17,8 @@ enum class Commands{
     SAVE,
     NEW_GAME,
     EXIT_GAME,
-    MENU
+    MENU,
+    LOAD
 };
 
 class CommandsHelper{
@@ -27,7 +28,8 @@ public:
     char easytolower(char sym);
     std::string tolower(const std::string &tolower);
 private:
-    std::map<std::string, T> enumStringsMap = {
+    const std::map<std::string, T> enumStringsMap =
+    {
         { "up", T::UP },
         { "down", T::DOWN },
         { "left", T::LEFT },
@@ -36,12 +38,14 @@ private:
         { "save" , T::SAVE },
         { "new_game", T::NEW_GAME },
         { "exit_game", T::EXIT_GAME },
-        { "menu", T::MENU }};
+        { "menu", T::MENU },
+        { "load", T::LOAD }
+    };
 };
 
 inline CommandsHelper::T CommandsHelper::commandFromString(const std::string value)
 {
-    std::map <std::string, T>::iterator it = enumStringsMap.find(value);
+    std::map <std::string, T>::const_iterator it = enumStringsMap.find(value);
     if(it != enumStringsMap.end())
         return enumStringsMap.at(value);
     return T::NONE;

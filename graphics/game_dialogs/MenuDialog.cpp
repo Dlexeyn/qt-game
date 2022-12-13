@@ -18,11 +18,19 @@ MenuDialog::MenuDialog(const std::map<Commands, int> &KeyCommands, QWidget *pare
     initButton(ui->helpButton, "Помощь", KeyCommands.at(Commands::PAUSE));
 
     initButton(ui->exitButton, "Завершить", KeyCommands.at(Commands::EXIT_GAME));
+
+    initButton(ui->loadButton, "Загрузить", KeyCommands.at(Commands::LOAD));
+
 }
 
 MenuDialog::~MenuDialog()
 {
     delete ui;
+}
+
+void MenuDialog::unlockButton()
+{
+    ui->loadButton->show();
 }
 
 void MenuDialog::initButton(QPushButton *button, QString text, int key)
@@ -67,6 +75,13 @@ void MenuDialog::on_helpButton_clicked()
 void MenuDialog::on_exitButton_clicked()
 {
     if(emit exitSignal())
+        this->hide();
+}
+
+
+void MenuDialog::on_loadButton_clicked()
+{
+    if(emit loadGame())
         this->hide();
 }
 

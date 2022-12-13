@@ -6,10 +6,10 @@
 #include "graphics/basewindow.h"
 #include "graphics/dialoglevel.h"
 #include "game/Controller.h"
-#include "map/LevelReader.h"
 #include "game/LogPool.h"
 #include "config/AppConfigurator.h"
 #include "game/CommandReader.h"
+#include "map/Memento/CareTaker.hpp"
 
 class GameApplication: public QObject
 {
@@ -19,6 +19,7 @@ public:
     ~GameApplication();
     void start();
 signals:
+
 
 private:
     int level = 0;
@@ -43,6 +44,11 @@ private:
 
     Game *game = nullptr;
 
+    CareTaker *careTaker = nullptr;
+    Field *backUp = nullptr;
+    int curIndexBackup = 0;
+    bool isSaveLoad = false;
+
     void callStateDialogs(WindowStatus status);
     void callStateFunction(WindowStatus status);
 
@@ -54,6 +60,8 @@ private slots:
     void changeLevel();
 
     void continueGame(WindowStatus curStatus = WindowStatus::NONE);
+
+    std::vector<Memento*> recreate();
 
     void exit();
 };

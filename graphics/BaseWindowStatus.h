@@ -11,7 +11,11 @@ enum class WindowStatus{
     isRestart = 6,
     RESTART_LEVEL = 7,
     END_LEVEL = 8,
-    GAME = 9
+    GAME = 9,
+    LOAD_SAVE = 10,
+    isLOAD = 11,
+    SAVE = 12,
+    DELETE_SAVE = 13
 };
 
 

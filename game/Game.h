@@ -16,6 +16,10 @@ class Game: public GlobalMediator, public LogObject
 public:
     Game(const std::vector< Log::EventSubscriber* >& loggers,
          const int level, QGraphicsScene *scene);
+
+    Game(const std::vector< Log::EventSubscriber* >& loggers,
+         const int level, Field* field, QGraphicsScene *scene);
+
     ~Game();
     void notify(GLMessage *mes);
     void initGame(EventWindow *window, GlobalComponent *controller, Config::AppConfigurator *config);
@@ -23,7 +27,6 @@ public:
 private:
     void createEvents();
     void checkGameStatus();
-    int numBox;
 
     EventWindow *baseWindow = nullptr;
     GlobalComponent *controller = nullptr;

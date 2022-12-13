@@ -20,6 +20,7 @@ BaseWindow::~BaseWindow()
     delete ui;
     delete menu;
     delete help;
+    delete load;
 }
 
 void BaseWindow::callLoseEventDialog()
@@ -63,12 +64,9 @@ void BaseWindow::callPauseDialog()
 
 void BaseWindow::callSaveDialog()
 {
-
-}
-
-void BaseWindow::callNewGameDialog()
-{
-
+    notifySubscribers("the game was saved", "game");
+    QMessageBox::information(this, "Сохранение", "Игра сохранена.");
+    emit endStatus(WindowStatus::GAME);
 }
 
 void BaseWindow::callMenuDialog()
@@ -77,23 +75,46 @@ void BaseWindow::callMenuDialog()
     menu->exec();
     if(status == WindowStatus::MENU)
         emit endStatus(WindowStatus::GAME);
+}
+
+int BaseWindow::callLoadSaveDialog(std::vector<std::string> saves)
+{
+    notifySubscribers("the load save dialog", "game");
+    load->setSaves(saves);
+    load->exec();
+    int n = load->getCur();
+    if(n > 0)
+        emit endStatus(WindowStatus::LOAD_SAVE);
+    else if(n < 0)
+        emit endStatus(WindowStatus::DELETE_SAVE);
     else
-        emit endStatus();
+        emit endStatus(WindowStatus::GAME);
+
+    return n;
 }
 
 bool BaseWindow::answerTheBox(WindowStatus status, QMessageBox::StandardButton &reply)
 {
     if (reply == QMessageBox::Yes)
     {
-        this->status = status;
-        emit endStatus();
+        emit endStatus(status);
         return true;
     }
     else
         emit endStatus(WindowStatus::GAME);
     return false;
 }
-//readData->getWidth()*sizeCellPx + 100
+
+void BaseWindow::setSaveIsLoad(bool newSaveIsLoad)
+{
+    saveIsLoad = newSaveIsLoad;
+}
+
+bool BaseWindow::getSaveIsLoad() const
+{
+    return saveIsLoad;
+}
+
 void BaseWindow::init(int h, int w, QGraphicsScene *scene, const Player *player)
 {
     this->setWindowTitle("Sokoban");
@@ -139,11 +160,14 @@ void BaseWindow::createDialogs(const std::map <int, Commands> KeyCommands)
 
     menu = new MenuDialog(tempKeyCommads);
     help = new HelpDialog(tempKeyCommads);
+    load = new LoadDialog();
 
-    //connect(menu, SIGNAL(saveGameSignal()), this, SLOT()); // ?
+    connect(menu, SIGNAL(saveGameSignal()), this, SLOT(callSaveDialog())); // ?
     connect(menu, SIGNAL(restartGameSignal()), this, SLOT(callRestartEventDialog())); // +
     connect(menu, SIGNAL(helpSignal()), this, SLOT(callPauseDialog())); // +
     connect(menu, SIGNAL(exitSignal()), this, SLOT(callExitDialog()));//+
+    //connect(menu, SIGNAL(loadGame()), this, SLOT(callLoadSaveDialog(std::vector<std::string>)));
+
 }
 
 void BaseWindow::keyPressEvent(QKeyEvent *event)

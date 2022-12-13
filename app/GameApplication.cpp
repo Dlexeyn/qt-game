@@ -1,4 +1,5 @@
 #include "GameApplication.h"
+#include "map/Memento/Snapshot.h"
 
 GameApplication::GameApplication(QApplication *app, QObject *parent)
     : QObject(parent),
@@ -11,6 +12,8 @@ GameApplication::GameApplication(QApplication *app, QObject *parent)
 
     keyReader->subscribe(logPool->getLoggers());
     keyReader->readCommands();
+
+    careTaker = new CareTaker(recreate(), logPool->getLoggers());
 
     controller = new Controller(keyReader->getData()); // Класс, отвечающий за команды от пользователя
     levelWindow = new DialogLevel(config);  // Окно меню
@@ -55,12 +58,14 @@ void GameApplication::callStateDialogs(WindowStatus status)
     case WindowStatus::MENU:
         baseWindow->callMenuDialog();
         break;
-//    case WindowStatus::NEW_GAME:
-//        baseWindow->callNewGameDialog();        // restart level
-//        break;
-//    case WindowStatus::SAVE:
-//        baseWindow->callSaveDialog();           // save level into txt
-//        break;
+    case WindowStatus::isSAVE:
+        careTaker->backup(level);
+        // Добавить диалог в случае не сохранения
+        baseWindow->callSaveDialog();
+        break;
+    case WindowStatus::isLOAD:
+        curIndexBackup = baseWindow->callLoadSaveDialog(careTaker->getInfo());
+        break;
     case WindowStatus::isEXIT:
         baseWindow->callExitDialog();
         break;
@@ -77,6 +82,7 @@ void GameApplication::callStateFunction(WindowStatus status)
     case WindowStatus::END_LEVEL:
         gameTimer.stop();
         baseWindow->hide();
+        careTaker->unsetOriginator();
         delete game;
         delete scene;
         levelWindow->show();
@@ -84,9 +90,36 @@ void GameApplication::callStateFunction(WindowStatus status)
     case WindowStatus::RESTART_LEVEL:
         gameTimer.stop();
         baseWindow->hide();
+        careTaker->unsetOriginator();
+
         delete game;
         delete scene;
+
         setLevel(this->level);
+        break;
+    case WindowStatus::LOAD_SAVE:
+        gameTimer.stop();
+        baseWindow->hide();
+
+        careTaker->unsetOriginator();
+
+        if(backUp)
+            delete backUp;
+
+        backUp = new Field;
+        careTaker->setOriginator(backUp);
+
+        level = careTaker->undo(curIndexBackup);
+
+        delete game;
+        delete scene;
+
+        isSaveLoad = true;
+        setLevel(level);
+        break;
+    case WindowStatus::DELETE_SAVE:
+        careTaker->deleteBackup(abs(curIndexBackup));
+        baseWindow->setStatus(WindowStatus::isLOAD);
         break;
     default:
         break;
@@ -101,13 +134,18 @@ void GameApplication::setLevel(int level)
     changeConfigs();
 
     scene = new QGraphicsScene();
+    if(!isSaveLoad)
+        game = new Game(logPool->getLoggers(), level, scene);
+    else
+        game = new Game(logPool->getLoggers(), level, backUp, scene);
 
-    game = new Game(logPool->getLoggers(), level, scene);
+    isSaveLoad = false;
     if(!game->field->getIsGenerated())
     {
         levelWindow->show();
         return;
     }
+
     game->initGame(baseWindow, controller, config);
     int hPx = game->field->getMap_height() * game->fView->getSizeCell();
     int wPx = game->field->getMap_width() * game->fView->getSizeCell();
@@ -116,6 +154,7 @@ void GameApplication::setLevel(int level)
     controller->setMediator(game);
 
     baseWindow->show();
+    careTaker->setOriginator(game->field);
     gameTimer.start(150);
 }
 
@@ -133,15 +172,31 @@ void GameApplication::changeLevel()
 
 void GameApplication::continueGame(WindowStatus curStatus)
 {
-    if(int(curStatus))
-        baseWindow->setStatus(WindowStatus::GAME);
+    baseWindow->setStatus(curStatus);
     baseWindow->notifySubscribers("Status was ended", "global");
     baseWindow->setFocus();
     gameTimer.start(150);
 }
 
+std::vector<Memento *> GameApplication::recreate()
+{
+    std::vector<Memento*> rec;
+    for(int i = 0; i < CareTaker::getSIZE(); i++)
+    {
+        Snapshot *s = new Snapshot(logPool->getLoggers());
+        if(s->readFromFile(i))
+        {
+            rec.push_back(s);
+        }
+        else
+            return rec;
+    }
+    return rec;
+}
+
 void GameApplication::exit()
 {
+    careTaker->saveToFile();
     baseWindow->notifySubscribers("Completing the application", "global");
     app->exit(0);
 }

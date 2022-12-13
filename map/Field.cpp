@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <iterator>
 #include "Ivents/CellEventFactory.h"
+#include "map/Memento/Snapshot.h"
 
 namespace map {
 
@@ -12,6 +13,98 @@ Field::~Field()
     map_field.clear();
     std::vector< std::vector< Cell* > >( map_field ).swap( map_field );
     delete eventFactory;
+}
+
+Memento *Field::save()
+{
+    return new Snapshot(map_field,
+                        map_height,
+                        map_width,
+                        hidDoor,
+                        *player,
+                        BoxList,
+                        condition,
+                        victory);
+}
+
+void Field::restore(Memento *memento)
+{
+    auto rData = memento->GetState();
+    map_height = rData["HEIGHT"][0];
+    map_width = rData["WIDTH"][0];
+    condition = rData["HIDDOR_CONDITION"][0];
+    victory = rData["VICTORY_CONDITION"][0];
+
+    player = new Player(rData["PLAYER_MAX_H"][0],
+                        rData["PLAYER_CUR_H"][0],
+                        rData["PLAYER_POINTS"][0],
+                        rData["PLAYER_XY"][0],
+                        rData["PLAYER_XY"][1]);
+
+    hidDoor = new QPoint(rData["HIDDOR_XY"][0],
+                         rData["HIDDOR_XY"][1]);
+
+    if(hidDoor->rx() == 0 and hidDoor->ry() == 0)
+    {
+        delete hidDoor;
+        hidDoor = nullptr;
+    }
+
+    int boxCount = rData["BOX_COUNT"][0];
+    BoxList = std::vector<Box*>(boxCount, nullptr);
+    for(int i = 0; i < boxCount; i++)
+    {
+        Box *cur = new Box(false);
+        cur->setPos(rData["BOX_" + std::to_string(i)][0],
+                    rData["BOX_" + std::to_string(i)][1]);
+        BoxList[i] = cur;
+    }
+
+    map_field = std::vector<std::vector<Cell*>>
+                (map_height, std::vector<Cell*>(map_width, nullptr));
+
+    for(int y = 0; y < map_height; y++)
+            for(int x = 0; x < map_width; x++)
+            {
+                TypeOfCell type = TypeOfCell(rData["MAP_" + std::to_string(y)][x]);
+                bool var = (type == TypeOfCell::WALL or type == TypeOfCell::TEMP_WALL)
+                        ? false : true;
+                Cell *cell = new Cell(type, var);
+                map_field[y][x] = cell;
+            }
+
+    updateMap();
+}
+
+void Field::updateMap()
+{
+    eventFactory = new CellEventFactory(CellEventType::COLOR_BOX, loggers, player);
+
+    for(int y = 0; y < map_height; y++)
+        for(int x = 0; x < map_width; x++)
+        {
+            Cell *cell = map_field[y][x];
+            switch (cell->getCell_type()) {
+            case CellSpace::TEMP_WALL:
+                eventFactory->setCurrentType(CellEventType::HIDDEN_DOOR, cell);
+                cell->setEvent(eventFactory->createEvent());
+                break;
+            case CellSpace::TARGET_BOX:
+                eventFactory->setCurrentType(CellEventType::COLOR_BOX, cell);
+                cell->setEvent(eventFactory->createEvent());
+                break;
+            case CellSpace::TARGET_WITH_BOX:
+                eventFactory->setCurrentType(CellEventType::RETURN_COLOR, cell);
+                cell->setEvent(eventFactory->createEvent());
+                break;
+            case CellSpace::END_CELL:
+                eventFactory->setCurrentType(CellEventType::DESTROY_PLAYER, cell);
+                cell->setEvent(eventFactory->createEvent());
+                break;
+            default:
+                break;
+            }
+        }
 }
 
 void Field::subscribeInto(const std::vector<EventSubscriber *> &arr)
@@ -218,6 +311,7 @@ void Field::setIsGenerated(bool newIsGenerated)
 {
     isGenerated = newIsGenerated;
 }
+
 
 void Field::setCondition(int newCondition)
 {

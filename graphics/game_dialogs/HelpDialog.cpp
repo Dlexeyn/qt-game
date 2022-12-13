@@ -6,7 +6,7 @@ HelpDialog::HelpDialog(const std::map<Commands, int> &KeyCommands, QWidget *pare
     ui(new Ui::HelpDialog)
 {
     ui->setupUi(this);
-
+    this->setWindowTitle("Пауза");
     for (auto& [key, value]: KeyCommands) {
         setLabel(key, value);
     }
@@ -48,6 +48,9 @@ void HelpDialog::setLabel(Commands command, int key)
         break;
     case Commands::MENU:
         ui->keyLabelMenu->setText(QKeySequence(key).toString());
+        break;
+    case Commands::LOAD:
+        ui->keyLabelLoad->setText(QKeySequence(key).toString());
         break;
     default:
         break;

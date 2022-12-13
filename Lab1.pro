@@ -26,6 +26,7 @@ SOURCES += \
     graphics/PlayerView.cpp \
     graphics/dialoglevel.cpp \
     graphics/game_dialogs/HelpDialog.cpp \
+    graphics/game_dialogs/LoadDialog.cpp \
     graphics/game_dialogs/MenuDialog.cpp \
     log/ConsoleLogDecorator.cpp \
     log/FileLogDecorator.cpp \
@@ -45,7 +46,14 @@ SOURCES += \
     map/ConditionsRule.cpp \
     map/GeneratorError.cpp \
     map/Ivents/DestroyPlayerEvent.cpp \
+    map/Memento/CareTaker.cpp \
+    map/Memento/Originator.cpp \
+    map/Memento/SnapshotException.cpp \
+    map/Memento/SnapshotReader.cpp \
+    map/Memento/SnapshotWriter.cpp \
     map/PlayerRule.cpp \
+    map/SaveReader/SaveHelper.cpp \
+    map/Memento/Snapshot.cpp \
     map/StructMapReader.cpp \
     map/SubLevelDoorRule.cpp \
     map/TargetRule.cpp \
@@ -99,6 +107,7 @@ HEADERS += \
     graphics/View.h \
     graphics/dialoglevel.h \
     graphics/game_dialogs/HelpDialog.h \
+    graphics/game_dialogs/LoadDialog.h \
     graphics/game_dialogs/MenuDialog.h \
     graphics/game_dialogs/gameDialog.h \
     log/ConsoleLogDecorator.h \
@@ -121,7 +130,15 @@ HEADERS += \
     map/GeneratorError.h \
     map/Ivents/DestroyPlayerEvent.h \
     map/MapGenerator.h \
+    map/Memento/CareTaker.hpp \
+    map/Memento/Memento.hpp \
+    map/Memento/Originator.hpp \
+    map/Memento/SnapshotException.h \
+    map/Memento/SnapshotReader.h \
+    map/Memento/SnapshotWriter.h \
     map/PlayerRule.h \
+    map/SaveReader/SaveHelper.h \
+    map/Memento/Snapshot.h \
     map/StructMapReader.h \
     map/SubLevelDoorRule.h \
     map/TargetRule.h \
@@ -152,6 +169,7 @@ FORMS += \
     graphics/basewindow.ui \
     graphics/dialoglevel.ui \
     graphics/game_dialogs/HelpDialog.ui \
+    graphics/game_dialogs/LoadDialog.ui \
     graphics/game_dialogs/MenuDialog.ui
 
 # Default rules for deployment.

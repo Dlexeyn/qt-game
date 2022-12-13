@@ -28,7 +28,7 @@ Game::Game(const std::vector<EventSubscriber *> &loggers,
 
         field = new Field(mapGen.generate(loggers));
     }
-    else {
+    else if(level == 2){
         MapGenerator <WallRule<map::level::SECOND>,
                       PlayerRule<11, 8>,
                       BoxesRule<6, 2, 7, 5, 7, 5, 4, 5, 2, 7, 3, 8, 4>,
@@ -39,13 +39,26 @@ Game::Game(const std::vector<EventSubscriber *> &loggers,
 
         field = new Field(mapGen.generate(loggers));
     }
-
     if(field->getIsGenerated())
     {
         field->subscribeInto(loggers);
         fView = new FieldView(field, scene);               // абстракция поля
     }
 }
+
+Game::Game(const std::vector<EventSubscriber *> &loggers,
+           const int level,
+           Field *field,
+           QGraphicsScene *scene)
+{
+    subscribe(loggers);
+    notifySubscribers("Level ", "global", new LogArgs(ArgsLog::LEVEL, level));
+
+    this->field = field;
+    field->subscribeInto(loggers);
+    fView = new FieldView(field, scene);
+}
+
 
 Game::~Game()
 {

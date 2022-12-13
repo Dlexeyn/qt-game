@@ -4,5 +4,6 @@
         <file>settings.png</file>
         <file>down-arrow.png</file>
         <file>arrow.ico</file>
+        <file>delete.png</file>
     </qresource>
 </RCC>

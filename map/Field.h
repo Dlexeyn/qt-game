@@ -1,15 +1,16 @@
 #ifndef FIELD_H
 #define FIELD_H
 
-#include <vector>
 
+#include <vector>
 #include "Cell.h"
 #include "Ivents/CellEventFactory.h"
 #include "log/LogObject.h"
+#include "map/Memento/Originator.hpp"
 #include "map/objects/Player.h"
 #include "map/objects/Box.h"
-using namespace CellSpace;
 
+using namespace CellSpace;
 namespace map {
 
 enum class level{
@@ -17,7 +18,7 @@ enum class level{
     SECOND = 2
 };
 
-class Field: public LogObject
+class Field: public LogObject, public Originator
 {
 public:
     Field() {}
@@ -31,6 +32,11 @@ public:
     Field &operator=(Field &&other);
 
     ~Field();
+
+    Memento *save();
+    void restore(Memento* memento);
+
+    void updateMap();
 
     void subscribeInto(const std::vector<EventSubscriber*> &arr);
 
@@ -70,13 +76,14 @@ public:
     bool getIsGenerated() const;
     void setIsGenerated(bool newIsGenerated);
 
+
 private:
 
     std::vector<std::vector<CellSpace::Cell*>> map_field;
     CellEventFactory *eventFactory = nullptr;
     int map_height, map_width;          // size in cells
 
-    int step;                           // in px
+    //int step;                           // in px
 
     Player *player = nullptr;
     std::vector<Box*> BoxList;

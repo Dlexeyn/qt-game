@@ -15,9 +15,8 @@ void Controller::sendCommand(Commands command)
 
     for(size_t index = 0; index < args.size(); index++)
         newMes.addArg(types[index], args[index]);
+    game->notify(&newMes);
 
-    if(command != Commands::SAVE)   // temp
-        game->notify(&newMes);
 }
 
 bool Controller::getMoveArgs(const Commands command, std::vector<int> &args, std::vector<ArgsTypes> &types)
@@ -63,6 +62,9 @@ void Controller::getOtherArgs(const Commands command, std::vector<int> &args, st
         break;
     case Commands::MENU:
         args[0] = int(WindowStatus::MENU);
+        break;
+    case Commands::LOAD:
+        args[0] = int(WindowStatus::isLOAD);
         break;
     default:
         break;

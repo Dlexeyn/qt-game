@@ -32,6 +32,7 @@ void Reader::createDefaultData()
         {Qt::Key_O, Commands::SAVE},
         {Qt::Key_End, Commands::EXIT_GAME},
         {Qt::Key_Home, Commands::NEW_GAME},
-        {Qt::Key_Escape, Commands::MENU}
+        {Qt::Key_Escape, Commands::MENU},
+        {Qt::Key_L, Commands::LOAD}
     };
 }

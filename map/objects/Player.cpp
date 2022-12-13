@@ -17,6 +17,13 @@ Player::Player(const Player &other)
     pos = other.pos;
 }
 
+Player::Player(int maxH, int curH, int points, int x, int y)
+    : maxHealth(maxH), curHealth(curH), victoryPoints(points)
+{
+    pos.setX(x);
+    pos.setY(y);
+}
+
 const int &Player::getVictoryPoints() const
 {
     return victoryPoints;
@@ -30,6 +37,11 @@ const unsigned &Player::getCurHealth() const
 void Player::setCurHealth(const unsigned &newCurHealth)
 {
     curHealth = newCurHealth;
+}
+
+unsigned int Player::getMaxHealth() const
+{
+    return maxHealth;
 }
 
 

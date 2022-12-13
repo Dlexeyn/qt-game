@@ -14,6 +14,7 @@
 #include "BaseWindowStatus.h"
 #include "game_dialogs/MenuDialog.h"
 #include "game_dialogs/HelpDialog.h"
+#include "game_dialogs/LoadDialog.h"
 #include "map/objects/Player.h"
 
 QT_BEGIN_NAMESPACE
@@ -40,6 +41,10 @@ public:
 
     void createDialogs(const std::map <int, Commands> KeyCommands);
 
+    bool getSaveIsLoad() const;
+
+    void setSaveIsLoad(bool newSaveIsLoad);
+
 public slots:
     void callLoseEventDialog();      // event dialog
 
@@ -53,11 +58,12 @@ public slots:
 
     void callSaveDialog();      // status dialog
 
-    void callNewGameDialog();   // status dialog
-
     void callMenuDialog();      // status dialog
 
+    int callLoadSaveDialog(std::vector<std::string> saves);  // status dialog
+
 signals:
+    void unlockDowload();
     void endApp();
     void endStatus(WindowStatus curStatus = WindowStatus::NONE);
 
@@ -69,6 +75,7 @@ private:
     Config::Configurator *config = nullptr;
     MenuDialog *menu = nullptr;
     HelpDialog *help = nullptr;
+    LoadDialog *load = nullptr;
 
     WindowStatus status;
 
@@ -76,6 +83,7 @@ private:
 
     const unsigned sizeCellPx = 50;
     int key;
+    bool saveIsLoad = false;
     virtual void keyPressEvent(QKeyEvent *event);
 public slots:
     void slotPlayerTimer();
