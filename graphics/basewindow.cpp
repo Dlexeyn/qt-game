@@ -110,6 +110,13 @@ void BaseWindow::setSaveIsLoad(bool newSaveIsLoad)
     saveIsLoad = newSaveIsLoad;
 }
 
+void BaseWindow::callWarningSaveDialog()
+{
+    QMessageBox::warning(this, tr("Сохранение"),
+                                   tr("Все слоты для сохранений заполнены."));
+    emit endStatus(WindowStatus::GAME);
+}
+
 bool BaseWindow::getSaveIsLoad() const
 {
     return saveIsLoad;

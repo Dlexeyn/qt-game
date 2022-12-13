@@ -15,5 +15,7 @@ class Memento {
     virtual std::map<std::string, std::vector<int>> GetState() const = 0;
     virtual bool saveToFile(int index) = 0;
     virtual bool readFromFile(int index) = 0;
+
+    virtual ~Memento() = default;
 };
 #endif // MEMENTO_HPP

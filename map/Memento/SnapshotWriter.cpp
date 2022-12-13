@@ -1,17 +1,25 @@
 #include "SnapshotWriter.h"
+#include "Utilities.h"
 #include <iostream>
 #include <string>
 #include <algorithm>
+#include <sstream>
 
 bool SnapshotWriter::write(std::map<std::string, std::vector<int>> &state, std::string time, std::string num)
 {
     out.open(fileName);
     if(out.is_open())
     {
+        std::string str = Utilities::createMapStr(state);
+        out << Utilities::hash(str) << '\n';
+
         char c = ':';
         time.erase(std::remove(time.begin(), time.end(), c), time.end());
-        out << "TIME=" << time << '\n';
-        out << "LEVEL=" << num << '\n';
+
+        for(auto s: time)
+            state["TIME"].push_back(s - '0');
+        state["LEVEL"].push_back(std::stoi(num));
+
         for(auto &el : state)
             writeLine(el);
         out << "END\n";

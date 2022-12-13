@@ -9,12 +9,12 @@
 #include "map/objects/Player.h"
 #include "SnapshotWriter.h"
 #include "SnapshotReader.h"
-#include "log/LogObject.h"
 
-class Snapshot: public Memento, public LogObject
+using namespace CellSpace;
+class Snapshot: public Memento
 {
 public:
-    Snapshot(const std::vector< Log::EventSubscriber* >& loggers);
+    Snapshot();
 
     Snapshot(const std::vector<std::vector<CellSpace::Cell*>> &map_field,
              const int &map_height,
@@ -45,12 +45,15 @@ public:
 
 private:
     std::map<std::string, std::vector<int>> state;
+
     std::string num_;
     std::string name;
     std::string time_;
+
     SnapshotWriter *writer = nullptr;
     SnapshotReader *reader = nullptr;
-    void clearOldSaves();
+
+    void checkState();
 };
 
 #endif // SNAPSHOT_H

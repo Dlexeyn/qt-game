@@ -7,9 +7,10 @@ SnapshotException::SnapshotException(Reason reason, std::string info)
     {
         {Reason::INCORRECT_LINE, "Incorrect line: "},
         {Reason::INCORRECT_END, "Incorrect end of file"},
-        {Reason::INCORRECT_TIME, "Incorrect time line in reading file: "},
-        {Reason::INCORRECT_LEVEL, "Incorrect level line in reading file: "},
-        {Reason::INCORRECT_MAP_LINE, "Incorrect map line: "}
+        {Reason::INCORRECT_KEY, "Incorrect name of parameter: "},
+        {Reason::INCORRECT_VALUE, "Incorrect value: "},
+        {Reason::INCORRECT_COUNT, "Incorrect count of lines: "},
+        {Reason::LOGICAL_ERROR, "Logical error in parameter: "}
     };
     whatStr = snap + errors[reason] + info;
 }

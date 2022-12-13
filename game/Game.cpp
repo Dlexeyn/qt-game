@@ -119,7 +119,7 @@ void Game::checkGameStatus()
 {
     if(field->getPlayer()->getCurHealth() == 0)
         loseEvent->trigger();
-    else if(field->getPlayer()->getVictoryPoints() == field->getVictory())
+    else if(field->getPlayer()->getVictoryPoints() >= field->getVictory())
         victoryEvent->trigger();
 }
 

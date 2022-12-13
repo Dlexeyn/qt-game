@@ -13,14 +13,16 @@ public:
     CareTaker(Originator *originator)
         : originator(originator) {}
 
-    CareTaker(std::vector<Memento*> snapshots, const std::vector< Log::EventSubscriber* >& loggers);
+    CareTaker(const std::vector< Log::EventSubscriber* >& loggers);
 
-    void backup(int level);
+    bool backup(int level);
     void deleteBackup(int index);
+    void deleteAll();
 
     int undo(int index);
 
     void saveToFile();
+    void recreate();
 
     void setOriginator(Originator *newOriginator);
     void unsetOriginator() { originator = nullptr; }
@@ -34,6 +36,8 @@ private:
     Originator *originator = nullptr;
     static const int SIZE = 5;
     int curLevel = 0;
+
+    void clearOldSaves();
 };
 
 #endif // CARETAKER_HPP

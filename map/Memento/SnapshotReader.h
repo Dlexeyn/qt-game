@@ -5,21 +5,32 @@
 #include <vector>
 #include <fstream>
 #include <map>
-#include "SnapshotException.h"
+
 
 class SnapshotReader
 {
 public:
-    SnapshotReader(std::string index);
+    SnapshotReader(std::string index) { nameFile = "save_" + index + ".txt"; }
     std::map<std::string, std::vector<int> > getState() const;
     bool read();
+    void checkHash();
 private:
     std::ifstream in;
     std::string nameFile;
+    std::string hash = "";
     std::map<std::string, std::vector<int>> state;
     bool isEnd = false;
 
-    void tokenize(const std::string &str, std::vector<std::string> &out, std::string token);
+    std::vector<std::string> true_params =
+    {
+        "TIME", "LEVEL", "BOX", "MAP", "BOX-COUNT",
+        "HEIGHT", "WIDTH", "HIDDOR-CONDITION",
+        "HIDDOR-XY", "PLAYER-CUR-H", "PLAYER-MAX-H",
+        "PLAYER-POINTS", "PLAYER-XY", "VICTORY-CONDITION"
+    };
+
+    void checkKey(const std::string &str);
+    void checkValue(const std::string &str);
 };
 
 #endif // SNAPSHOTREADER_H

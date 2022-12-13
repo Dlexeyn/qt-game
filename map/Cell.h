@@ -7,17 +7,17 @@
 
 namespace CellSpace {
 enum TypeOfCell{
-    DIRT = 100,           // 'd'
-    SAND = 115,           // 's'
-    GRASS = 103,        // 'g'
-    WALL = 119,         // 'w'
-    TEMP_WALL = 87,     // 'W'
-    BROKEN_WALL = 6,
-    TRAP = 84,           // 'T'
-    BROKEN_TRAP = 116,    // 't'
-    TARGET_BOX = 98,     // 'b'
+    DIRT = 100,             // 'd'
+    SAND = 115,             // 's'
+    GRASS = 103,            // 'g'
+    WALL = 119,             // 'w'
+    TEMP_WALL = 87,         // 'W'
+    BROKEN_WALL = 6,        //
+    TRAP = 84,              // 'T'
+    BROKEN_TRAP = 116,      // 't'
+    TARGET_BOX = 98,        // 'b'
     TARGET_WITH_BOX = 66,   // 'B'
-    END_CELL = 101,      // 'e'
+    END_CELL = 101,         // 'e'
     EMPTY = 12
 };
 

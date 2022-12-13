@@ -1,5 +1,4 @@
 #include "GameApplication.h"
-#include "map/Memento/Snapshot.h"
 
 GameApplication::GameApplication(QApplication *app, QObject *parent)
     : QObject(parent),
@@ -13,7 +12,8 @@ GameApplication::GameApplication(QApplication *app, QObject *parent)
     keyReader->subscribe(logPool->getLoggers());
     keyReader->readCommands();
 
-    careTaker = new CareTaker(recreate(), logPool->getLoggers());
+    careTaker = new CareTaker(logPool->getLoggers());
+    careTaker->recreate();
 
     controller = new Controller(keyReader->getData()); // Класс, отвечающий за команды от пользователя
     levelWindow = new DialogLevel(config);  // Окно меню
@@ -59,9 +59,10 @@ void GameApplication::callStateDialogs(WindowStatus status)
         baseWindow->callMenuDialog();
         break;
     case WindowStatus::isSAVE:
-        careTaker->backup(level);
-        // Добавить диалог в случае не сохранения
-        baseWindow->callSaveDialog();
+        if(!careTaker->backup(level))
+            baseWindow->callWarningSaveDialog();
+        else
+            baseWindow->callSaveDialog();
         break;
     case WindowStatus::isLOAD:
         curIndexBackup = baseWindow->callLoadSaveDialog(careTaker->getInfo());
@@ -176,22 +177,6 @@ void GameApplication::continueGame(WindowStatus curStatus)
     baseWindow->notifySubscribers("Status was ended", "global");
     baseWindow->setFocus();
     gameTimer.start(150);
-}
-
-std::vector<Memento *> GameApplication::recreate()
-{
-    std::vector<Memento*> rec;
-    for(int i = 0; i < CareTaker::getSIZE(); i++)
-    {
-        Snapshot *s = new Snapshot(logPool->getLoggers());
-        if(s->readFromFile(i))
-        {
-            rec.push_back(s);
-        }
-        else
-            return rec;
-    }
-    return rec;
 }
 
 void GameApplication::exit()

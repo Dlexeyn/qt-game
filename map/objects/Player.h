@@ -22,16 +22,6 @@ public:
 
     void setCurHealth(const unsigned &newCurHealth);
 
-    friend std::ostream& operator<<(std::ostream& out, const Player& obj){
-        out << "PLAYER:\n";
-        out << obj.maxHealth << "\n";
-        out << obj.curHealth << "\n";
-        out << obj.victoryPoints << "\n";
-        out << obj.pos.x() << "\n";
-        out << obj.pos.y() << "\n";
-        return out;
-    }
-
     unsigned int getMaxHealth() const;
 
 private:

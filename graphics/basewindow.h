@@ -46,6 +46,8 @@ public:
     void setSaveIsLoad(bool newSaveIsLoad);
 
 public slots:
+    void callWarningSaveDialog();
+
     void callLoseEventDialog();      // event dialog
 
     void callVictoryEventDialog();   // event dialog

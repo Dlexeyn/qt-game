@@ -61,8 +61,6 @@ private slots:
 
     void continueGame(WindowStatus curStatus = WindowStatus::NONE);
 
-    std::vector<Memento*> recreate();
-
     void exit();
 };
 

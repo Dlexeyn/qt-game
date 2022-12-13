@@ -48,9 +48,11 @@ SOURCES += \
     map/Ivents/DestroyPlayerEvent.cpp \
     map/Memento/CareTaker.cpp \
     map/Memento/Originator.cpp \
+    map/Memento/SaveFileException.cpp \
     map/Memento/SnapshotException.cpp \
     map/Memento/SnapshotReader.cpp \
     map/Memento/SnapshotWriter.cpp \
+    map/Memento/Utilities.cpp \
     map/PlayerRule.cpp \
     map/SaveReader/SaveHelper.cpp \
     map/Memento/Snapshot.cpp \
@@ -133,9 +135,11 @@ HEADERS += \
     map/Memento/CareTaker.hpp \
     map/Memento/Memento.hpp \
     map/Memento/Originator.hpp \
+    map/Memento/SaveFileException.h \
     map/Memento/SnapshotException.h \
     map/Memento/SnapshotReader.h \
     map/Memento/SnapshotWriter.h \
+    map/Memento/Utilities.h \
     map/PlayerRule.h \
     map/SaveReader/SaveHelper.h \
     map/Memento/Snapshot.h \

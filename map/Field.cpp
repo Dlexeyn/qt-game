@@ -32,17 +32,17 @@ void Field::restore(Memento *memento)
     auto rData = memento->GetState();
     map_height = rData["HEIGHT"][0];
     map_width = rData["WIDTH"][0];
-    condition = rData["HIDDOR_CONDITION"][0];
-    victory = rData["VICTORY_CONDITION"][0];
+    condition = rData["HIDDOR-CONDITION"][0];
+    victory = rData["VICTORY-CONDITION"][0];
 
-    player = new Player(rData["PLAYER_MAX_H"][0],
-                        rData["PLAYER_CUR_H"][0],
-                        rData["PLAYER_POINTS"][0],
-                        rData["PLAYER_XY"][0],
-                        rData["PLAYER_XY"][1]);
+    player = new Player(rData["PLAYER-MAX-H"][0],
+                        rData["PLAYER-CUR-H"][0],
+                        rData["PLAYER-POINTS"][0],
+                        rData["PLAYER-XY"][0],
+                        rData["PLAYER-XY"][1]);
 
-    hidDoor = new QPoint(rData["HIDDOR_XY"][0],
-                         rData["HIDDOR_XY"][1]);
+    hidDoor = new QPoint(rData["HIDDOR-XY"][0],
+                         rData["HIDDOR-XY"][1]);
 
     if(hidDoor->rx() == 0 and hidDoor->ry() == 0)
     {
@@ -50,7 +50,7 @@ void Field::restore(Memento *memento)
         hidDoor = nullptr;
     }
 
-    int boxCount = rData["BOX_COUNT"][0];
+    int boxCount = rData["BOX-COUNT"][0];
     BoxList = std::vector<Box*>(boxCount, nullptr);
     for(int i = 0; i < boxCount; i++)
     {
@@ -146,7 +146,7 @@ void Field::movement(int stepX, int stepY)
     changePlayer(map_field[y + stepY][x + stepX]);
     //-----------------------------------------------------------------------
 
-    if(player->getVictoryPoints() == condition and hidDoor)
+    if(player->getVictoryPoints() >= condition and hidDoor)
     {
         map_field[hidDoor->y()][hidDoor->x()]->getEvent()->trigger();
         delete hidDoor;

@@ -9,10 +9,11 @@ class SnapshotException: public std::exception
 public:
     enum class Reason{
         INCORRECT_LINE,
-        INCORRECT_TIME,
-        INCORRECT_LEVEL,
         INCORRECT_END,
-        INCORRECT_MAP_LINE,
+        INCORRECT_KEY,
+        INCORRECT_VALUE,
+        INCORRECT_COUNT,
+        LOGICAL_ERROR
     };
 
     explicit SnapshotException(Reason reason, std::string info = "");

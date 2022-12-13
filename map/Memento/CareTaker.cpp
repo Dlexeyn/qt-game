@@ -1,24 +1,26 @@
 #include "CareTaker.hpp"
 #include "map/Memento/Memento.hpp"
+#include "map/Memento/SaveFileException.h"
 #include "map/Memento/SnapshotException.h"
+#include "map/Memento/Snapshot.h"
+#include <filesystem>
 
-CareTaker::CareTaker(std::vector<Memento *> snapshots,
-                     const std::vector<EventSubscriber *> &loggers)
+CareTaker::CareTaker(const std::vector<EventSubscriber *> &loggers)
 {
-    this->snapshots = snapshots;
     subscribe(loggers);
 }
 
-void CareTaker::backup(int level)
+bool CareTaker::backup(int level)
 {
     int num = int(snapshots.size());
 
     if(num >= 5)
-        return;
+        return false;
 
     Memento *newMem = originator->save();
     newMem->setInfo(std::to_string(level), "Level " + std::to_string(level));
     snapshots.push_back(newMem);
+    return true;
 }
 
 void CareTaker::deleteBackup(int index)
@@ -26,6 +28,12 @@ void CareTaker::deleteBackup(int index)
     index--;
     auto iter = snapshots.cbegin();
     snapshots.erase(iter + index);
+}
+
+void CareTaker::deleteAll()
+{
+    for(auto s: snapshots)
+        delete s;
 }
 
 int CareTaker::undo(int index)
@@ -40,6 +48,7 @@ int CareTaker::undo(int index)
 
 void CareTaker::saveToFile()
 {
+    clearOldSaves();
     for(std::size_t i = 0; i < snapshots.size(); i++)
     {
         try {
@@ -47,6 +56,23 @@ void CareTaker::saveToFile()
         } catch (SnapshotException &e) {
             notifySubscribers(std::string(e.what()), "critical");
         }
+    }
+}
+
+void CareTaker::recreate()
+{
+    for(int i = 0; i < SIZE; i++)
+    {
+        try {
+            Snapshot *s = new Snapshot();
+            if(s->readFromFile(i))
+                snapshots.push_back(s);
+        } catch (SnapshotException &e) {
+            notifySubscribers(std::string(e.what()), "warning");
+        } catch (SaveFileException &e) {
+            notifySubscribers(std::string(e.what()), "warning");
+        }
+
     }
 }
 
@@ -71,6 +97,16 @@ std::vector<std::string> CareTaker::getInfo()
 int CareTaker::getSIZE()
 {
     return SIZE;
+}
+
+void CareTaker::clearOldSaves()
+{
+    for(int i = 0; i < SIZE; i++)
+    {
+        std::string name = "save_" + std::to_string(i) + ".txt";
+        if(std::filesystem::exists(name))
+            std::remove(name.c_str());
+    }
 }
 
 

@@ -1,15 +1,14 @@
 #include "Snapshot.h"
+#include "SnapshotException.h"
 #include <iomanip>
 #include <ctime>
 #include <sstream>
 #include <iostream>
-#include <filesystem>
 #include <cstdio>
 
-Snapshot::Snapshot(const std::vector<EventSubscriber *> &loggers)
+Snapshot::Snapshot()
 {
     name = "Level ";
-    subscribe(loggers);
 }
 
 Snapshot::Snapshot(const std::vector<std::vector<CellSpace::Cell *> > &map_field,
@@ -23,27 +22,27 @@ Snapshot::Snapshot(const std::vector<std::vector<CellSpace::Cell *> > &map_field
 {
     state["HEIGHT"].push_back(map_height);
     state["WIDTH"].push_back(map_width);
-    state["HIDDOR_CONDITION"].push_back(condition);
-    state["VICTORY_CONDITION"].push_back(victory);
+    state["HIDDOR-CONDITION"].push_back(condition);
+    state["VICTORY-CONDITION"].push_back(victory);
 
-    state["PLAYER_MAX_H"].push_back(player.getMaxHealth());
-    state["PLAYER_CUR_H"].push_back(player.getCurHealth());
-    state["PLAYER_POINTS"].push_back(player.getVictoryPoints());
-    state["PLAYER_XY"].push_back(player.getPos(true));
-    state["PLAYER_XY"].push_back(player.getPos(false));
+    state["PLAYER-MAX-H"].push_back(player.getMaxHealth());
+    state["PLAYER-CUR-H"].push_back(player.getCurHealth());
+    state["PLAYER-POINTS"].push_back(player.getVictoryPoints());
+    state["PLAYER-XY"].push_back(player.getPos(true));
+    state["PLAYER-XY"].push_back(player.getPos(false));
 
     if(hidDoor)
     {
-        state["HIDDOR_XY"].push_back(hidDoor->x());
-        state["HIDDOR_XY"].push_back(hidDoor->y());
+        state["HIDDOR-XY"].push_back(hidDoor->x());
+        state["HIDDOR-XY"].push_back(hidDoor->y());
     }
     else
     {
-        state["HIDDOR_XY"].push_back(0);
-        state["HIDDOR_XY"].push_back(0);
+        state["HIDDOR-XY"].push_back(0);
+        state["HIDDOR-XY"].push_back(0);
     }
 
-    state["BOX_COUNT"].push_back(BoxList.size());
+    state["BOX-COUNT"].push_back(BoxList.size());
     for(size_t i = 0; i < BoxList.size(); i++)
     {
         state["BOX_" + std::to_string(i)].push_back(BoxList[i]->getPos(true));
@@ -80,7 +79,6 @@ void Snapshot::setInfo(std::string num, std::string name)
 
 bool Snapshot::saveToFile(int index)
 {
-    clearOldSaves();
     writer = new SnapshotWriter(std::to_string(index));
     bool var = writer->write(state, time_, num_);
     delete writer;
@@ -90,37 +88,39 @@ bool Snapshot::saveToFile(int index)
 bool Snapshot::readFromFile(int index)
 {
     reader = new SnapshotReader(std::to_string(index));
-    bool var;
-    try {
-        var = reader->read();
-    } catch (SnapshotException &e) {
-        notifySubscribers(std::string(e.what()), "warning");
-        var = false;
-    }
-
+    bool var = reader->read();
     if(var)
     {
         state = reader->getState();
-        time_ = std::to_string(state["TIME"][0]);
+        checkState();
+
+        for(auto s : state["TIME"])
+            time_ += std::to_string(s);
+
         time_.insert(2, 1, ':');
         time_.insert(5, 1, ':');
+
         name += std::to_string(state["LEVEL"][0]);
         num_ = std::to_string(state["LEVEL"][0]);
+
         state.erase("TIME");
         state.erase("LEVEL");
+
+        reader->checkHash();
     }
     delete reader;
     return var;
 }
 
-void Snapshot::clearOldSaves()
+void Snapshot::checkState() // logical check
 {
-    for(int i = 0; i < SIZE; i++)
-    {
-        std::string name = "save_" + std::to_string(i) + ".txt";
-        if(std::filesystem::exists(name))
-            std::remove(name.c_str());
-    }
+    int countBox = state["BOX-COUNT"][0];
+    int countMapY = state["HEIGHT"][0];
+
+    int trueCount = 12 + countBox + countMapY;
+    if(int(state.size()) != trueCount)
+        throw SnapshotException(SnapshotException::Reason::INCORRECT_COUNT,
+                                std::to_string(trueCount) + " vs " + std::to_string(state.size()));
 }
 
 

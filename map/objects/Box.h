@@ -10,11 +10,6 @@ class Box : public Object, public LogObject
 public:
     Box(bool isTargetPos);
     Box(const Box& other);
-    friend std::ostream& operator<<(std::ostream& out, const Box& obj){
-        out << obj.pos.x() << "\n";
-        out << obj.pos.y() << "\n";
-        return out;
-    }
 
 private:
     bool isTargetPos;
